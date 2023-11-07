@@ -1,4 +1,4 @@
-package recipeList;
+package RecipeList;
 
 import javafx.application.Application;
 import javafx.scene.Parent;
@@ -35,22 +35,22 @@ import java.io.File;
 
 class Recipe extends HBox {
 
-
     // Recipe Information
     private TextField RecipeName;
 
     // Task: add user information to Recipe()
     Recipe() {
         this.setPrefSize(500, 40); // sets size of Recipe
-        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of Recipe
-        
+        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background
+                                                                                                     // color of Recipe
+
         RecipeName = new TextField(); // create Recipe name text field
         RecipeName.setPrefSize(140, 20); // set size of text field
         RecipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
-       
+
         RecipeName.setPadding(new Insets(20, 0, 20, 10)); // adds some padding to the text field
         this.getChildren().add(RecipeName); // add textlabel to Recipe
-         
+
     }
 
     public TextField getRecipeName() {
@@ -58,9 +58,9 @@ class Recipe extends HBox {
     }
 }
 
-class recipeList extends VBox {
+class RecipeList extends VBox {
 
-    recipeList() {
+    RecipeList() {
         this.setSpacing(5); // sets spacing between Recipes
         this.setPrefSize(500, 560);
         this.setStyle("-fx-background-color: #F0F8FF;");
@@ -69,30 +69,34 @@ class recipeList extends VBox {
     public void loadRecipes() {
         FileReader file; // Contents of file
         try {
- 
-            file = new FileReader("Recipes.csv");
- 
-            BufferedReader buffer = new BufferedReader(file, 16384);
- 
-            String line = ""; // Reads line by line of file
-            try{line = buffer.readLine();
-            }catch(Exception e){}
 
-    
-            while(line != null){ // Sets a new task per line
+            file = new FileReader("Recipes.csv");
+
+            BufferedReader buffer = new BufferedReader(file, 16384);
+
+            String line = ""; // Reads line by line of file
+            try {
+                line = buffer.readLine();
+            } catch (Exception e) {
+            }
+
+            while (line != null) { // Sets a new task per line
                 Recipe recipe = new Recipe();
                 recipe.getRecipeName().setText(line);
                 this.getChildren().add(recipe);
-                try{line = buffer.readLine();}
-                catch(Exception e){}  
+                try {
+                    line = buffer.readLine();
+                } catch (Exception e) {
+                }
             }
-            
-        try{
-            buffer.close();
-            file.close();
-            } catch(Exception e){}
+
+            try {
+                buffer.close();
+                file.close();
+            } catch (Exception e) {
+            }
+        } catch (FileNotFoundException e) {
         }
-         catch (FileNotFoundException e) {}
     }
 
 }
@@ -108,9 +112,9 @@ class Header extends VBox {
         Text titleText = new Text("Recipe List"); // Text of the Header
         titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
         this.getChildren().add(titleText);
-        this.setPadding(new Insets(20, 0, 0, 20)); 
+        this.setPadding(new Insets(20, 0, 0, 20));
         this.setAlignment(Pos.BASELINE_LEFT); // Align the text to the Center
-    
+
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
 
         addButton = new Button("+"); // text displayed on add button
@@ -124,27 +128,23 @@ class Header extends VBox {
     }
 }
 
-
 /*
- *  APP GUI
+ * APP GUI
  */
-class AppFrame extends BorderPane{
+class AppFrame extends BorderPane {
 
     private Header header;
-    private recipeList recipeList;
+    private RecipeList RecipeList;
     private Button addButton;
-   
 
-    AppFrame()
-    {
+    AppFrame() {
         // Initialise the header Object
         header = new Header();
-      
 
-        // Create a recipeList Object to hold the Recipes
-        recipeList = new recipeList();
+        // Create a RecipeList Object to hold the Recipes
+        RecipeList = new RecipeList();
 
-        ScrollPane scroller = new ScrollPane(recipeList);
+        ScrollPane scroller = new ScrollPane(RecipeList);
         scroller.setFitToHeight(isCache());
         scroller.setFitToWidth(true);
 
@@ -152,32 +152,31 @@ class AppFrame extends BorderPane{
         this.setTop(header);
         // Add scroller to the centre of the BorderPane
         this.setCenter(scroller);
-        
+
         // Add footer to the bottom of the BorderPane
 
         // Initialise Button Variables through the getters in Footer
         addButton = header.getAddButton();
-      
+
         // Call Event Listeners for the Buttons
         addListeners();
 
-        recipeList.loadRecipes();
+        RecipeList.loadRecipes();
     }
 
-    public void addListeners()
-    {
+    public void addListeners() {
 
         // Add button functionality
         addButton.setOnAction(e -> {
             // Create a new Recipe
             Recipe Recipe = new Recipe();
-            // Add Recipe to recipeList
-            recipeList.getChildren().add(Recipe);
+            // Add Recipe to RecipeList
+            RecipeList.getChildren().add(Recipe);
             // New window appears and makes new page
             // ViewFrame() should populate with Recipe object data
-            
+
         });
-       
+
     }
 }
 
@@ -186,7 +185,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        // Setting the Layout of the Window- Should contain a Header, Footer and the recipeList
+        // Setting the Layout of the Window- Should contain a Header, Footer and the
+        // RecipeList
         AppFrame root = new AppFrame();
 
         // Set the title of the app
