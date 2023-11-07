@@ -12,22 +12,21 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MyCreationTest {
+    CSVHandler csv = new CSVHander();
     ChatGPT prompt = new ChatGpt();
     
+    // Tests if a valid output is given
     @Test
     void testValidInput() {
-        //Voice("Make dinner");
-        prompt.getGPTResponse("eggs")
-        assertEquals(1, 1);
+        assertTrue(prompt.getGPTResponse("eggs") != NULL);
     }
     
-
-   /*  @Test
+    // Test for Duplicates
+    @Test
     void testUpdate() {
-        Recipe spaghetti = new Recipe();
-        spaghetti.name = "spaghetti";
-        spaghetti.ingredient = "pasta";
-        Voice("make Dinner");
-        asserEquals(spaghetti, recipe.getRecipe("spaghetti"));
-    }*/
+        csv.writeRecipes("eggs");
+        csv.writeRecipes("eggs");
+
+        assertEquals(1 , csv.readRecipes().size());
+    }
 }
