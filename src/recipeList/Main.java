@@ -100,6 +100,7 @@ class recipeList extends VBox {
 class Header extends VBox {
 
     private Button addButton;
+    private Button createRecipeButton;
 
     Header() {
         this.setPrefSize(500, 100); // Size of the header
@@ -117,10 +118,20 @@ class Header extends VBox {
         addButton.setStyle(defaultButtonStyle); // styling the button
         this.getChildren().add(addButton);
         addButton.setAlignment(Pos.TOP_RIGHT);
+
+        //create recipe button
+        createRecipeButton = new Button("New Recipe"); // text displayed on add button
+        createRecipeButton.setStyle(defaultButtonStyle); // styling the button
+        this.getChildren().add(createRecipeButton);
+        createRecipeButton.setAlignment(Pos.TOP_RIGHT);
     }
 
     public Button getAddButton() {
         return addButton;
+    }
+
+    public Button getCreateRecipeButton() {
+        return createRecipeButton;
     }
 }
 
@@ -133,6 +144,7 @@ class AppFrame extends BorderPane{
     private Header header;
     private recipeList recipeList;
     private Button addButton;
+    private Button createRecipeButton;
    
 
     AppFrame()
@@ -157,6 +169,9 @@ class AppFrame extends BorderPane{
 
         // Initialise Button Variables through the getters in Footer
         addButton = header.getAddButton();
+
+        // Initialise Button Variables through the getters in Footer
+        createRecipeButton = header.getCreateRecipeButton();
       
         // Call Event Listeners for the Buttons
         addListeners();
@@ -177,7 +192,15 @@ class AppFrame extends BorderPane{
             // ViewFrame() should populate with Recipe object data
             
         });
-       
+
+        createRecipeButton.setOnAction(e -> {
+            try {
+                // Create a new Recipe
+                new SpecifyIngredientPage().start(new Stage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 }
 
