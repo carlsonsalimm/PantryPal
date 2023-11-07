@@ -21,6 +21,15 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
 }
 
+sourceSets {
+  main {
+    java {
+      srcDir 'src'
+      srcDir 'test'
+    }
+  }
+}
+
 test {
     useJUnitPlatform()
 }
