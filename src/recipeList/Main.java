@@ -33,6 +33,9 @@ import java.util.Comparator;
 
 import java.io.File;
 
+//Import Files
+import "./Recipe.java";
+
 class RecipeItem extends HBox {
 
 
@@ -47,7 +50,7 @@ class RecipeItem extends HBox {
         RecipeName = new TextField(); // create RecipeItem name text field
         RecipeName.setPrefSize(140, 20); // set size of text field
         RecipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
-       
+
         RecipeName.setPadding(new Insets(20, 0, 20, 10)); // adds some padding to the text field
         this.getChildren().add(RecipeName); // add textlabel to Recipe
          
@@ -81,9 +84,9 @@ class RecipeItem extends HBox {
 
 }
 
-class recipeList extends VBox {
+class RecipeList extends VBox {
 
-    recipeList() {
+    RecipeList() {
         this.setSpacing(5); // sets spacing between Recipes
         this.setPrefSize(500, 560);
         this.setStyle("-fx-background-color: #F0F8FF;");
@@ -94,10 +97,11 @@ class recipeList extends VBox {
         for(int i = 0; i < this.getChildren().size() ; i++){
             this.getChildren().removeIf(recipe -> recipe instanceof RecipeItem);
         }
+        CSVHandler recipes = new CSVHandler();
 
-        for(recipe : recipe.getRecipeName()){
+        for(Recipe recipe : recipes.getRecipeName()){
             RecipeItem Item = new RecipeItem();
-            recipe.getRecipeName().setText(recipe);
+            Item.getRecipeName().setText(recipe.getTitle());
             this.getChildren().add(Item);
         }
     }
@@ -115,9 +119,9 @@ class Header extends VBox {
         Text titleText = new Text("Recipe List"); // Text of the Header
         titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
         this.getChildren().add(titleText);
-        this.setPadding(new Insets(20, 0, 0, 20)); 
+        this.setPadding(new Insets(20, 0, 0, 20));
         this.setAlignment(Pos.BASELINE_LEFT); // Align the text to the Center
-    
+
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
 
         addButton = new Button("+"); // text displayed on add button
@@ -131,27 +135,25 @@ class Header extends VBox {
     }
 }
 
-
 /*
- *  APP GUI
+ * APP GUI
  */
-class AppFrame extends BorderPane{
+class AppFrame extends BorderPane {
 
     private Header header;
-    private recipeList recipeList;
+    private RecipeList RecipeList;
     private Button addButton;
     private Button viewButton;
 
-    AppFrame()
-    {
+    AppFrame() {
         // Initialise the header Object
         header = new Header();
         
 
-        // Create a recipeList Object to hold the Recipes
-        recipeList = new recipeList();
+        // Create a RecipeList Object to hold the Recipes
+        RecipeList = new RecipeList();
 
-        ScrollPane scroller = new ScrollPane(recipeList);
+        ScrollPane scroller = new ScrollPane(RecipeList);
         scroller.setFitToHeight(isCache());
         scroller.setFitToWidth(true);
 
@@ -159,7 +161,7 @@ class AppFrame extends BorderPane{
         this.setTop(header);
         // Add scroller to the centre of the BorderPane
         this.setCenter(scroller);
-        
+
         // Add footer to the bottom of the BorderPane
 
         // Initialise Button Variables through the getters in Footer
@@ -167,11 +169,10 @@ class AppFrame extends BorderPane{
         // Call Event Listeners for the Buttons
         addListeners();
 
-        recipeList.loadRecipes();
+        RecipeList.loadRecipes();
     }
 
-    public void addListeners()
-    {
+    public void addListeners() {
 
         // Add button functionality
         addButton.setOnAction(e -> {
@@ -191,7 +192,7 @@ class AppFrame extends BorderPane{
             prompt.show();
             
         });
-       
+
     }
 }
 
@@ -200,7 +201,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        // Setting the Layout of the Window- Should contain a Header, Footer and the recipeList
+        // Setting the Layout of the Window- Should contain a Header, Footer and the
+        // RecipeList
         AppFrame root = new AppFrame();
 
         // Set the title of the app
