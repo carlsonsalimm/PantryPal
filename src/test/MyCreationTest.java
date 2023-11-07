@@ -24,7 +24,7 @@ public class MyCreationTest {
     // Tests if a valid output is given
     @Test
     void testValidInput() throws IOException, InterruptedException, URISyntaxException {
-        String result = ChatGPT.getGPTResponse("eggs");
+        String result = ChatGPT.getGPTResponse("eggs").toString();
         assertTrue(result != null);
     }
     
