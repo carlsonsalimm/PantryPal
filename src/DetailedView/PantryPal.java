@@ -279,8 +279,8 @@ public class PantryPal extends Application {
         test.setTitle("New Title");
         test.setInstructions("avocado, blueberry, food \n 1) Do stuff \n 2) Do more stuff");
         // Setting the Layout of the Window- Should contain a Header, Footer and the TaskList
-        DetailedView newView = new DetailedView(test, this);
-        root = new Scene(new DetailedView(rootRecipe, this), 500, 600);
+        DetailedRecipePage newView = new DetailedRecipePage(test, this);
+        root = new Scene(new DetailedRecipePage(rootRecipe, this), 500, 600);
 
         // Set the title of the app
         primaryStage.setTitle("DetailedView Test");
