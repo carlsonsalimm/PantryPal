@@ -1,4 +1,4 @@
-package src.PantryPal;
+package PantryPal;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -27,17 +27,17 @@ class Header extends HBox {
         // set a default style for buttons - background color, font size, italics
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial";
         
-        ImageView backIcon = new ImageView(new Image("./src/icons/back.png"));
+        ImageView backIcon = new ImageView(new Image("./icons/back.png"));
         deleteButton = new Button(); // text displayed on delete contacts button
         deleteButton.setGraphic(backIcon);
         deleteButton.setStyle(defaultButtonStyle); // styling the button
 
-        ImageView saveIcon = new ImageView(new Image("./src/icons/save.png"));
+        ImageView saveIcon = new ImageView(new Image("./icons/save.png"));
         saveButton = new Button(); // text displayed on save contacts button
         saveButton.setGraphic(saveIcon);
         saveButton.setStyle(defaultButtonStyle); // styling the button
 
-        ImageView editIcon = new ImageView(new Image("./src/icons/edit.png"));
+        ImageView editIcon = new ImageView(new Image("./icons/edit.png"));
         editButton = new Button(); // text displayed on sort contacts button
         editButton.setGraphic(editIcon);
         editButton.setStyle(defaultButtonStyle); // styling the button
@@ -129,7 +129,12 @@ public class DetailedRecipePage extends BorderPane{
     {
         // Delete recipe and go back to RecipeListPage
         deleteButton.setOnAction(e -> {
-            deleteRecipe();
+            try {
+                deleteRecipe();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
         });
 
         // Toggle editing of ingredients & instructions
@@ -144,14 +149,18 @@ public class DetailedRecipePage extends BorderPane{
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+
         });
     }
 
-    private void exitWindow() {
+    private void exitWindow() throws IOException {
         // Go back to RecipeListPage
+        RecipeListPage temp = new RecipeListPage();
+        Main.setPage(temp);
+        // Main.callLoadMethod();
     }
 
-    private void deleteRecipe() {
+    private void deleteRecipe() throws IOException {
         exitWindow();
     }
 

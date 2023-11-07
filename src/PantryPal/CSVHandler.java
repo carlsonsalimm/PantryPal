@@ -1,7 +1,8 @@
-package src.PantryPal;
+package PantryPal;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,13 +14,13 @@ import java.util.List;
 public class CSVHandler {
     private static String fileName = "Recipes.csv";
 
-    public static List<Recipe> readRecipes() throws IOException{
+    public static List<Recipe> readRecipes() throws IOException {
 
         List<Recipe> recipes = new ArrayList<Recipe>();
         FileReader file; // Contents of file
         try {
             file = new FileReader(fileName);
-            BufferedReader buffer = new BufferedReader(file, 16384);
+            BufferedReader buffer = new BufferedReader(file);
             
             try {
                 String line = ""; // Reads line by line of file
@@ -28,13 +29,19 @@ public class CSVHandler {
                 Recipe recipe = new Recipe(tokens[0], tokens[1]);
                 recipes.add(recipe);
                 }
-
-                buffer.close();
-                file.close();
             } catch (Exception e) {
+                System.err.println("CSVHandler: reading recipes error");
             }
 
+            buffer.close();
+            file.close();
         } catch (FileNotFoundException e) {
+            File recipesCSV = new File(fileName);
+            try {
+                recipesCSV.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
 
         return recipes;
@@ -58,7 +65,12 @@ public class CSVHandler {
             fr.close();
             br.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Error loading recipes");
+            File recipesCSV = new File(fileName);
+            try {
+                recipesCSV.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
 
         // save the new/updated recipe

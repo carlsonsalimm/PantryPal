@@ -1,4 +1,4 @@
-package src.PantryPal;
+package PantryPal;
 
 public class Recipe {
     String title;
