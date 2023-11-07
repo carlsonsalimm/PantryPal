@@ -1,4 +1,4 @@
-package PantryPal;
+package edu.ucsd.cse110.lab2;
 
 import java.io.IOException;
 import java.util.List;
