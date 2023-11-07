@@ -33,29 +33,52 @@ import java.util.Comparator;
 
 import java.io.File;
 
-class Recipe extends HBox {
+class RecipeItem extends HBox {
 
 
-    // Recipe Information
+    // RecipeItem Information
     private TextField RecipeName;
-
-    // Task: add user information to Recipe()
-    Recipe() {
+    private Button viewButton;
+    // Task: add user information to RecipeItem()
+    RecipeItem() {
         this.setPrefSize(500, 40); // sets size of Recipe
         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of Recipe
         
-        RecipeName = new TextField(); // create Recipe name text field
+        RecipeName = new TextField(); // create RecipeItem name text field
         RecipeName.setPrefSize(140, 20); // set size of text field
         RecipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
        
         RecipeName.setPadding(new Insets(20, 0, 20, 10)); // adds some padding to the text field
         this.getChildren().add(RecipeName); // add textlabel to Recipe
          
+        String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
+
+        viewButton = new Button("View"); // text displayed on button
+        viewButton.setStyle(defaultButtonStyle); // styling the button
+        this.getChildren().add(viewButton);
+        //viewButton.setAlignment(Pos.CENTER_RIGHT);
+        viewButton.setPadding(new Insets(20,0,20,80));
+
+        viewButton.setOnAction(e -> {
+
+            Stage prompt = new Stage();
+
+            // CHANGE TO THEIR STAGE
+            AppFrame root = new AppFrame();
+
+            
+            // Create scene of mentioned size with the border pane
+            prompt.setScene(new Scene(root, 600, 700));
+            
+           
+            
+        });
     }
 
     public TextField getRecipeName() {
         return this.RecipeName;
     }
+
 }
 
 class recipeList extends VBox {
@@ -67,32 +90,16 @@ class recipeList extends VBox {
     }
 
     public void loadRecipes() {
-        FileReader file; // Contents of file
-        try {
- 
-            file = new FileReader("Recipes.csv");
- 
-            BufferedReader buffer = new BufferedReader(file, 16384);
- 
-            String line = ""; // Reads line by line of file
-            try{line = buffer.readLine();
-            }catch(Exception e){}
 
-    
-            while(line != null){ // Sets a new task per line
-                Recipe recipe = new Recipe();
-                recipe.getRecipeName().setText(line);
-                this.getChildren().add(recipe);
-                try{line = buffer.readLine();}
-                catch(Exception e){}  
-            }
-            
-        try{
-            buffer.close();
-            file.close();
-            } catch(Exception e){}
+        for(int i = 0; i < this.getChildren().size() ; i++){
+            this.getChildren().removeIf(recipe -> recipe instanceof RecipeItem);
         }
-         catch (FileNotFoundException e) {}
+
+        for(recipe : recipe.getRecipeName()){
+            RecipeItem Item = new RecipeItem();
+            recipe.getRecipeName().setText(recipe);
+            this.getChildren().add(Item);
+        }
     }
 
 }
@@ -133,13 +140,13 @@ class AppFrame extends BorderPane{
     private Header header;
     private recipeList recipeList;
     private Button addButton;
-   
+    private Button viewButton;
 
     AppFrame()
     {
         // Initialise the header Object
         header = new Header();
-      
+        
 
         // Create a recipeList Object to hold the Recipes
         recipeList = new recipeList();
@@ -157,7 +164,6 @@ class AppFrame extends BorderPane{
 
         // Initialise Button Variables through the getters in Footer
         addButton = header.getAddButton();
-      
         // Call Event Listeners for the Buttons
         addListeners();
 
@@ -169,12 +175,20 @@ class AppFrame extends BorderPane{
 
         // Add button functionality
         addButton.setOnAction(e -> {
-            // Create a new Recipe
-            Recipe Recipe = new Recipe();
-            // Add Recipe to recipeList
-            recipeList.getChildren().add(Recipe);
-            // New window appears and makes new page
-            // ViewFrame() should populate with Recipe object data
+
+            Stage prompt = new Stage();
+
+            // CHANGE TO THEIR STAGE
+            AppFrame root = new AppFrame();
+
+            // Set the title of the app
+            prompt.setTitle("Prompt");
+            // Create scene of mentioned size with the border pane
+            prompt.setScene(new Scene(root, 600, 700));
+            // Make window non-resizable
+            prompt.setResizable(false);
+            // Show the app
+            prompt.show();
             
         });
        
@@ -190,7 +204,7 @@ public class Main extends Application {
         AppFrame root = new AppFrame();
 
         // Set the title of the app
-        primaryStage.setTitle("Recipe List");
+        primaryStage.setTitle("RecipeItem List");
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
         // Make window non-resizable
