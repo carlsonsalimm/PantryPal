@@ -33,184 +33,150 @@ import java.util.Comparator;
 
 import java.io.File;
 
-class Recipe extends HBox {
+// class Recipe extends HBox {
 
+//     // Recipe Information
+//     private TextField RecipeName;
 
-    // Recipe Information
-    private TextField RecipeName;
+//     // Task: add user information to Recipe()
+//     Recipe() {
+//         this.setPrefSize(500, 40); // sets size of Recipe
+//         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background
+//                                                                                                      // color of Recipe
 
-    // Task: add user information to Recipe()
-    Recipe() {
-        this.setPrefSize(500, 40); // sets size of Recipe
-        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of Recipe
-        
-        RecipeName = new TextField(); // create Recipe name text field
-        RecipeName.setPrefSize(140, 20); // set size of text field
-        RecipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
-       
-        RecipeName.setPadding(new Insets(20, 0, 20, 10)); // adds some padding to the text field
-        this.getChildren().add(RecipeName); // add textlabel to Recipe
-         
-    }
+//         RecipeName = new TextField(); // create Recipe name text field
+//         RecipeName.setPrefSize(140, 20); // set size of text field
+//         RecipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
 
-    public TextField getRecipeName() {
-        return this.RecipeName;
-    }
-}
+//         RecipeName.setPadding(new Insets(20, 0, 20, 10)); // adds some padding to the text field
+//         this.getChildren().add(RecipeName); // add textlabel to Recipe
 
-class recipeList extends VBox {
+//     }
 
-    recipeList() {
-        this.setSpacing(5); // sets spacing between Recipes
-        this.setPrefSize(500, 560);
-        this.setStyle("-fx-background-color: #F0F8FF;");
-    }
+//     public TextField getRecipeName() {
+//         return this.RecipeName;
+//     }
+// }
 
-    public void loadRecipes() {
-        FileReader file; // Contents of file
-        try {
- 
-            file = new FileReader("Recipes.csv");
- 
-            BufferedReader buffer = new BufferedReader(file, 16384);
- 
-            String line = ""; // Reads line by line of file
-            try{line = buffer.readLine();
-            }catch(Exception e){}
+// class recipeList extends VBox {
 
-    
-            while(line != null){ // Sets a new task per line
-                Recipe recipe = new Recipe();
-                recipe.getRecipeName().setText(line);
-                this.getChildren().add(recipe);
-                try{line = buffer.readLine();}
-                catch(Exception e){}  
-            }
-            
-        try{
-            buffer.close();
-            file.close();
-            } catch(Exception e){}
-        }
-         catch (FileNotFoundException e) {}
-    }
+//     recipeList() {
+//         this.setSpacing(5); // sets spacing between Recipes
+//         this.setPrefSize(500, 560);
+//         this.setStyle("-fx-background-color: #F0F8FF;");
+//     }
 
-}
+//     public void loadRecipes() {
+//         FileReader file; // Contents of file
+//         try {
 
-class Header extends VBox {
+//             file = new FileReader("Recipes.csv");
 
-    private Button addButton;
-    private Button createRecipeButton;
+//             BufferedReader buffer = new BufferedReader(file, 16384);
 
-    Header() {
-        this.setPrefSize(500, 100); // Size of the header
-        this.setStyle("-fx-background-color: #F0F8FF;");
+//             String line = ""; // Reads line by line of file
+//             try {
+//                 line = buffer.readLine();
+//             } catch (Exception e) {
+//             }
 
-        Text titleText = new Text("Recipe List"); // Text of the Header
-        titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
-        this.getChildren().add(titleText);
-        this.setPadding(new Insets(20, 0, 0, 20)); 
-        this.setAlignment(Pos.BASELINE_LEFT); // Align the text to the Center
-    
-        String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
+//             while (line != null) { // Sets a new task per line
+//                 Recipe recipe = new Recipe();
+//                 recipe.getRecipeName().setText(line);
+//                 this.getChildren().add(recipe);
+//                 try {
+//                     line = buffer.readLine();
+//                 } catch (Exception e) {
+//                 }
+//             }
 
-        addButton = new Button("+"); // text displayed on add button
-        addButton.setStyle(defaultButtonStyle); // styling the button
-        this.getChildren().add(addButton);
-        addButton.setAlignment(Pos.TOP_RIGHT);
+//             try {
+//                 buffer.close();
+//                 file.close();
+//             } catch (Exception e) {
+//             }
+//         } catch (FileNotFoundException e) {
+//         }
+//     }
 
-        //create recipe button
-        createRecipeButton = new Button("New Recipe"); // text displayed on add button
-        createRecipeButton.setStyle(defaultButtonStyle); // styling the button
-        this.getChildren().add(createRecipeButton);
-        createRecipeButton.setAlignment(Pos.TOP_RIGHT);
-    }
+// }
 
-    public Button getAddButton() {
-        return addButton;
-    }
+// class Header extends VBox {
 
-    public Button getCreateRecipeButton() {
-        return createRecipeButton;
-    }
-}
+//     private Button addButton;
 
+//     Header() {
+//         this.setPrefSize(500, 100); // Size of the header
+//         this.setStyle("-fx-background-color: #F0F8FF;");
 
-/*
- *  APP GUI
- */
-class AppFrame extends BorderPane{
+//         Text titleText = new Text("Recipe List"); // Text of the Header
+//         titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
+//         this.getChildren().add(titleText);
+//         this.setPadding(new Insets(20, 0, 0, 20));
+//         this.setAlignment(Pos.BASELINE_LEFT); // Align the text to the Center
 
-    private Header header;
-    private recipeList recipeList;
-    private Button addButton;
-    private Button createRecipeButton;
-   
+//         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
 
-    AppFrame()
-    {
-        // Initialise the header Object
-        header = new Header();
-      
+//         addButton = new Button("+"); // text displayed on add button
+//         addButton.setStyle(defaultButtonStyle); // styling the button
+//         this.getChildren().add(addButton);
+//         addButton.setAlignment(Pos.TOP_RIGHT);
+//     }
 
-        // Create a recipeList Object to hold the Recipes
-        recipeList = new recipeList();
+//     public Button getAddButton() {
+//         return addButton;
+//     }
+// }
 
-        ScrollPane scroller = new ScrollPane(recipeList);
-        scroller.setFitToHeight(isCache());
-        scroller.setFitToWidth(true);
+// /*
+//  * APP GUI
+//  */
+// class AppFrame extends BorderPane {
 
-        // Add header to the top of the BorderPane
-        this.setTop(header);
-        // Add scroller to the centre of the BorderPane
-        this.setCenter(scroller);
-        
-        // Add footer to the bottom of the BorderPane
+//     private Header header;
+//     private recipeList recipeList;
+//     private Button addButton;
+//     private SpecifyIngredientPage specifyIngredientPage;
 
-        // Initialise Button Variables through the getters in Footer
-        addButton = header.getAddButton();
+//     AppFrame() {
+//         // Initialise the header Object
+//         header = new Header();
 
-        // Initialise Button Variables through the getters in Footer
-        createRecipeButton = header.getCreateRecipeButton();
-      
-        // Call Event Listeners for the Buttons
-        addListeners();
+//         // Create a recipeList Object to hold the Recipes
+//         recipeList = new recipeList();
 
-        recipeList.loadRecipes();
-    }
+//         // create a specify ingredient page
+//         specifyIngredientPage = new SpecifyIngredientPage();
 
-    public void addListeners()
-    {
+//         recipeList.loadRecipes();
 
-        // Add button functionality
-        addButton.setOnAction(e -> {
-            // Create a new Recipe
-            Recipe Recipe = new Recipe();
-            // Add Recipe to recipeList
-            recipeList.getChildren().add(Recipe);
-            // New window appears and makes new page
-            // ViewFrame() should populate with Recipe object data
-            
-        });
+//     }
 
-        createRecipeButton.setOnAction(e -> {
-            try {
-                // Create a new Recipe
-                new SpecifyIngredientPage().start(new Stage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-    }
-}
+//     public void addListeners() {
+
+//         // Add button functionality
+//         addButton.setOnAction(e -> {
+
+//             // Create a new Recipe
+//             Recipe Recipe = new Recipe();
+//             // Add Recipe to recipeList
+//             recipeList.getChildren().add(Recipe);
+//             // New window appears and makes new page
+//             // ViewFrame() should populate with Recipe object data
+
+//         });
+
+//     }
+// }
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        // Setting the Layout of the Window- Should contain a Header, Footer and the recipeList
-        AppFrame root = new AppFrame();
+        // Setting the Layout of the Window- Should contain a Header, Footer and the
+        // recipeList
+        SpecifyIngredientPage root = new SpecifyIngredientPage();
 
         // Set the title of the app
         primaryStage.setTitle("Recipe List");
