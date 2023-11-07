@@ -1,4 +1,4 @@
-package test;
+package edu.ucsd.cse110.lab2;
 
 import PantryPal.ChatGPT;
 import PantryPal.CSVHandler;
