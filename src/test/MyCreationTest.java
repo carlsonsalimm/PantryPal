@@ -1,5 +1,4 @@
-// Replace with Our files
-//package test.java.edu.ucsd.cse110.project;
+package PantryPal;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,11 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MyCreationTest {
-    //private Recipe recipe;
+    ChatGPT prompt = new ChatGpt();
     
     @Test
     void testValidInput() {
         //Voice("Make dinner");
+        prompt.getGPTResponse("eggs")
         assertEquals(1, 1);
     }
     
