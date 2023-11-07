@@ -1,4 +1,4 @@
-package src.PantryPal;
+package PantryPal;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -26,18 +26,18 @@ class Header extends HBox {
 
         // set a default style for buttons - background color, font size, italics
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial";
-        
-        ImageView backIcon = new ImageView(new Image("./src/icons/back.png"));
+
+        ImageView backIcon = new ImageView(new Image("./icons/back.png"));
         deleteButton = new Button(); // text displayed on delete contacts button
         deleteButton.setGraphic(backIcon);
         deleteButton.setStyle(defaultButtonStyle); // styling the button
 
-        ImageView saveIcon = new ImageView(new Image("./src/icons/save.png"));
+        ImageView saveIcon = new ImageView(new Image("./icons/save.png"));
         saveButton = new Button(); // text displayed on save contacts button
         saveButton.setGraphic(saveIcon);
         saveButton.setStyle(defaultButtonStyle); // styling the button
 
-        ImageView editIcon = new ImageView(new Image("./src/icons/edit.png"));
+        ImageView editIcon = new ImageView(new Image("./icons/edit.png"));
         editButton = new Button(); // text displayed on sort contacts button
         editButton.setGraphic(editIcon);
         editButton.setStyle(defaultButtonStyle); // styling the button
@@ -71,7 +71,7 @@ class Header extends HBox {
     }
 }
 
-public class DetailedRecipePage extends BorderPane{
+public class DetailedRecipePage extends BorderPane {
 
     // private RecipeListPage recipeListPage;
     // private PantryPal pantryPal;
@@ -91,8 +91,8 @@ public class DetailedRecipePage extends BorderPane{
 
     // private Boolean editing = false;
 
-
-    // Assumes that Recipe class has at least TextFields for title, ingredients, and instructions
+    // Assumes that Recipe class has at least TextFields for title, ingredients, and
+    // instructions
     DetailedRecipePage(Recipe recipe) {
         header = new Header();
 
@@ -125,8 +125,7 @@ public class DetailedRecipePage extends BorderPane{
         this.setCenter(container);
     }
 
-    public void addListeners(Recipe recipe)
-    {
+    public void addListeners(Recipe recipe) {
         // Delete recipe and go back to RecipeListPage
         deleteButton.setOnAction(e -> {
             deleteRecipe();
@@ -156,13 +155,13 @@ public class DetailedRecipePage extends BorderPane{
     }
 
     // private void editRecipe() {
-    //     if (this.editing) {
-    //         this.instructions.setEditable(false);
-    //         this.editing = false; 
-    //     } else {
-    //         this.instructions.setEditable(true);
-    //         this.editing = true; 
-    //     }
+    // if (this.editing) {
+    // this.instructions.setEditable(false);
+    // this.editing = false;
+    // } else {
+    // this.instructions.setEditable(true);
+    // this.editing = true;
+    // }
     // }
 
     private void saveRecipe(Recipe recipe) throws IOException {
@@ -171,4 +170,3 @@ public class DetailedRecipePage extends BorderPane{
         exitWindow();
     }
 }
-

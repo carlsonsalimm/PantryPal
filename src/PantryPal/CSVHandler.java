@@ -1,6 +1,7 @@
-package src.PantryPal;
+package PantryPal;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -13,20 +14,20 @@ import java.util.List;
 public class CSVHandler {
     private static String fileName = "Recipes.csv";
 
-    public static List<Recipe> readRecipes() throws IOException{
+    public static List<Recipe> readRecipes() throws IOException {
 
         List<Recipe> recipes = new ArrayList<Recipe>();
         FileReader file; // Contents of file
         try {
             file = new FileReader(fileName);
             BufferedReader buffer = new BufferedReader(file, 16384);
-            
+
             try {
                 String line = ""; // Reads line by line of file
                 while ((line = buffer.readLine()) != null) { // Sets a new task per line
-                String[] tokens = line.split(";");
-                Recipe recipe = new Recipe(tokens[0], tokens[1]);
-                recipes.add(recipe);
+                    String[] tokens = line.split(";");
+                    Recipe recipe = new Recipe(tokens[0], tokens[1]);
+                    recipes.add(recipe);
                 }
 
                 buffer.close();
@@ -35,6 +36,8 @@ public class CSVHandler {
             }
 
         } catch (FileNotFoundException e) {
+            File recipesCSV = new File(fileName);
+            recipesCSV.createNewFile();
         }
 
         return recipes;
@@ -71,7 +74,7 @@ public class CSVHandler {
                 fw.close();
             } catch (Exception e) {
                 System.err.println("Error saving recipe");
-            } 
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package recipeList;
+package PantryPal;
 
 import javafx.application.Application;
 import javafx.scene.Parent;
@@ -31,36 +31,32 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 import java.util.Comparator;
 
-import java.io.File;
-
-//Import Files
-import "./Recipe.java";
-
 class RecipeItem extends HBox {
-
 
     // RecipeItem Information
     private TextField RecipeName;
     private Button viewButton;
+
     // Task: add user information to RecipeItem()
     RecipeItem() {
         this.setPrefSize(500, 40); // sets size of Recipe
-        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of Recipe
-        
+        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background
+                                                                                                     // color of Recipe
+
         RecipeName = new TextField(); // create RecipeItem name text field
         RecipeName.setPrefSize(140, 20); // set size of text field
         RecipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
 
         RecipeName.setPadding(new Insets(20, 0, 20, 10)); // adds some padding to the text field
         this.getChildren().add(RecipeName); // add textlabel to Recipe
-         
+
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
 
         viewButton = new Button("View"); // text displayed on button
         viewButton.setStyle(defaultButtonStyle); // styling the button
         this.getChildren().add(viewButton);
-        //viewButton.setAlignment(Pos.CENTER_RIGHT);
-        viewButton.setPadding(new Insets(20,0,20,80));
+        // viewButton.setAlignment(Pos.CENTER_RIGHT);
+        viewButton.setPadding(new Insets(20, 0, 20, 80));
 
         viewButton.setOnAction(e -> {
 
@@ -69,12 +65,9 @@ class RecipeItem extends HBox {
             // CHANGE TO THEIR STAGE
             AppFrame root = new AppFrame();
 
-            
             // Create scene of mentioned size with the border pane
             prompt.setScene(new Scene(root, 600, 700));
-            
-           
-            
+
         });
     }
 
@@ -92,14 +85,13 @@ class RecipeList extends VBox {
         this.setStyle("-fx-background-color: #F0F8FF;");
     }
 
-    public void loadRecipes() {
+    public void loadRecipes() throws IOException {
 
-        for(int i = 0; i < this.getChildren().size() ; i++){
+        for (int i = 0; i < this.getChildren().size(); i++) {
             this.getChildren().removeIf(recipe -> recipe instanceof RecipeItem);
         }
-        CSVHandler recipes = new CSVHandler();
 
-        for(Recipe recipe : recipes.getRecipeName()){
+        for (Recipe recipe : CSVHandler.readRecipes()) {
             RecipeItem Item = new RecipeItem();
             Item.getRecipeName().setText(recipe.getTitle());
             this.getChildren().add(Item);
@@ -148,7 +140,6 @@ class AppFrame extends BorderPane {
     AppFrame() {
         // Initialise the header Object
         header = new Header();
-        
 
         // Create a RecipeList Object to hold the Recipes
         RecipeList = new RecipeList();
@@ -190,13 +181,13 @@ class AppFrame extends BorderPane {
             prompt.setResizable(false);
             // Show the app
             prompt.show();
-            
+
         });
 
     }
 }
 
-public class Main extends Application {
+public class RecipeListPage extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
