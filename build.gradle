@@ -10,6 +10,12 @@ repositories {
     jcenter()
 }
 
+java{
+    toolchain{
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 dependencies {
     // JavaFX dependencies
     implementation 'org.openjfx:javafx-base:16.0.2'
@@ -20,13 +26,13 @@ dependencies {
     implementation 'org.json:json:20210307'
 
     // JUnit dependencies
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 
     // Add any other dependencies your project may need
 }
 
 application {
-    mainClassName = 'your.package.name.Main' // Replace with your main class
+    mainClassName = 'project.Main' // Replace with your main class
 }
 
 javafx {
