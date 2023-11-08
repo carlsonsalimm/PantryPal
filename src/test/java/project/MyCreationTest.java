@@ -1,6 +1,4 @@
-package edu.ucsd.cse110.lab2;
-
-
+package project;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;

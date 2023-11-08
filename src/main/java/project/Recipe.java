@@ -1,4 +1,4 @@
-package edu.ucsd.cse110.lab2;
+package project;
 
 public class Recipe {
     String title;
