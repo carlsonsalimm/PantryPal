@@ -1,4 +1,4 @@
-package PantryPal;
+package project;
 import java.io.*;
 import java.net.*;
 import org.json.*;

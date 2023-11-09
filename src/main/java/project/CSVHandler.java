@@ -1,4 +1,4 @@
-package PantryPal;
+package project;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

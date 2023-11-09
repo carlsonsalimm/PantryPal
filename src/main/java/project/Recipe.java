@@ -1,4 +1,4 @@
-package PantryPal;
+package project;
 
 public class Recipe {
     String title;
