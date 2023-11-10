@@ -22,7 +22,7 @@ dependencies {
     implementation 'org.openjfx:javafx-fxml:16.0.2'
 
     // org.json dependency
-    implementation 'org.json:json:20210307'
+    implementation 'org.json:json:20230227'
 
     // JUnit dependencies
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
