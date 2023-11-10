@@ -32,17 +32,20 @@ class Header extends HBox {
         // set a default style for buttons - background color, font size, italics
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial";
 
-        ImageView backIcon = new ImageView(new Image(DetailedRecipePage.class.getResource("/icons/back.png").toString()));
+        ImageView backIcon = new ImageView(
+                new Image(DetailedRecipePage.class.getResource("/icons/back.png").toString()));
         deleteButton = new Button(); // text displayed on delete contacts button
         deleteButton.setGraphic(backIcon);
         deleteButton.setStyle(defaultButtonStyle); // styling the button
 
-        ImageView saveIcon = new ImageView(new Image(DetailedRecipePage.class.getResource("/icons/save.png").toString()));
+        ImageView saveIcon = new ImageView(
+                new Image(DetailedRecipePage.class.getResource("/icons/save.png").toString()));
         saveButton = new Button(); // text displayed on save contacts button
         saveButton.setGraphic(saveIcon);
         saveButton.setStyle(defaultButtonStyle); // styling the button
 
-        ImageView editIcon = new ImageView(new Image(DetailedRecipePage.class.getResource("/icons/edit.png").toString()));
+        ImageView editIcon = new ImageView(
+                new Image(DetailedRecipePage.class.getResource("/icons/edit.png").toString()));
         editButton = new Button(); // text displayed on sort contacts button
         editButton.setGraphic(editIcon);
         editButton.setStyle(defaultButtonStyle); // styling the button
@@ -94,7 +97,7 @@ public class DetailedRecipePage extends BorderPane {
     private TextField title = new TextField();
     private TextField instructions = new TextField(); // includes ingredients
 
-    // private Boolean editing = false;
+    private Boolean editing = false;
 
     // Assumes that Recipe class has at least TextFields for title, ingredients, and
     // instructions
@@ -136,7 +139,6 @@ public class DetailedRecipePage extends BorderPane {
             try {
                 deleteRecipe();
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         });
@@ -161,7 +163,6 @@ public class DetailedRecipePage extends BorderPane {
         // Go back to RecipeListPage
         RecipeListPage temp = new RecipeListPage();
         Main.setPage(temp);
-        // Main.callLoadMethod();
     }
 
     private void deleteRecipe() throws IOException {
@@ -169,13 +170,13 @@ public class DetailedRecipePage extends BorderPane {
     }
 
     // private void editRecipe() {
-    // if (this.editing) {
-    // this.instructions.setEditable(false);
-    // this.editing = false;
-    // } else {
-    // this.instructions.setEditable(true);
-    // this.editing = true;
-    // }
+    //     if (this.editing) {
+    //         this.instructions.setEditable(false);
+    //         this.editing = false;
+    //     } else {
+    //         this.instructions.setEditable(true);
+    //         this.editing = true;
+    //     }
     // }
 
     private void saveRecipe(Recipe recipe) throws IOException {

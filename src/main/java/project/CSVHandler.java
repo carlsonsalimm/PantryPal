@@ -26,7 +26,7 @@ public class CSVHandler {
                 String line = ""; // Reads line by line of file
                 while ((line = buffer.readLine()) != null) { // Sets a new task per line
                 String[] tokens = line.split(";");
-                Recipe recipe = new Recipe(tokens[0], tokens[1]);
+                Recipe recipe = new Recipe(tokens[0], tokens[1].replace("\\n", "\n"));
                 recipes.add(recipe);
                 }
             } catch (Exception e) {
@@ -58,7 +58,7 @@ public class CSVHandler {
             while (br.ready()) {
                 next = br.readLine();
                 String[] tokens = next.split(";");
-                if (tokens[0].trim().equals(recipe.getTitle()) && tokens[1].trim().equals(recipe.getInstructions())) {
+                if (tokens[0].trim().equals(recipe.getTitle().trim()) && tokens[1].trim().replace("\\n", "\n").equals(recipe.getInstructions())) {
                     recipeExists = true;
                 }
             }
@@ -78,7 +78,7 @@ public class CSVHandler {
             try {
                 String oldFile = Files.readString(Paths.get(fileName));
                 FileWriter fw = new FileWriter(fileName);
-                fw.write(recipe.getTitle() + ";" + recipe.getInstructions() + "\r\n");
+                fw.write(recipe.getTitle().trim() + ";" + recipe.getInstructions().trim().replace("\n", "\\n") + "\r\n");
                 fw.append(oldFile);
                 fw.close();
             } catch (Exception e) {
