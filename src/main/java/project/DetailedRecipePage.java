@@ -26,17 +26,20 @@ class Header extends HBox {
         // set a default style for buttons - background color, font size, italics
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial";
         
-        ImageView backIcon = new ImageView(new Image("./icons/back.png"));
+        //ImageView backIcon = new ImageView(new Image("./icons/back.png"));
+        ImageView backIcon = new ImageView(new Image("file:///Users/arthurandersen/Documents/CSE110/Final_Project/cse-110-project-team-31/src/main/java/project/icons/back.png"));
         deleteButton = new Button(); // text displayed on delete contacts button
         deleteButton.setGraphic(backIcon);
         deleteButton.setStyle(defaultButtonStyle); // styling the button
 
-        ImageView saveIcon = new ImageView(new Image("./icons/save.png"));
+        //ImageView saveIcon = new ImageView(new Image("./icons/save.png"));
+        ImageView saveIcon = new ImageView(new Image("file:///Users/arthurandersen/Documents/CSE110/Final_Project/cse-110-project-team-31/src/main/java/project/icons/save.png"));
         saveButton = new Button(); // text displayed on save contacts button
         saveButton.setGraphic(saveIcon);
         saveButton.setStyle(defaultButtonStyle); // styling the button
 
-        ImageView editIcon = new ImageView(new Image("./icons/edit.png"));
+        //ImageView editIcon = new ImageView(new Image("./icons/edit.png"));
+        ImageView editIcon = new ImageView(new Image("file:///Users/arthurandersen/Documents/CSE110/Final_Project/cse-110-project-team-31/src/main/java/project/icons/edit.png"));
         editButton = new Button(); // text displayed on sort contacts button
         editButton.setGraphic(editIcon);
         editButton.setStyle(defaultButtonStyle); // styling the button

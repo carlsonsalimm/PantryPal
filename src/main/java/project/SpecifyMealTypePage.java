@@ -13,19 +13,13 @@ import java.io.IOException;
 
 import javax.sound.sampled.*;
 
-// import org.junit.platform.reporting.shadow.org.opentest4j.reporting.events.core.Sources;
-
-public class SpecifyIngredientPage extends BorderPane {
-
-    private AudioRecording recordButton;
+public class SpecifyMealTypePage extends BorderPane {
     
-    //Constructor for Specify Ingredient Page
-    SpecifyIngredientPage(String mealType) {
-        recordButton = new AudioRecording(mealType);
+    private AudioRecording recordButton;
+
+    SpecifyMealTypePage() {
+        recordButton = new AudioRecording();
 
         this.setCenter(recordButton);
     }
-
 }
-
-
