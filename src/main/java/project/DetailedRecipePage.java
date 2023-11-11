@@ -137,7 +137,7 @@ public class DetailedRecipePage extends BorderPane {
         // Delete recipe and go back to RecipeListPage
         deleteButton.setOnAction(e -> {
             try {
-                deleteRecipe();
+                deleteRecipe(recipe);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -165,18 +165,19 @@ public class DetailedRecipePage extends BorderPane {
         Main.setPage(temp);
     }
 
-    private void deleteRecipe() throws IOException {
+    private void deleteRecipe(Recipe recipe) throws IOException {
+        CSVHandler.deleteRecipe(recipe);
         exitWindow();
     }
 
     // private void editRecipe() {
-    //     if (this.editing) {
-    //         this.instructions.setEditable(false);
-    //         this.editing = false;
-    //     } else {
-    //         this.instructions.setEditable(true);
-    //         this.editing = true;
-    //     }
+    // if (this.editing) {
+    // this.instructions.setEditable(false);
+    // this.editing = false;
+    // } else {
+    // this.instructions.setEditable(true);
+    // this.editing = true;
+    // }
     // }
 
     private void saveRecipe(Recipe recipe) throws IOException {

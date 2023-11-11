@@ -21,15 +21,16 @@ public class CSVHandler {
         try {
             file = new FileReader(fileName);
             BufferedReader buffer = new BufferedReader(file);
-            
+
             try {
                 String line = ""; // Reads line by line of file
                 while ((line = buffer.readLine()) != null) { // Sets a new task per line
-                String[] tokens = line.split(";");
-                Recipe recipe = new Recipe(tokens[0], tokens[1].replace("\\n", "\n"));
-                recipes.add(recipe);
+                    String[] tokens = line.split(";");
+                    Recipe recipe = new Recipe(tokens[0], tokens[1].replace("\\n", "\n"));
+                    recipes.add(recipe);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 System.err.println("CSVHandler: reading recipes error");
             }
 
@@ -58,7 +59,8 @@ public class CSVHandler {
             while (br.ready()) {
                 next = br.readLine();
                 String[] tokens = next.split(";");
-                if (tokens[0].trim().equals(recipe.getTitle().trim()) && tokens[1].trim().replace("\\n", "\n").equals(recipe.getInstructions())) {
+                if (tokens[0].trim().equals(recipe.getTitle().trim())
+                        && tokens[1].trim().replace("\\n", "\n").equals(recipe.getInstructions())) {
                     recipeExists = true;
                 }
             }
@@ -78,12 +80,36 @@ public class CSVHandler {
             try {
                 String oldFile = Files.readString(Paths.get(fileName));
                 FileWriter fw = new FileWriter(fileName);
-                fw.write(recipe.getTitle().trim() + ";" + recipe.getInstructions().trim().replace("\n", "\\n") + "\r\n");
+                fw.write(
+                        recipe.getTitle().trim() + ";" + recipe.getInstructions().trim().replace("\n", "\\n") + "\r\n");
                 fw.append(oldFile);
                 fw.close();
             } catch (Exception e) {
                 System.err.println("Error saving recipe");
-            } 
+            }
+        }
+    }
+
+    public static void deleteRecipe(Recipe recipe) throws IOException {
+        List<Recipe> recipes = readRecipes(); // Read existing recipes
+
+        // Find and remove the recipe to be deleted
+        for (Recipe r : recipes) {
+            if (r.getTitle().equals(recipe.getTitle()) && r.getInstructions().equals(recipe.getInstructions())) {
+                recipes.remove(r);
+                break; // Stop iterating once the recipe is found and removed
+            }
+        }
+
+        // Write the updated list of recipes back to the CSV file
+        try {
+            FileWriter fw = new FileWriter(fileName);
+            for (Recipe r : recipes) {
+                fw.write(r.getTitle().trim() + ";" + r.getInstructions().trim().replace("\n", "\\n") + "\r\n");
+            }
+            fw.close();
+        } catch (Exception e) {
+            System.err.println("Error deleting recipe");
         }
     }
 }
