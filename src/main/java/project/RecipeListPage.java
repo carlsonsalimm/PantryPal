@@ -16,24 +16,41 @@ import javafx.scene.text.*;
  * Has add button UI that redirects to SpecifyIngredientsPage
  */
 class RecipeListHeader extends HBox {
+    private Label title;
     private Button addButton;
+    private BorderPane pane;
+    private StackPane titleContainer;
+    private StackPane addContainer;
 
     RecipeListHeader() {
-        this.setPrefSize(600, 100); // Size of the header
+        this.setPrefSize(600, 70); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
+        pane = new BorderPane();
+        pane.setPrefSize(550, 40); // sets size of Recipe
+        pane.setStyle(" -fx-background-color:E1EAF3; -fx-background-radius: 5; -fx-font-weight: bold;"); // sets background
 
-        Text titleText = new Text("Recipe List"); // Text of the Header
-        titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
-        this.getChildren().add(titleText);
-        this.setPadding(new Insets(20, 0, 0, 20));
-        this.setAlignment(Pos.BASELINE_LEFT); // Align the text to the Center
+        title = new Label("My Recipes"); // Text of the Header
+        
+        title.setStyle("-fx-font-weight: bold; -fx-border-width: 1; -fx-border-color: #BCBCBC; -fx-font-size: 20;");
+        title.setPrefSize(475, 40); // sets size of Recipe
+        title.setPadding(new Insets(0,10,0,20));
+        title.setTextAlignment(TextAlignment.CENTER);
 
-        String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
-
+        String defaultButtonStyle = "-fx-border-color: #BCBCBC; -fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
+        //String defaultButtonStyle = "-fx-font-style: italic; -fx-border-color: #FFFFFF; -fx-border-weight: 1; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
+       
         addButton = new Button("+"); // text displayed on add button
         addButton.setStyle(defaultButtonStyle); // styling the button
-        this.getChildren().add(addButton);
-        addButton.setAlignment(Pos.TOP_RIGHT);
+
+        titleContainer = new StackPane(title);
+        StackPane.setMargin(title, new Insets(0, 10, 0, 0));
+
+        addContainer = new StackPane(addButton);
+        StackPane.setMargin(addButton, new Insets(0, 10, 0, 0));
+
+        pane.setLeft(titleContainer);
+        pane.setRight(addContainer);
+        this.getChildren().add(pane);
     }
 
     public Button getAddButton() {
@@ -46,35 +63,35 @@ class RecipeItem extends HBox {
     private Label recipeName;
     private Button detailedViewButton;
     private BorderPane pane;
+    private StackPane viewContainer;
 
     RecipeItem(Recipe recipe) {
         this.recipe = recipe;
         pane = new BorderPane();
-        pane.setPrefSize(600, 40); // sets size of Recipe
-        this.setStyle("-fx-border-color: #BCBCBC; -fx-border-width: 1; -fx-font-weight: bold;"); // sets background
+        pane.setPrefSize(550, 40); // sets size of Recipe
+        pane.setStyle(" -fx-background-color:E1EAF3; -fx-background-radius: 5; -fx-font-weight: bold;"); // sets background
 
-        
-        
+
         recipeName = new Label(); // create RecipeItem name text field
-        recipeName.setPrefSize(550, 40); // sets size of Recipe
-       
+        recipeName.setPrefSize(475, 40); // sets size of Recipe
         recipeName.setText(this.recipe.getTitle());
-        recipeName.setPadding(new Insets(0,20,0,20));
+        recipeName.setPadding(new Insets(0,10,0,20));
         recipeName.setTextAlignment(TextAlignment.CENTER);
         
-        
 
-        String defaultButtonStyle = "-fx-border-color: #BCBCBC; -fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
-
+        String defaultButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #D9D9D9; -fx-font-weight: bold; -fx-font: 11 arial; -fx-top-spacing: 5;";
         detailedViewButton = new Button("View"); // text displayed on button
         detailedViewButton.setStyle(defaultButtonStyle); // styling the button
-        detailedViewButton.setPrefSize(50, 35); // sets size of Recipe
+        detailedViewButton.setPrefSize(50, 30); // sets size of Recipe
         detailedViewButton.setTextAlignment(TextAlignment.CENTER);
        
-    
+        viewContainer = new StackPane(detailedViewButton);
+        StackPane.setMargin(detailedViewButton, new Insets(0, 10, 0, 0));
+
         pane.setLeft(recipeName);
-        pane.setRight(detailedViewButton);
+        pane.setRight(viewContainer);
         this.getChildren().add(pane);
+        this.setAlignment(Pos.CENTER);
 
 
         detailedViewButton.setOnAction(e -> {
@@ -93,8 +110,9 @@ class RecipeList extends VBox {
     private void loadRecipe() throws IOException{
         recipes = CSVHandler.readRecipes();
 
-        this.setSpacing(5);
-        this.setPrefSize(600, 560);
+        this.setSpacing(7);
+        this.setPadding(new Insets(10,0,30,0));
+        //this.setPrefSize(600, 560);
         this.setStyle("-fx-background-color: #FFFFFF;");
 
         for (Recipe recipe : recipes) {
@@ -116,7 +134,6 @@ public class RecipeListPage extends BorderPane {
         recipeList = new RecipeList();
         // Initialise the header Object
         header = new RecipeListHeader();
-        
 
         // Create a RecipeList Object to hold the Recipes
         recipeList = new RecipeList();
