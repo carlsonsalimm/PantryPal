@@ -8,14 +8,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 
@@ -87,15 +82,12 @@ public class DetailedRecipePage extends BorderPane {
     // private SpecifyIngredientsPage specifyIngredientsPage;
 
     private Header header;
-
-    private Recipe currRecipe;
-
     private Button deleteButton;
     private Button editButton;
     private Button saveButton;
 
     private TextField title = new TextField();
-    private TextField instructions = new TextField(); // includes ingredients
+    private TextArea instructions = new TextArea(); // includes ingredients
 
     private Boolean editing = false;
 
@@ -145,7 +137,7 @@ public class DetailedRecipePage extends BorderPane {
 
         // Toggle editing of ingredients & instructions
         editButton.setOnAction(e -> {
-            // editRecipe();
+            editRecipe();
         });
 
         // Save recipe and go back to RecipeListPage
@@ -170,19 +162,26 @@ public class DetailedRecipePage extends BorderPane {
         exitWindow();
     }
 
-    // private void editRecipe() {
-    // if (this.editing) {
-    // this.instructions.setEditable(false);
-    // this.editing = false;
-    // } else {
-    // this.instructions.setEditable(true);
-    // this.editing = true;
-    // }
-    // }
+    private void editRecipe() {
+        if (this.editing) {
+            this.instructions.setEditable(false);
+            this.editing = false;
+        } else {
+            this.instructions.setEditable(true);
+            this.editing = true;
+        }
+    }
 
-    private void saveRecipe(Recipe recipe) throws IOException {
-        // call CSVHandler for saving
-        CSVHandler.writeRecipes(recipe);
+    private void saveRecipe(Recipe oldRecipe) throws IOException {
+        // call CSVHandler for saving new recipe or updating old recipe
+        // System.out.println(oldRecipe.getInstructions() + "\n");
+        // System.out.println(this.instructions.getText() + "\n");
+        if (oldRecipe.getInstructions().equals(this.instructions.getText())) {
+            CSVHandler.writeRecipes(oldRecipe);
+        } else {
+            CSVHandler.updateRecipe(oldRecipe, new Recipe(this.title.getText(), this.instructions.getText()));
+        }
+        
         exitWindow();
     }
 }

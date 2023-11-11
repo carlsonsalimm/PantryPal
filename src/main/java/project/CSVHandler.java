@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +50,7 @@ public class CSVHandler {
         boolean recipeExists = false;
 
         // check if the recipe we're saving already exists
+        System.out.println("Writing a new recipe.");
         try {
             FileReader fr = new FileReader(fileName);
             BufferedReader br = new BufferedReader(fr);
@@ -62,6 +61,7 @@ public class CSVHandler {
                 if (tokens[0].trim().equals(recipe.getTitle().trim())
                         && tokens[1].trim().replace("\\n", "\n").equals(recipe.getInstructions())) {
                     recipeExists = true;
+                    break; // Stop iterating if the recipe is found
                 }
             }
             fr.close();
@@ -75,19 +75,47 @@ public class CSVHandler {
             }
         }
 
-        // save the new/updated recipe
+        // save the new recipe at the top of the CSV
         if (!recipeExists) {
             try {
-                String oldFile = Files.readString(Paths.get(fileName));
+                List<Recipe> recipes = readRecipes(); // Read existing recipes
+                recipes.add(0, recipe);
                 FileWriter fw = new FileWriter(fileName);
-                fw.write(
-                        recipe.getTitle().trim() + ";" + recipe.getInstructions().trim().replace("\n", "\\n") + "\r\n");
-                fw.append(oldFile);
+                for (Recipe r : recipes) {
+                    fw.write(r.getTitle().trim() + ";" + r.getInstructions().trim().replace("\n", "\\n") + "\r\n");
+                }
                 fw.close();
             } catch (Exception e) {
                 System.err.println("Error saving recipe");
             }
         }
+
+    }
+
+    public static void updateRecipe(Recipe oldRecipe, Recipe newRecipe) throws IOException {
+        // update oldRecipe to be newRecipe
+        List<Recipe> recipes = readRecipes(); // Read existing recipes
+
+        // Find and update the changed recipe
+        for (Recipe r : recipes) {
+            if (r.getTitle().equals(oldRecipe.getTitle())
+                    && r.getInstructions().equals(oldRecipe.getInstructions())) {
+                r.setInstructions(newRecipe.getInstructions());
+                break; // Stop iterating once the recipe is found and removed
+            }
+        }
+
+        // Write the updated list of recipes back to the CSV file
+        try {
+            FileWriter fw = new FileWriter(fileName);
+            for (Recipe r : recipes) {
+                fw.write(r.getTitle().trim() + ";" + r.getInstructions().trim().replace("\n", "\\n") + "\r\n");
+            }
+            fw.close();
+        } catch (Exception e) {
+            System.err.println("Error deleting recipe");
+        }
+
     }
 
     public static void deleteRecipe(Recipe recipe) throws IOException {
