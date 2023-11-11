@@ -27,18 +27,14 @@ class RecipeListHeader extends HBox {
         this.setStyle("-fx-background-color: #FFFFFF;");
         pane = new BorderPane();
         pane.setPrefSize(565, 40); // sets size of Recipe
-        //pane.setStyle(" -fx-background-color:E1EAF3; -fx-background-radius: 5; -fx-font-weight: bold;"); // sets background
 
         title = new Label("My Recipes"); // Text of the Header
         
         title.setStyle("-fx-font-size: 20;-fx-font-weight: bold;");
         title.setPrefSize(475, 40); // sets size of Recipe
-        //title.setPadding(new Insets(0,10,0,10));
         title.setTextAlignment(TextAlignment.CENTER);
 
         String defaultButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
-        //String defaultButtonStyle = "-fx-font-style: italic; -fx-border-color: #FFFFFF; -fx-border-weight: 1; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
-       
         addButton = new Button("+"); // text displayed on add button
         addButton.setStyle(defaultButtonStyle); // styling the button
 
@@ -73,9 +69,8 @@ class RecipeItem extends HBox {
         pane.setStyle(" -fx-background-color:E1EAF3; -fx-background-radius: 5; -fx-font-weight: bold;"); // sets background
 
 
-        recipeName = new Label(); // create RecipeItem name text field
+        recipeName = new Label(this.recipe.getTitle()); // create RecipeItem name text field
         recipeName.setPrefSize(475, 40); // sets size of Recipe
-        recipeName.setText(this.recipe.getTitle());
         recipeName.setPadding(new Insets(0,10,0,20));
         recipeName.setTextAlignment(TextAlignment.CENTER);
         
