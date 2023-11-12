@@ -16,4 +16,12 @@ public class Recipe {
     public String getInstructions() {
         return this.instructions;
     }
+
+    public void setTitle(String s) {
+        this.title = s;
+    }
+
+    public void setInstructions(String s) {
+        this.instructions = s;
+    }
 }

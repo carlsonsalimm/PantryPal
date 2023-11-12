@@ -1,5 +1,9 @@
 .vscode/launch.json
 .vscode/settings.json
 lib/
+libs/
 bin/
+build/
+./tempAudio.wav
+./Recipes.csv
 .DS_store
