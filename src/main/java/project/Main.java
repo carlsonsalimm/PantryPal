@@ -2,6 +2,7 @@ package project;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.layout.BorderPane;
@@ -22,8 +23,10 @@ public class Main extends Application {
 
         Main.root = root;
         Main.temp = root;
-        // Set the title of the app
+        // Remove Title Bar
         primaryStage.initStyle(StageStyle.UNIFIED);
+        // Add app icon
+        primaryStage.getIcons().add(new Image("./icons/recipe.png"));
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
         // Make window non-resizable
