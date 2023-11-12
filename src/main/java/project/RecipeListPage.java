@@ -4,7 +4,7 @@ import java.util.List;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.control.ScrollPane;
 import javafx.geometry.Insets;
@@ -14,25 +14,39 @@ import javafx.scene.text.*;
  * Header for RecipeListPage
  * Has add button UI that redirects to SpecifyIngredientsPage
  */
-class RecipeListHeader extends VBox {
+class RecipeListHeader extends HBox {
+    private Label title;
     private Button addButton;
+    private BorderPane pane;
+    private StackPane titleContainer;
+    private StackPane addContainer;
 
     RecipeListHeader() {
-        this.setPrefSize(500, 100); // Size of the header
+        this.setPrefSize(600, 70); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
+        pane = new BorderPane();
+        pane.setPrefSize(565, 40); // sets size of Recipe
 
-        Text titleText = new Text("Recipe List"); // Text of the Header
-        titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
-        this.getChildren().add(titleText);
-        this.setPadding(new Insets(20, 0, 0, 20));
-        this.setAlignment(Pos.BASELINE_LEFT); // Align the text to the Center
+        title = new Label("My Recipes"); // Text of the Header
+        
+        title.setStyle("-fx-font-size: 20;-fx-font-weight: bold;");
+        title.setPrefSize(475, 40); // sets size of Recipe
+        title.setTextAlignment(TextAlignment.CENTER);
 
-        String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
-
+        String defaultButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
         addButton = new Button("+"); // text displayed on add button
         addButton.setStyle(defaultButtonStyle); // styling the button
-        this.getChildren().add(addButton);
-        addButton.setAlignment(Pos.TOP_RIGHT);
+
+        titleContainer = new StackPane(title);
+        StackPane.setMargin(title, new Insets(0, 10, 0, 0));
+
+        addContainer = new StackPane(addButton);
+        StackPane.setMargin(addButton, new Insets(0, 33, 0, 0));
+
+        pane.setLeft(titleContainer);
+        pane.setRight(addContainer);
+        this.getChildren().add(pane);
+        this.setAlignment(Pos.CENTER);
     }
 
     public Button getAddButton() {
@@ -42,29 +56,38 @@ class RecipeListHeader extends VBox {
 
 class RecipeItem extends HBox {
     public Recipe recipe;
-    private TextField recipeName;
+    private Label recipeName;
     private Button detailedViewButton;
+    private BorderPane pane;
+    private StackPane viewContainer;
 
     RecipeItem(Recipe recipe) {
         this.recipe = recipe;
-        this.setPrefSize(500, 40); // sets size of Recipe
-        this.setStyle("-fx-background-color: #BCBCBC; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background
-                                                                                                     // color of Recipe
+        pane = new BorderPane();
+        pane.setPrefSize(550, 40); // sets size of Recipe
+        pane.setStyle(" -fx-background-color:E1EAF3; -fx-background-radius: 5; -fx-font-weight: bold;"); // sets background
 
-        recipeName = new TextField(); // create RecipeItem name text field
-        recipeName.setPrefSize(140, 20); // set size of text field
-        recipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
-        recipeName.setText(this.recipe.getTitle());
-        recipeName.setPadding(new Insets(20, 0, 20, 10)); // adds some padding to the text field
-        this.getChildren().add(recipeName); // add textlabel to Recipe
 
-        String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
+        recipeName = new Label(this.recipe.getTitle()); // create RecipeItem name text field
+        recipeName.setPrefSize(475, 40); // sets size of Recipe
+        recipeName.setPadding(new Insets(0,10,0,20));
+        recipeName.setTextAlignment(TextAlignment.CENTER);
+        
 
+        String defaultButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #D9D9D9; -fx-font-weight: bold; -fx-font: 11 arial; -fx-top-spacing: 5;";
         detailedViewButton = new Button("View"); // text displayed on button
         detailedViewButton.setStyle(defaultButtonStyle); // styling the button
-        this.getChildren().add(detailedViewButton);
-        // viewButton.setAlignment(Pos.CENTER_RIGHT);
-        detailedViewButton.setPadding(new Insets(20, 0, 20, 80));
+        detailedViewButton.setPrefSize(50, 30); // sets size of Recipe
+        detailedViewButton.setTextAlignment(TextAlignment.CENTER);
+       
+        viewContainer = new StackPane(detailedViewButton);
+        StackPane.setMargin(detailedViewButton, new Insets(0, 10, 0, 0));
+
+        pane.setLeft(recipeName);
+        pane.setRight(viewContainer);
+        this.getChildren().add(pane);
+        this.setAlignment(Pos.CENTER);
+
 
         detailedViewButton.setOnAction(e -> {
             Main.setPage(new DetailedRecipePage(recipe));
@@ -82,8 +105,9 @@ class RecipeList extends VBox {
     private void loadRecipe() throws IOException{
         recipes = CSVHandler.readRecipes();
 
-        this.setSpacing(5);
-        this.setPrefSize(500, 560);
+        this.setSpacing(7);
+        this.setPadding(new Insets(10,0,30,0));
+        //this.setPrefSize(600, 560);
         this.setStyle("-fx-background-color: #FFFFFF;");
 
         for (Recipe recipe : recipes) {
@@ -105,7 +129,6 @@ public class RecipeListPage extends BorderPane {
         recipeList = new RecipeList();
         // Initialise the header Object
         header = new RecipeListHeader();
-        
 
         // Create a RecipeList Object to hold the Recipes
         recipeList = new RecipeList();
@@ -113,6 +136,7 @@ public class RecipeListPage extends BorderPane {
         ScrollPane scroller = new ScrollPane(recipeList);
         scroller.setFitToHeight(isCache());
         scroller.setFitToWidth(true);
+       
 
         // Add header to the top of the BorderPane
         this.setTop(header);
