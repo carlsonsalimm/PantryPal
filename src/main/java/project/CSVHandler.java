@@ -46,7 +46,7 @@ public class CSVHandler {
         return recipes;
     }
 
-    public static void writeRecipes(Recipe recipe) throws IOException {
+    public static boolean writeRecipes(Recipe recipe) throws IOException {
         boolean recipeExists = false;
 
         // check if the recipe we're saving already exists
@@ -88,8 +88,9 @@ public class CSVHandler {
             } catch (Exception e) {
                 System.err.println("Error saving recipe");
             }
+            return true;
         }
-
+        return false;
     }
 
     public static void updateRecipe(Recipe oldRecipe, Recipe newRecipe) throws IOException {
