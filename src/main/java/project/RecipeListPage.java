@@ -136,6 +136,7 @@ public class RecipeListPage extends BorderPane {
         ScrollPane scroller = new ScrollPane(recipeList);
         scroller.setFitToHeight(isCache());
         scroller.setFitToWidth(true);
+       
 
         // Add header to the top of the BorderPane
         this.setTop(header);

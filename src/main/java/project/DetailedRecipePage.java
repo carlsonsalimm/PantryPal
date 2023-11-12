@@ -1,101 +1,92 @@
 package project;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-
-import java.io.IOException;
+import javafx.scene.text.*;
 import javafx.geometry.Insets;
 
+import java.io.IOException;
+
 class Header extends HBox {
-    private Button deleteButton;
-    private Button editButton;
+    private Label title;
+    private Button delButton;
     private Button saveButton;
+    private Button backButton;
+    private BorderPane pane;
+    private Pane titleContainer;
+    private Pane addContainer;
 
     Header() {
-        this.setPrefSize(500, 80);
-        this.setStyle("fx-background-color: #FFFFFF;");
-        this.setSpacing(15);
-        this.setPadding(new Insets(0, 30, 0, 30));
+        this.setPrefSize(600, 70); // Size of the header
+        this.setStyle("-fx-background-color: #FFFFFF;");
+        pane = new BorderPane();
+        pane.setPrefSize(565, 40);
 
-        // set a default style for buttons
+        title = new Label("Recipe"); // Text of the Header
         
+        title.setStyle("-fx-font-size: 20;-fx-font-weight: bold;");
+        title.setPrefSize(475, 40); // sets size of Recipe
+        title.setTextAlignment(TextAlignment.CENTER);
+
+        String defaultButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
+        delButton = new Button(); // text displayed on add button
+        ImageView trash = new ImageView("./icons/trash.png");
+        trash.setFitWidth(20);
+        trash.setFitHeight(20);
+        delButton.setGraphic(trash);
+        delButton.setStyle(defaultButtonStyle); // styling the button
+      
         
-        int buttonRadius = 22;
 
-        ImageView backIcon = new ImageView(
-                new Image(DetailedRecipePage.class.getResource("/icons/back.png").toString(),
-                        50, 50, true, false));
-        deleteButton = new Button(); // text displayed on delete contacts button
-        deleteButton.setGraphic(backIcon);
-        deleteButton.setStyle(DetailedRecipePage.defaultButtonStyle); // styling the button
-        deleteButton.setShape(new Circle(buttonRadius));
-        deleteButton.setMinSize(buttonRadius * 2, buttonRadius * 2);
-        deleteButton.setMaxSize(buttonRadius * 2, buttonRadius * 2);
+        saveButton = new Button(); // text displayed on add button
+        ImageView save = new ImageView("./icons/save.png");
+        save.setFitWidth(20);
+        save.setFitHeight(20);
+        saveButton.setGraphic(save);
+        saveButton.setStyle(defaultButtonStyle); // styling the button
+       
 
-        ImageView saveIcon = new ImageView(
-                new Image(DetailedRecipePage.class.getResource("/icons/save.png").toString(),
-                        50, 50, true, false));
-        saveButton = new Button(); // text displayed on save contacts button
-        saveButton.setGraphic(saveIcon);
-        saveButton.setStyle(DetailedRecipePage.defaultButtonStyle); // styling the button
-        saveButton.setShape(new Circle(buttonRadius));
-        saveButton.setMinSize(buttonRadius * 2, buttonRadius * 2);
-        saveButton.setMaxSize(buttonRadius * 2, buttonRadius * 2);
+        backButton = new Button(); // text displayed on add button
+        ImageView back = new ImageView("./icons/back.png");
+        back.setFitWidth(20);
+        back.setFitHeight(20);
+        backButton.setGraphic(back);
+        backButton.setStyle(defaultButtonStyle); // styling the button
+      
 
-        ImageView editIcon = new ImageView(
-                new Image(DetailedRecipePage.class.getResource("/icons/edit.png").toString(),
-                        50, 50, true, false));
-        editButton = new Button(); // text displayed on sort contacts button
-        editButton.setGraphic(editIcon);
-        editButton.setStyle(DetailedRecipePage.defaultButtonStyle); // styling the button
-        editButton.setShape(new Circle(buttonRadius));
-        editButton.setMinSize(buttonRadius * 2, buttonRadius * 2);
-        editButton.setMaxSize(buttonRadius * 2, buttonRadius * 2);
+        titleContainer = new Pane();
+        titleContainer.getChildren().addAll(backButton,title);
+        title.relocate(20,30);
+        backButton.relocate(20, 0);
 
-        HBox left = new HBox(deleteButton);
-        left.setAlignment(Pos.CENTER_LEFT);
-        left.setSpacing(10);
-        left.setPadding(new Insets(0, 100, 0, 0));
+        addContainer = new Pane();
+        addContainer.getChildren().addAll(delButton,saveButton);
+        delButton.relocate(-20,0);
+        saveButton.relocate(30, 0);
 
-        HBox right = new HBox(editButton, saveButton);
-        right.setAlignment(Pos.CENTER_RIGHT);
-        right.setSpacing(10);
-        right.setPadding(new Insets(0, 0, 0, 150));
-
-        HBox fillerSpace = new HBox();
-        HBox.setHgrow(fillerSpace, Priority.ALWAYS);
-        // System.out.println(bounds);
-
-        this.getChildren().addAll(left, fillerSpace, right); // adding buttons to footer
-        // this.setAlignment(Pos.CENTER); // aligning the buttons to center
+        pane.setLeft(titleContainer);
+        pane.setRight(addContainer);
+        this.getChildren().add(pane);
+        this.setAlignment(Pos.CENTER);
     }
 
-    public Button getdeleteButton() {
-        return deleteButton;
+    public Button getDelButton() {
+        return delButton;
     }
-
-    public Button getSaveButton() {
+    public Button getSaveButton(){
         return saveButton;
     }
-
-    public Button getEditButton() {
-        return editButton;
+    public Button getBackButton(){
+        return backButton;
     }
 }
 
 public class DetailedRecipePage extends BorderPane {
-
-    // private RecipeListPage recipeListPage;
-    // private PantryPal pantryPal;
-    // private CSVHandler csvHandler;
-    // private SpecifyIngredientsPage specifyIngredientsPage;
 
     public static String defaultButtonStyle = "-fx-background-color: #D9D9D9; -fx-background-radius: 5em; ";
     public static String defaultMouseOverButtonStyle = "-fx-background-color: #bfbfbf; -fx-background-radius: 5em;";
@@ -112,13 +103,14 @@ public class DetailedRecipePage extends BorderPane {
 
     private Boolean editing = false;
 
+    
     // Assumes that Recipe class has at least TextFields for title, ingredients, and
     // instructions
     DetailedRecipePage(Recipe recipe) {
         header = new Header();
 
-        deleteButton = header.getdeleteButton();
-        editButton = header.getEditButton();
+        deleteButton = header.getDelButton();
+        editButton = header.getBackButton();
         saveButton = header.getSaveButton();
 
         title.setText(recipe.getTitle());
@@ -130,6 +122,7 @@ public class DetailedRecipePage extends BorderPane {
         instructions.setWrapText(true);
 
         createUI();
+        
         addListeners(recipe);
     }
 
