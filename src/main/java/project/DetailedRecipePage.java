@@ -11,7 +11,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 
 class Header extends HBox {

@@ -3,6 +3,7 @@ package project;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.layout.BorderPane;
 
 public class Main extends Application {
@@ -15,19 +16,14 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         Main.primaryStage = primaryStage;
-        // Setting the Layout of the Window- Should contain a Header, Footer and the
-        // RecipeList
-        // AppFrame root = new AppFrame();
-        Recipe testRecipe = new Recipe("blah", "daowoawdo1");
         RecipeListPage root = new RecipeListPage();
-        DetailedRecipePage temp = new DetailedRecipePage(new Recipe("a", "b"));
 
         
 
         Main.root = root;
         Main.temp = root;
         // Set the title of the app
-        primaryStage.setTitle("Recipe List");
+        primaryStage.initStyle(StageStyle.UNIFIED);
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
         // Make window non-resizable
