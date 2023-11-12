@@ -28,9 +28,13 @@ public class MyCreationTest {
     @Test
     void testUpdate() throws IOException {
         Recipe eggs = new Recipe("eggs", "instructions");
-        CSVHandler.writeRecipes(eggs);
-        CSVHandler.writeRecipes(eggs);
+        int size = CSVHandler.readRecipes().size();
 
-        assertEquals(1 , CSVHandler.readRecipes().size());
+        if(CSVHandler.writeRecipes(eggs)){
+            size += 1;
+        }
+        CSVHandler.writeRecipes(eggs);
+        
+        assertEquals(size , CSVHandler.readRecipes().size());
     }
 }
