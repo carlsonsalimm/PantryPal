@@ -116,6 +116,7 @@ public class DetailedRecipePage extends BorderPane {
 
         title.setText(recipe.getTitle());
         instructions.setText(recipe.getInstructions());
+        instructions.setPrefSize(600, 550);
 
         title.setEditable(true);
         instructions.setEditable(true);
