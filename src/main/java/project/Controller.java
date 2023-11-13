@@ -1,4 +1,4 @@
-package client;
+package project;
 
 import javafx.event.ActionEvent;
 

@@ -1,4 +1,4 @@
-package server;
+package project;
 import com.sun.net.httpserver.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
