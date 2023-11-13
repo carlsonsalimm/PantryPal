@@ -3,6 +3,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.io.IOException;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.geometry.Pos;
@@ -61,7 +64,7 @@ class SpecifyMealTypeContent extends VBox {
 
 }
 
-public class SpecifyMealTypePage extends BorderPane {
+public class SpecifyMealTypePage extends BorderPane{
     private SpecifyMealTypeContent content;
     private String cancelButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
     private Button cancelButton;
@@ -78,7 +81,14 @@ public class SpecifyMealTypePage extends BorderPane {
     }
 
     public void addListeners() {
-        cancelButton.setOnAction(event -> Main.setPage(Main.temp));
+        cancelButton.setOnAction(event -> {
+            RecipeListPage temp;
+            try {
+                temp = new RecipeListPage();
+                Main.setPage(temp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
-    
 }

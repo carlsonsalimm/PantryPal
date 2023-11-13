@@ -1,4 +1,6 @@
 package project;
+import java.io.IOException;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -77,7 +79,15 @@ public class SpecifyIngredientPage extends BorderPane {
     }
 
     public void addListeners() {
-        cancelButton.setOnAction(event -> Main.setPage(Main.temp));
+        cancelButton.setOnAction(event -> {
+            RecipeListPage temp;
+            try {
+                temp = new RecipeListPage();
+                Main.setPage(temp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
     
 }
