@@ -43,15 +43,6 @@ public class MyCreationTest {
     }
 
 
-    // Test GPT Response for Recipe Creation
-    @Test
-    void testGPTResponse() throws IOException, JSONException, URISyntaxException, InterruptedException{
-        String type = whisper.transcribeAudio("testType.wav");
-        String ingredients = whisper.transcribeAudio("testIngredients.wav");
-        String response = gpt.getGPTResponse(ingredients,type);
-        assertEquals("", response); // replace dinner with expected gpt response
-    }
-
     // Test voice-command to recipe construction for Recipe Creation
     @Test
     void testRecipeCreation() throws IOException, JSONException, URISyntaxException, InterruptedException{
@@ -64,13 +55,19 @@ public class MyCreationTest {
         assertEquals("\nTest instructions from MockGPT", testRecipe.getInstructions());
     }
 
-    // Test Meal Type Selection
+    // Test that meal type check passes when meal type is valid
     @Test
-    void testMealType() throws IOException, JSONException, URISyntaxException{
-       
+    void testMealTypeCheckValid() throws IOException, JSONException, URISyntaxException{
         String type = whisper.transcribeAudio("testType.wav"); // -> Dinner.
         String detectedMealType = AudioRecording.detectMealType(type);
         assertEquals("dinner", detectedMealType);
+    }
+
+    // Test that meal type check fails when meal type is invalid
+    @Test
+    void testMealTypeCheckInvalid() throws IOException, JSONException, URISyntaxException{
+        String detectedMealType = AudioRecording.detectMealType("invalid");
+        assertEquals(null, detectedMealType);
     }
 
     // Test Detailed Recipe Display 
@@ -140,12 +137,6 @@ public class MyCreationTest {
         CSVHandler.deleteRecipe(recipe2);
 
         assertEquals(size-1, CSVHandler.readRecipes().size());
-    }
-
-    // Test Scalable to work on multiple platforms 
-    @Test
-    void testScalable() throws IOException{
-        
     }
 
     // Deletion when updating a recipe

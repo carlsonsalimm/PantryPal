@@ -67,7 +67,7 @@ public class SpecifyMealTypePage extends BorderPane {
         content = new SpecifyMealTypeContent();
         cancelButton = new Button("x");
         cancelButton.setStyle(cancelButtonStyle);
-        cancelButton.setPadding(new Insets())
+        cancelButton.setPadding(new Insets(10, 0, 0, 10));
 
         this.setTop(cancelButton);
         this.setCenter(content);
