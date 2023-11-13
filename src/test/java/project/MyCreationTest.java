@@ -55,22 +55,4 @@ public class MyCreationTest {
     void testDisplay() throws IOException{
 
     }
-
-    // Test Save Fucntionality
-    @Test
-    void testCreate() throws IOException{
-
-    }
-
-    // Test Recipe Creation
-    @Test
-    void testCreate() throws IOException{
-
-    }
-
-    // Test Recipe Creation
-    @Test
-    void testCreate() throws IOException{
-
-    }
 }
