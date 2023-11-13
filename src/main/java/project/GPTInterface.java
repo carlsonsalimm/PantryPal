@@ -1,7 +1,10 @@
 package project;
 
-interface GPTInterface {
-private static final String API_ENDPOINT;
-    private static final String API_KEY;
-    private static final String MODEL;  
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+public interface GPTInterface {
+
+    String getGPTResponse(String prompt, String mealType) throws IOException, InterruptedException, URISyntaxException;
+
 }
