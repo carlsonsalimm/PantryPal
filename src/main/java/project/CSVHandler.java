@@ -141,4 +141,16 @@ public class CSVHandler {
             System.err.println("Error deleting recipe");
         }
     }
+
+    public static void clearAll() throws IOException {
+
+         try {
+            FileWriter fw = new FileWriter(fileName);
+            fw.write("");
+            
+            fw.close();
+        } catch (Exception e) {
+            System.err.println("Error deleting recipe");
+        }
+    }
 }

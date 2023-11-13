@@ -118,7 +118,7 @@ public class DetailedRecipePage extends BorderPane {
         instructions.setText(recipe.getInstructions());
         instructions.setPrefSize(600, 550);
 
-        title.setEditable(true);
+        title.setEditable(false);
         instructions.setEditable(true);
 
         instructions.setWrapText(true);
@@ -185,13 +185,13 @@ public class DetailedRecipePage extends BorderPane {
         });
     }
 
-    private void exitWindow() throws IOException {
+    public void exitWindow() throws IOException {
         // Go back to RecipeListPage
         RecipeListPage temp = new RecipeListPage();
         Main.setPage(temp);
     }
 
-    private void deleteRecipe(Recipe recipe) throws IOException {
+    public void deleteRecipe(Recipe recipe) throws IOException {
         CSVHandler.deleteRecipe(recipe);
         exitWindow();
     }
@@ -208,7 +208,7 @@ public class DetailedRecipePage extends BorderPane {
         }
     }
 */
-    private void saveRecipe(Recipe oldRecipe) throws IOException {
+    public void saveRecipe(Recipe oldRecipe) throws IOException {
         // call CSVHandler for saving new recipe or updating old recipe
         // System.out.println(oldRecipe.getInstructions() + "\n");
         // System.out.println(this.instructions.getText() + "\n");
@@ -219,5 +219,13 @@ public class DetailedRecipePage extends BorderPane {
         }
 
         exitWindow();
+    }
+
+    public TextField getRecipeTitle() {
+        return title;
+    }
+
+    public TextArea getRecipeInstructions() {
+        return instructions;
     }
 }
