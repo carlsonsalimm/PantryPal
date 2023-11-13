@@ -9,6 +9,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.*;
 import javafx.geometry.Insets;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 import java.io.IOException;
 
@@ -124,7 +126,7 @@ public class DetailedRecipePage extends BorderPane {
         instructions.setWrapText(true);
         createUI();
         
-        addListeners(recipe);
+        // addListeners(recipe);
     }
 
     private void createUI() {
@@ -153,6 +155,22 @@ public class DetailedRecipePage extends BorderPane {
         this.setTop(header);
         this.setCenter(container);
     }
+
+    public void setDeleteRecipeButtonAction(EventHandler<ActionEvent> eventHandler) {
+        deleteButton.setOnAction(eventHandler);
+    }
+
+    public void setBackButtonAction(EventHandler<ActionEvent> eventHandler) {
+        backButton.setOnAction(eventHandler);
+    }
+
+    public void setSaveButtonAction(EventHandler<ActionEvent> eventHandler) {
+        saveButton.setOnAction(eventHandler);
+    }
+
+
+
+    
 
     public void addListeners(Recipe recipe) {
         // Delete recipe and go back to RecipeListPage

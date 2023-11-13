@@ -12,6 +12,8 @@ public class SpecifyIngredientPage extends BorderPane {
         recordButton = new AudioRecording(mealType);
 
         this.setCenter(recordButton);
+        
+        // UI implementation v2 
     }
 
 }

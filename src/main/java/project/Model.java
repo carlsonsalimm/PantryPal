@@ -9,7 +9,8 @@ import java.net.URI;
 
 
 public class Model {
-    public String performRequest(String method, String language, String year, String query) {
+    // For getting recipe list
+    public List<Recipe> performRequest(String method, String language, String year, String query) {
         // Implement your HTTP request logic here and return the response
 
         try {
@@ -38,4 +39,6 @@ public class Model {
             return "Error: " + ex.getMessage();
         }
     }
+
+    // 
 }

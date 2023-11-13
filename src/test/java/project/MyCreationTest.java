@@ -37,4 +37,40 @@ public class MyCreationTest {
         
         assertEquals(size , CSVHandler.readRecipes().size());
     }
+
+    // Test Recipe Creation
+    @Test
+    void testCreate() throws IOException{
+
+    }
+
+    // Test Meal Selection
+    @Test
+    void testMealType() throws IOException{
+
+    }
+
+    // Test Recipe Display
+    @Test
+    void testDisplay() throws IOException{
+
+    }
+
+    // Test Save Fucntionality
+    @Test
+    void testCreate() throws IOException{
+
+    }
+
+    // Test Recipe Creation
+    @Test
+    void testCreate() throws IOException{
+
+    }
+
+    // Test Recipe Creation
+    @Test
+    void testCreate() throws IOException{
+
+    }
 }

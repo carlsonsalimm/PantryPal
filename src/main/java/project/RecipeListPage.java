@@ -103,7 +103,10 @@ class RecipeList extends VBox {
     }
 
     private void loadRecipe() throws IOException{
+        // TO-DO: Replace with GET request
         recipes = CSVHandler.readRecipes();
+        
+        recipes = Controller.getRecipes();
 
         this.setSpacing(7);
         this.setPadding(new Insets(10,0,30,0));
