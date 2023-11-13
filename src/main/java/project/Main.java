@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.layout.BorderPane;
 
-public class Main extends Application {
+public class Main2 extends Application {
 
     static Stage primaryStage;
     static BorderPane root;
@@ -16,13 +16,11 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        Main.primaryStage = primaryStage;
+        Main2.primaryStage = primaryStage;
         RecipeListPage root = new RecipeListPage();
 
-        
-
-        Main.root = root;
-        Main.temp = root;
+        Main2.root = root;
+        Main2.temp = root;
         // Remove Title Bar
         primaryStage.initStyle(StageStyle.UNIFIED);
         // Add app icon

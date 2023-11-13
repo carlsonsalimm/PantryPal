@@ -1,7 +1,7 @@
 package project;
+
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +15,8 @@ public class AudioRecording extends HBox {
     private Button recorderButton;
     public String mealType;
 
-    //Constructor for Specify Meal Type Page
-    AudioRecording(){
+    // Constructor for Specify Meal Type Page
+    AudioRecording() {
         // Create a button that the user can press and hold to record
         this.setPrefSize(100, 100);
         this.setStyle("-fx-background-color: #FFFFFF;");
@@ -30,7 +30,7 @@ public class AudioRecording extends HBox {
         recorderButton.setOnMouseReleased(event -> stopRecordingAndProcessMealType());
     }
 
-    //Constructor for Specify Ingredient Page
+    // Constructor for Specify Ingredient Page
     AudioRecording(String mealType) {
         // Create a button that the user can press and hold to record
         this.setPrefSize(100, 100);
@@ -45,8 +45,10 @@ public class AudioRecording extends HBox {
         recorderButton.setOnMouseReleased(event -> stopRecordingAndProcessRecipe());
     }
 
-    // Returns the audio format to use for the recording for Specify Ingredient Page and Specify Meal Type Page
-    // NOTE: This is the same format that is used for the Whisper transcribeAudio method
+    // Returns the audio format to use for the recording for Specify Ingredient Page
+    // and Specify Meal Type Page
+    // NOTE: This is the same format that is used for the Whisper transcribeAudio
+    // method
     private void startRecording() {
         try {
             System.out.println("Starting to Record");
@@ -74,7 +76,8 @@ public class AudioRecording extends HBox {
     }
 
     // Returns the audio format to use for the recording for Specify Ingredient Page
-    // NOTE: This is the same format that is used for the Whisper transcribeAudio method
+    // NOTE: This is the same format that is used for the Whisper transcribeAudio
+    // method
     private void stopRecordingAndProcessRecipe() {
         if (targetDataLine != null) {
             targetDataLine.stop();
@@ -95,7 +98,7 @@ public class AudioRecording extends HBox {
 
                 Recipe newRecipe = new Recipe(recipeTitle, recipeInstructions);
 
-                Main.setPage(new DetailedRecipePage(newRecipe));
+                Main2.setPage(new DetailedRecipePage(newRecipe));
 
                 // Handle the UI update or user notification with the generated recipe response
             } catch (Exception e) {
@@ -105,38 +108,40 @@ public class AudioRecording extends HBox {
         }
     }
 
-    // Returns the audio format to use for the recording for Specify Ingredient Page and Specify Meal Type Page
+    // Returns the audio format to use for the recording for Specify Ingredient Page
+    // and Specify Meal Type Page
     private void stopRecordingAndProcessMealType() {
         if (targetDataLine == null) {
             return;
         }
-    
+
         targetDataLine.stop();
         targetDataLine.close();
         System.out.println("Recording stopped.");
-    
+
         try {
             String transcribedText = Whisper.transcribeAudio(TEMP_AUDIO_FILE_PATH);
             System.out.println("Transcription: " + transcribedText);
-    
+
             String mealType = detectMealType(transcribedText);
-    
+
             if (mealType != null) {
-                Main.setPage(new SpecifyIngredientPage(mealType));
+                Main2.setPage(new SpecifyIngredientPage(mealType));
             } else {
                 System.out.println("Please try again");
-                Main.setPage(new SpecifyMealTypePage());
+                Main2.setPage(new SpecifyMealTypePage());
             }
         } catch (Exception e) {
             e.printStackTrace();
             // Handle exceptions appropriately
         }
     }
-    
-    // Returns the meal type if it is found in the transcribed text, otherwise returns null (Helper Function)
+
+    // Returns the meal type if it is found in the transcribed text, otherwise
+    // returns null (Helper Function)
     private String detectMealType(String transcribedText) {
-        String[] mealTypes = {"breakfast", "lunch", "dinner"};
-        
+        String[] mealTypes = { "breakfast", "lunch", "dinner" };
+
         for (String meal : mealTypes) {
             if (transcribedText.toLowerCase().contains(meal)) {
                 return meal;
@@ -144,8 +149,9 @@ public class AudioRecording extends HBox {
         }
         return null;
     }
-    
-    // Returns the audio format to use for the recording for Specify Ingredient Page and Specify Meal Type Page
+
+    // Returns the audio format to use for the recording for Specify Ingredient Page
+    // and Specify Meal Type Page
     private AudioFormat getAudioFormat() {
         float sampleRate = 16000; // typically 44100 for music
         int sampleSizeInBits = 16;

@@ -1,4 +1,5 @@
 package project;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -29,23 +30,22 @@ import javafx.scene.text.*;
 public class SpecifyMealTypePage extends BorderPane {
     String cancelButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
     private AudioRecording recordButton;
+
     SpecifyMealTypePage() {
-        //button to record audio
+        // button to record audio
         recordButton = new AudioRecording();
-        //button place at center of page
+        // button place at center of page
         this.setCenter(recordButton);
 
-        //button to cancel recording and return to recipe list page
+        // button to cancel recording and return to recipe list page
         Button cancelButton = new Button("Cancel");
         cancelButton.setStyle(cancelButtonStyle);
-        cancelButton.setOnAction(event -> Main.setPage(Main.temp));
-        //button place at bottom center of page
+        cancelButton.setOnAction(event -> Main2.setPage(Main2.temp));
+        // button place at bottom center of page
         this.setBottom(cancelButton);
         this.setAlignment(cancelButton, Pos.CENTER);
 
-        // UI implementation v2 
-        
+        // UI implementation v2
 
-        
     }
 }
