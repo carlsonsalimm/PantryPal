@@ -2,7 +2,6 @@ package project;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -33,7 +32,7 @@ class SpecifyMealTypeContent extends VBox {
         // Set up labels
         prompt = new Label("What kind of meal are you making?");
         prompt.setStyle(promptStyle);
-        subPrompt = new Label("Say \"breafast, \"lunch,\" or \"dinner.\"");
+        subPrompt = new Label("Say \"breakfast, \"lunch,\" or \"dinner.\"");
         subPrompt.setStyle(subPromptStyle);
 
         //button to record audio
@@ -41,8 +40,12 @@ class SpecifyMealTypeContent extends VBox {
         //bodyContainer = new StackPane();
         
         promptContainer = new HBox(prompt);
+        promptContainer.setAlignment(Pos.CENTER);
         subPromptContainer = new HBox(subPrompt);
+        subPromptContainer.setAlignment(Pos.CENTER);
         recordButtonContainer = new HBox(recordButton);
+        recordButtonContainer.setAlignment(Pos.CENTER);
+        
         
         //place stack panges onto border pane
 

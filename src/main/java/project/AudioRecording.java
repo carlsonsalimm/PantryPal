@@ -2,6 +2,8 @@ package project;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.control.Label;
 
 import java.io.File;
@@ -9,7 +11,7 @@ import java.io.IOException;
 
 import javax.sound.sampled.*;
 
-public class AudioRecording extends HBox {
+public class AudioRecording extends VBox {
     private TargetDataLine targetDataLine;
     private AudioFormat audioFormat;
     private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
@@ -17,18 +19,19 @@ public class AudioRecording extends HBox {
     private Button recorderButton;
     public String mealType;
     private String errorMsgStyle = "-fx-font-size: 20;-fx-font-weight: bold; -fx-text-fill: #DF0000;";
-    private Label errorMsg;
+    private Text errorMsg;
     private Boolean errorFlag = false;
 
     // Constructor for Specify Meal Type Page
     AudioRecording() {
         // Create a button that the user can press and hold to record
-        this.setPrefSize(100, 100);
+        this.setPrefSize(300, 500);
         this.setStyle("-fx-background-color: #FFFFFF;");
 
         recorderButton = new Button("Hold to Record");
         recorderButton.setStyle(recorderButtonStyle);
-
+            
+        recorderButton.setPrefSize(300, 50);
         this.getChildren().add(recorderButton);
     
         // Set the button actions for mouse press and release
@@ -149,7 +152,7 @@ public class AudioRecording extends HBox {
 
                 if(!errorFlag) {
                     // Add label child to layout here
-                    errorMsg = new Label("Sorry, we didn't catch that. Please Try Again");
+                    errorMsg = new Text("Sorry, we didn't catch that. Please Try Again");
                     errorMsg.setStyle(errorMsgStyle);
                     this.getChildren().add(errorMsg);
                     errorFlag = true;
