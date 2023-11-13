@@ -7,7 +7,7 @@ public class MockGPT implements GPTInterface {
 
     public String getGPTResponse(String prompt, String mealType)
             throws IOException, InterruptedException, URISyntaxException {
-        return "Test instructions from MockGPT";
+        return "Test title from MockGPT\nTest instructions from MockGPT";
     }
 
 }

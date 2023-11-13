@@ -17,15 +17,16 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MyCreationTest {
-    ChatGPT prompt = new ChatGPT();
     Recipe recipe1 = new Recipe("scrambled eggs", "heat pan then scramble desired amount of eggs");
     Recipe recipe2 = new Recipe("sunnyside eggs", "just eggs");
+    MockGPT gpt = new MockGPT();
+    MockWhisper whisper = new MockWhisper();
     
     // Tests with non-trivial testing-class coverage
     // Tests if a valid output is given
     @Test
     void testValidInput() throws IOException, InterruptedException, URISyntaxException {
-        String result = ChatGPT.getGPTResponse("eggs", "breakfast").toString();
+        String result = gpt.getGPTResponse("eggs", "breakfast").toString();
         assertTrue(result != null);
     }
     
@@ -42,30 +43,34 @@ public class MyCreationTest {
     }
 
 
-    // Test voice-command for Recipe Creation
+    // Test GPT Response for Recipe Creation
     @Test
-    void testVoiceCommand() throws IOException, JSONException, URISyntaxException, InterruptedException{
-        String type = Whisper.transcribeAudio("testType.wav");
-        String ingredients = Whisper.transcribeAudio("testIngredients.wav");
-        String response = ChatGPT.getGPTResponse(ingredients,type);
-        assertEquals("dinner", response); // replace dinner with expected gpt response
+    void testGPTResponse() throws IOException, JSONException, URISyntaxException, InterruptedException{
+        String type = whisper.transcribeAudio("testType.wav");
+        String ingredients = whisper.transcribeAudio("testIngredients.wav");
+        String response = gpt.getGPTResponse(ingredients,type);
+        assertEquals("", response); // replace dinner with expected gpt response
     }
 
     // Test voice-command to recipe construction for Recipe Creation
     @Test
     void testRecipeCreation() throws IOException, JSONException, URISyntaxException, InterruptedException{
-        MockGPT mock = new MockGPT();
+        String type = whisper.transcribeAudio("testType.wav");
+        String ingredients = whisper.transcribeAudio("testIngredients.wav");
+        String gptResponse = gpt.getGPTResponse(ingredients, type);
+        Recipe testRecipe = AudioRecording.createRecipe(gptResponse);
 
-        String type = Whisper.transcribeAudio("testType.wav");
-        String ingredients = Whisper.transcribeAudio("testIngredients.wav");
+        assertEquals("Test title from MockGPT", testRecipe.getTitle());
+        assertEquals("\nTest instructions from MockGPT", testRecipe.getInstructions());
     }
 
     // Test Meal Type Selection
     @Test
     void testMealType() throws IOException, JSONException, URISyntaxException{
-        String type = Whisper.transcribeAudio("testType.wav");
-
-        assertEquals("dinner", type);
+       
+        String type = whisper.transcribeAudio("testType.wav"); // -> Dinner.
+        String detectedMealType = AudioRecording.detectMealType(type);
+        assertEquals("dinner", detectedMealType);
     }
 
     // Test Detailed Recipe Display 
@@ -127,7 +132,6 @@ public class MyCreationTest {
     // Test Recipe Deletion
     @Test
     void testRecipeDeletion() throws IOException{
-        Recipe recipe2 = new Recipe("hotdog", "bun");
         CSVHandler.writeRecipes(recipe2);
         //Size after insertion
         int size = CSVHandler.readRecipes().size();
@@ -142,6 +146,27 @@ public class MyCreationTest {
     @Test
     void testScalable() throws IOException{
         
+    }
+
+    // Deletion when updating a recipe
+    @Test
+    void testCombination() throws IOException{
+         CSVHandler.clearAll();
+         CSVHandler.writeRecipes(recipe2);
+         CSVHandler.updateRecipe(recipe2, recipe1);
+
+         Recipe combine = new Recipe("sunnyside eggs", "heat pan then scramble desired amount of eggs");
+         CSVHandler.deleteRecipe(combine);
+
+         assertEquals(0, CSVHandler.readRecipes().size());
+    }
+
+    @Test
+    void testDeletion() throws IOException{
+        CSVHandler.clearAll();
+        CSVHandler.writeRecipes(recipe2);
+
+        assertFalse(CSVHandler.deleteRecipe(recipe1));
     }
     
 }

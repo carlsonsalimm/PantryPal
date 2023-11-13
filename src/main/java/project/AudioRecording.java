@@ -2,6 +2,7 @@ package project;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.control.Label;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,9 @@ public class AudioRecording extends HBox {
     private String recorderButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
     private Button recorderButton;
     public String mealType;
+    private String errorMsgStyle = "-fx-font-size: 20;-fx-font-weight: bold; -fx-text-fill: #DF0000;";
+    private Label errorMsg;
+    private Boolean errorFlag = false;
 
     // Constructor for Specify Meal Type Page
     AudioRecording() {
@@ -26,7 +30,7 @@ public class AudioRecording extends HBox {
         recorderButton.setStyle(recorderButtonStyle);
 
         this.getChildren().add(recorderButton);
-
+    
         // Set the button actions for mouse press and release
         recorderButton.setOnMousePressed(event -> startRecording());
         recorderButton.setOnMouseReleased(event -> stopRecordingAndProcessMealType());
@@ -99,12 +103,8 @@ public class AudioRecording extends HBox {
                 String response = chatGPT.getGPTResponse(transcribedText, mealType);
                 System.out.println("ChatGPT Response: " + response);
 
-                String recipeTitle = response.substring(0, response.indexOf("\n"));
-                String recipeInstructions = response.substring(response.indexOf("\n"));
-
-                Recipe newRecipe = new Recipe(recipeTitle, recipeInstructions);
-
-                Main.setPage(new DetailedRecipePage(newRecipe));
+            
+                Main.setPage(new DetailedRecipePage(createRecipe(response)));
 
                 // Handle the UI update or user notification with the generated recipe response
             } catch (Exception e) {
@@ -114,7 +114,17 @@ public class AudioRecording extends HBox {
         }
     }
 
-    // Returns the audio format to use for the recording for Specify Ingredient Page
+    public static Recipe createRecipe(String gptResponse) {
+        String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
+        String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
+
+        Recipe recipe = new Recipe(recipeTitle, recipeInstructions);
+        return recipe;
+    }
+
+    
+
+    // Returns the audio format to use for the recording for SpecifyMealTypePage
     // and Specify Meal Type Page
     private void stopRecordingAndProcessMealType() {
         if (targetDataLine == null) {
@@ -136,7 +146,14 @@ public class AudioRecording extends HBox {
                 Main.setPage(new SpecifyIngredientPage(mealType));
             } else {
                 System.out.println("Please try again");
-                Main.setPage(new SpecifyMealTypePage());
+
+                if(!errorFlag) {
+                    // Add label child to layout here
+                    errorMsg = new Label("Sorry, we didn't catch that. Please Try Again");
+                    errorMsg.setStyle(errorMsgStyle);
+                    this.getChildren().add(errorMsg);
+                    errorFlag = true;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -146,7 +163,7 @@ public class AudioRecording extends HBox {
 
     // Returns the meal type if it is found in the transcribed text, otherwise
     // returns null (Helper Function)
-    private String detectMealType(String transcribedText) {
+    public static String detectMealType(String transcribedText) {
         String[] mealTypes = { "breakfast", "lunch", "dinner" };
 
         for (String meal : mealTypes) {

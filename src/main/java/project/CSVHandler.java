@@ -119,9 +119,9 @@ public class CSVHandler {
 
     }
 
-    public static void deleteRecipe(Recipe recipe) throws IOException {
+    public static boolean deleteRecipe(Recipe recipe) throws IOException {
         List<Recipe> recipes = readRecipes(); // Read existing recipes
-
+        int size = recipes.size();
         // Find and remove the recipe to be deleted
         for (Recipe r : recipes) {
             if (r.getTitle().equals(recipe.getTitle()) && r.getInstructions().equals(recipe.getInstructions())) {
@@ -140,6 +140,9 @@ public class CSVHandler {
         } catch (Exception e) {
             System.err.println("Error deleting recipe");
         }
+
+        if(recipes.size() == size){return false;}
+        return true;
     }
 
     public static void clearAll() throws IOException {

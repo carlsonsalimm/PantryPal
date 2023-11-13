@@ -90,6 +90,7 @@ class RecipeItem extends HBox {
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
 
+       
         detailedViewButton.setOnAction(e -> {
             Main.setPage(new DetailedRecipePage(recipe));
             // add controller for the DetailedRecipePage creation here
@@ -100,12 +101,13 @@ class RecipeItem extends HBox {
 class RecipeList extends VBox {
     public List<Recipe> recipes;
 
-    RecipeList() {
+    RecipeList() throws IOException {
+        loadRecipe();
     }
 
-    public void loadRecipe(List<Recipe> recipes) throws IOException {
+    public void loadRecipe() throws IOException {
         // TO-DO: Replace with GET request
-        this.recipes = recipes;
+        this.recipes = CSVHandler.readRecipes();
 
         this.setSpacing(7);
         this.setPadding(new Insets(10, 0, 30, 0));
