@@ -1,4 +1,5 @@
 package project;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -28,7 +29,7 @@ class Header extends HBox {
         pane.setPrefSize(565, 40);
 
         title = new Label("Recipe"); // Text of the Header
-        
+
         title.setStyle("-fx-font-size: 20;-fx-font-weight: bold;");
         title.setPrefSize(475, 40); // sets size of Recipe
         title.setTextAlignment(TextAlignment.CENTER);
@@ -40,8 +41,6 @@ class Header extends HBox {
         trash.setFitHeight(20);
         delButton.setGraphic(trash);
         delButton.setStyle(defaultButtonStyle); // styling the button
-      
-        
 
         saveButton = new Button(); // text displayed on add button
         ImageView save = new ImageView("./icons/save.png");
@@ -49,7 +48,6 @@ class Header extends HBox {
         save.setFitHeight(20);
         saveButton.setGraphic(save);
         saveButton.setStyle(defaultButtonStyle); // styling the button
-       
 
         backButton = new Button(); // text displayed on add button
         ImageView back = new ImageView("./icons/back.png");
@@ -57,16 +55,15 @@ class Header extends HBox {
         back.setFitHeight(20);
         backButton.setGraphic(back);
         backButton.setStyle(defaultButtonStyle); // styling the button
-      
 
         titleContainer = new Pane();
-        titleContainer.getChildren().addAll(backButton,title);
-        title.relocate(20,30);
+        titleContainer.getChildren().addAll(backButton, title);
+        title.relocate(20, 30);
         backButton.relocate(20, 0);
 
         addContainer = new Pane();
-        addContainer.getChildren().addAll(delButton,saveButton);
-        delButton.relocate(-20,0);
+        addContainer.getChildren().addAll(delButton, saveButton);
+        delButton.relocate(-20, 0);
         saveButton.relocate(30, 0);
 
         pane.setLeft(titleContainer);
@@ -78,10 +75,12 @@ class Header extends HBox {
     public Button getDelButton() {
         return delButton;
     }
-    public Button getSaveButton(){
+
+    public Button getSaveButton() {
         return saveButton;
     }
-    public Button getBackButton(){
+
+    public Button getBackButton() {
         return backButton;
     }
 }
@@ -102,9 +101,6 @@ public class DetailedRecipePage extends BorderPane {
     private TextField title = new TextField();
     private TextArea instructions = new TextArea(); // includes ingredients
 
-    private Boolean editing = false;
-
-    
     // Assumes that Recipe class has at least TextFields for title, ingredients, and
     // instructions
     DetailedRecipePage(Recipe recipe) {
@@ -123,7 +119,7 @@ public class DetailedRecipePage extends BorderPane {
 
         instructions.setWrapText(true);
         createUI();
-        
+
         addListeners(recipe);
     }
 
@@ -143,9 +139,9 @@ public class DetailedRecipePage extends BorderPane {
         sp.setFitToHeight(false);
 
         titleContainer.setPadding(new Insets(0, 20, 0, 20));
-        titleContainer.setStyle( defaultBackgroundStyle);
+        titleContainer.setStyle(defaultBackgroundStyle);
         bodyText.setPadding(new Insets(0, 20, 0, 20));
-        bodyText.setStyle( defaultBackgroundStyle);
+        bodyText.setStyle(defaultBackgroundStyle);
 
         VBox container = new VBox(titleContainer, bodyText);
         container.setStyle(defaultBackgroundStyle);
@@ -166,13 +162,12 @@ public class DetailedRecipePage extends BorderPane {
 
         // Toggle editing of ingredients & instructions
         backButton.setOnAction(e -> {
-            try{
+            try {
                 exitWindow();
-            } catch(IOException e1){
-                e1.printStackTrace();    
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
         });
-
 
         // Save recipe and go back to RecipeListPage
         saveButton.setOnAction(e -> {
@@ -195,19 +190,20 @@ public class DetailedRecipePage extends BorderPane {
         CSVHandler.deleteRecipe(recipe);
         exitWindow();
     }
-/* 
-    private void editRecipe() {
-        if (this.editing) {
-            this.instructions.setEditable(false);
-            this.editing = false;
-            this.editButton.setStyle(defaultMouseOverButtonStyle);
-        } else {
-            this.instructions.setEditable(true);
-            this.editing = true;
-            this.editButton.setStyle(defaultMouseClickButtonStyle);
-        }
-    }
-*/
+
+    /*
+     * private void editRecipe() {
+     * if (this.editing) {
+     * this.instructions.setEditable(false);
+     * this.editing = false;
+     * this.editButton.setStyle(defaultMouseOverButtonStyle);
+     * } else {
+     * this.instructions.setEditable(true);
+     * this.editing = true;
+     * this.editButton.setStyle(defaultMouseClickButtonStyle);
+     * }
+     * }
+     */
     private void saveRecipe(Recipe oldRecipe) throws IOException {
         // call CSVHandler for saving new recipe or updating old recipe
         // System.out.println(oldRecipe.getInstructions() + "\n");
