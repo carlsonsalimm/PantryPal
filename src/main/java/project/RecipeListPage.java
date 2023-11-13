@@ -1,4 +1,5 @@
 package project;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import javafx.scene.layout.*;
 import javafx.scene.control.ScrollPane;
 import javafx.geometry.Insets;
 import javafx.scene.text.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 /*
  * Header for RecipeListPage
@@ -28,7 +31,7 @@ class RecipeListHeader extends HBox {
         pane.setPrefSize(565, 40); // sets size of Recipe
 
         title = new Label("My Recipes"); // Text of the Header
-        
+
         title.setStyle("-fx-font-size: 20;-fx-font-weight: bold;");
         title.setPrefSize(475, 40); // sets size of Recipe
         title.setTextAlignment(TextAlignment.CENTER);
@@ -65,21 +68,20 @@ class RecipeItem extends HBox {
         this.recipe = recipe;
         pane = new BorderPane();
         pane.setPrefSize(550, 40); // sets size of Recipe
-        pane.setStyle(" -fx-background-color:E1EAF3; -fx-background-radius: 5; -fx-font-weight: bold;"); // sets background
-
+        pane.setStyle(" -fx-background-color:E1EAF3; -fx-background-radius: 5; -fx-font-weight: bold;"); // sets
+                                                                                                         // background
 
         recipeName = new Label(this.recipe.getTitle()); // create RecipeItem name text field
         recipeName.setPrefSize(475, 40); // sets size of Recipe
-        recipeName.setPadding(new Insets(0,10,0,20));
+        recipeName.setPadding(new Insets(0, 10, 0, 20));
         recipeName.setTextAlignment(TextAlignment.CENTER);
-        
 
         String defaultButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #D9D9D9; -fx-font-weight: bold; -fx-font: 11 arial; -fx-top-spacing: 5;";
         detailedViewButton = new Button("View"); // text displayed on button
         detailedViewButton.setStyle(defaultButtonStyle); // styling the button
         detailedViewButton.setPrefSize(50, 30); // sets size of Recipe
         detailedViewButton.setTextAlignment(TextAlignment.CENTER);
-       
+
         viewContainer = new StackPane(detailedViewButton);
         StackPane.setMargin(detailedViewButton, new Insets(0, 10, 0, 0));
 
@@ -88,9 +90,10 @@ class RecipeItem extends HBox {
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
 
-
+       
         detailedViewButton.setOnAction(e -> {
             Main.setPage(new DetailedRecipePage(recipe));
+            // add controller for the DetailedRecipePage creation here
         });
     }
 }
@@ -102,12 +105,13 @@ class RecipeList extends VBox {
         loadRecipe();
     }
 
-    private void loadRecipe() throws IOException{
-        recipes = CSVHandler.readRecipes();
+    public void loadRecipe() throws IOException {
+        // TO-DO: Replace with GET request
+        this.recipes = CSVHandler.readRecipes();
 
         this.setSpacing(7);
-        this.setPadding(new Insets(10,0,30,0));
-        //this.setPrefSize(600, 560);
+        this.setPadding(new Insets(10, 0, 30, 0));
+        // this.setPrefSize(600, 560);
         this.setStyle("-fx-background-color: #FFFFFF;");
 
         for (Recipe recipe : recipes) {
@@ -126,9 +130,6 @@ public class RecipeListPage extends BorderPane {
     RecipeListPage() throws IOException {
         header = new RecipeListHeader();
         addButton = header.getAddButton();
-        recipeList = new RecipeList();
-        // Initialise the header Object
-        header = new RecipeListHeader();
 
         // Create a RecipeList Object to hold the Recipes
         recipeList = new RecipeList();
@@ -136,7 +137,6 @@ public class RecipeListPage extends BorderPane {
         ScrollPane scroller = new ScrollPane(recipeList);
         scroller.setFitToHeight(isCache());
         scroller.setFitToWidth(true);
-       
 
         // Add header to the top of the BorderPane
         this.setTop(header);
@@ -150,6 +150,10 @@ public class RecipeListPage extends BorderPane {
         // Call Event Listeners for the Buttons
         addListeners();
     }
+
+    // public void setAddButtonAction(EventHandler<ActionEvent> eventHandler) {
+    //     addButton.setOnAction(eventHandler);
+    // }
 
     // Add Event Listeners for the Buttons to redirect to meal type page
     public void addListeners() {
