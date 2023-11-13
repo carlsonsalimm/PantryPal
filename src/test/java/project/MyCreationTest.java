@@ -66,12 +66,11 @@ public class MyCreationTest {
     }
 
     // Test Detailed Recipe Display 
+    // TODO
     @Test
     void testRecipeDisplay() throws IOException{
         //recipe.saveRecipe(recipe1);
-        DetailedRecipePage detailedRecipe = new DetailedRecipePage(recipe1);
-        String detailedTitle =  detailedRecipe.getRecipeTitle().getText();
-        String detailedInstruction = detailedRecipe.getRecipeInstructions().getText();
+        Main.launch(null);
         assertEquals(recipe1.getTitle(), detailedTitle);
         assertEquals(recipe1.getInstructions(), detailedInstruction);
     }
