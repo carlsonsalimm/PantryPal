@@ -12,6 +12,7 @@ public class AudioRecording extends HBox {
     private TargetDataLine targetDataLine;
     private AudioFormat audioFormat;
     private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
+    private String recorderButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
     private Button recorderButton;
     public String mealType;
 
@@ -22,6 +23,7 @@ public class AudioRecording extends HBox {
         this.setStyle("-fx-background-color: #FFFFFF;");
 
         recorderButton = new Button("Hold to Record");
+        recorderButton.setStyle(recorderButtonStyle);
 
         this.getChildren().add(recorderButton);
 

@@ -54,7 +54,10 @@ public class MyCreationTest {
     // Test voice-command to recipe construction for Recipe Creation
     @Test
     void testRecipeCreation() throws IOException, JSONException, URISyntaxException, InterruptedException{
-        
+        MockGPT mock = new MockGPT();
+
+        String type = Whisper.transcribeAudio("testType.wav");
+        String ingredients = Whisper.transcribeAudio("testIngredients.wav");
     }
 
     // Test Meal Type Selection
@@ -66,13 +69,14 @@ public class MyCreationTest {
     }
 
     // Test Detailed Recipe Display 
-    // TODO
     @Test
     void testRecipeDisplay() throws IOException{
-        //recipe.saveRecipe(recipe1);
-        Main.launch(null);
-        assertEquals(recipe1.getTitle(), detailedTitle);
-        assertEquals(recipe1.getInstructions(), detailedInstruction);
+        
+        CSVHandler.clearAll();
+        CSVHandler.writeRecipes(recipe2);
+       
+        assertEquals(recipe2.getTitle(), CSVHandler.readRecipes().get(0).getTitle());
+        assertEquals(recipe2.getInstructions(), CSVHandler.readRecipes().get(0).getInstructions());
     }
 
     // Test Recipe Saving
@@ -139,7 +143,6 @@ public class MyCreationTest {
     void testScalable() throws IOException{
         
     }
-
-    // Integration Tests
+    
 }
 

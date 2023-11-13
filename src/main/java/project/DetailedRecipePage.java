@@ -99,23 +99,22 @@ public class DetailedRecipePage extends BorderPane {
     private Button backButton;
     private Button saveButton;
 
-    private TextField title = new TextField();
-    private TextArea instructions = new TextArea(); // includes ingredients
-
-    private Boolean editing = false;
+    private TextField title ;
+    private TextArea instructions; // includes ingredients
 
     
     // Assumes that Recipe class has at least TextFields for title, ingredients, and
     // instructions
     DetailedRecipePage(Recipe recipe) {
+        
         header = new Header();
 
         deleteButton = header.getDelButton();
         backButton = header.getBackButton();
         saveButton = header.getSaveButton();
 
-        title.setText(recipe.getTitle());
-        instructions.setText(recipe.getInstructions());
+        title = new TextField(recipe.getTitle());
+        instructions = new TextArea(recipe.getInstructions());
         instructions.setPrefSize(600, 550);
 
         title.setEditable(false);

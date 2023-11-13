@@ -12,11 +12,11 @@ import org.json.JSONObject;
 
 public class ChatGPT {
 
-    private static final String API_ENDPOINT = "https://api.openai.com/v1/completions";
-    private static final String API_KEY = "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";
-    private static final String MODEL = "text-davinci-003";
+    private final String API_ENDPOINT = "https://api.openai.com/v1/completions";
+    private final String API_KEY = "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";
+    private final String MODEL = "text-davinci-003";
 
-    public static String getGPTResponse(String prompt, String mealType) throws IOException, InterruptedException, URISyntaxException {
+    public String getGPTResponse(String prompt, String mealType) throws IOException, InterruptedException, URISyntaxException {
 
         // Set Request parameters
         prompt = " generate a " + mealType + " recipie with " + prompt;
