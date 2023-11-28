@@ -17,12 +17,12 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         Main.primaryStage = primaryStage;
-        RecipeListPage root = new RecipeListPage();
+        LoginPage root = new LoginPage();
 
         
 
         Main.root = root;
-        Main.temp = root;
+       
         // Remove Title Bar
         primaryStage.initStyle(StageStyle.UNIFIED);
         // Add app icon
