@@ -87,6 +87,10 @@ class Header extends HBox {
 
 public class DetailedRecipePage extends BorderPane {
 
+    //for mongoDB
+    private String username;
+    private String password;
+
     public static String defaultButtonStyle = "-fx-background-color: #D9D9D9; -fx-background-radius: 5em; ";
     public static String defaultMouseOverButtonStyle = "-fx-background-color: #bfbfbf; -fx-background-radius: 5em;";
     public static String defaultMouseClickButtonStyle = "-fx-background-color: #D9D9D9; -fx-background-radius: 5em;";
@@ -103,7 +107,9 @@ public class DetailedRecipePage extends BorderPane {
 
     // Assumes that Recipe class has at least TextFields for title, ingredients, and
     // instructions
-    DetailedRecipePage(Recipe recipe) {
+    DetailedRecipePage(Recipe recipe, String username, String password) {
+        this.username = username;
+        this.password = password;
         header = new Header();
 
         deleteButton = header.getDelButton();
@@ -181,13 +187,13 @@ public class DetailedRecipePage extends BorderPane {
     }
 
     private void exitWindow() throws IOException {
-        // Go back to RecipeListPage
-        RecipeListPage temp = new RecipeListPage();
+        // Create a new RecipeListPage with the current username and password
+        RecipeListPage temp = new RecipeListPage(this.username, this.password);
         Main.setPage(temp);
     }
 
     private void deleteRecipe(Recipe recipe) throws IOException {
-        CSVHandler.deleteRecipe(recipe);
+        CSVHandler.deleteRecipe(this.username, this.password, recipe);
         exitWindow();
     }
 
@@ -206,12 +212,10 @@ public class DetailedRecipePage extends BorderPane {
      */
     private void saveRecipe(Recipe oldRecipe) throws IOException {
         // call CSVHandler for saving new recipe or updating old recipe
-        // System.out.println(oldRecipe.getInstructions() + "\n");
-        // System.out.println(this.instructions.getText() + "\n");
         if (oldRecipe.getInstructions().equals(this.instructions.getText())) {
-            CSVHandler.writeRecipes(oldRecipe);
+            CSVHandler.writeRecipes(this.username, this.password, oldRecipe);
         } else {
-            CSVHandler.updateRecipe(oldRecipe, new Recipe(this.title.getText(), this.instructions.getText()));
+            CSVHandler.updateRecipe(this.username, this.password, oldRecipe, new Recipe(this.title.getText(), this.instructions.getText()));
         }
 
         exitWindow();

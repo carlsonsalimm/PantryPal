@@ -12,12 +12,14 @@ public class Main extends Application {
     static Stage primaryStage;
     static BorderPane root;
     static RecipeListPage temp;
+    private String username;
+    private String password;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         Main.primaryStage = primaryStage;
-        RecipeListPage root = new RecipeListPage();
+        RecipeListPage root = new RecipeListPage(this.username, this.password);
 
         
 
