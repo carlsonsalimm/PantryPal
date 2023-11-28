@@ -46,8 +46,12 @@ test {
     useJUnitPlatform()
 }
 
-server {
-    mainClassName = 'project.ChatGPT'
+sourceSets {
+    main {
+        java{
+            srcDirs 'src/server/java' /* include proto files from base project level */
+        }
+    }
 }
 
 tasks.withType(JavaCompile) {
