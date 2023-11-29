@@ -16,7 +16,7 @@ public class LoginPageController {
 
     public LoginPageController(LoginPage view ,Model model){
         this.view = view;
-        //this.model = model;
+        this.model = model;
 
         this.view.setSignInButtonAction(event -> {
             try {
@@ -28,14 +28,21 @@ public class LoginPageController {
         });
 
 
-        this.view.setCreateAccountButtonAction(this::handleCreateAccountButton);
+        this.view.setCreateAccountButtonAction(event -> {
+            try {
+                handleCreateAccountButton(event);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
     }
 
     private void handleSignInButton(ActionEvent event) throws IOException{
         String username = view.getUsername();
         String password = view.getPassword();
 
-        if(model.performRequest("GET", username, password).equals("true")){
+        if(model.performRequest("GET", null, username, password, null, null, null).equals("true")){
             view.goToRecipeListPage();
         }
         else{
@@ -55,12 +62,12 @@ public class LoginPageController {
         }
     }
 
-    private void handleCreateAccountButton(ActionEvent event){
+    private void handleCreateAccountButton(ActionEvent event) throws IOException{
         String username = view.getUsername();
         String password = view.getPassword();
 
-        if(model.performRequest("GET", username, password).equals("false")){
-            model.performRequest("PUT", username, password);
+        if(model.performRequest("GET", null, username, password, null, null, null).equals("false")){
+            model.performRequest("PUT", null, username, password, null, null, null);
             view.goToRecipeListPage();
         }
         else{

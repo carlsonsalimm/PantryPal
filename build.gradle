@@ -46,6 +46,14 @@ test {
     useJUnitPlatform()
 }
 
+sourceSets {
+    main {
+        java{
+            srcDirs 'src/server/java' /* include proto files from base project level */
+        }
+    }
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }

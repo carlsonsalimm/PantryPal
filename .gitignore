@@ -7,3 +7,4 @@ build/
 ./tempAudio.wav
 ./Recipes.csv
 .DS_store
+.gradle

@@ -26,9 +26,9 @@ public class Main extends Application {
         //RecipeListPage root = new RecipeListPage();
 
         Main.root = root;
+        Model model = new Model();
 
-
-        LoginPageController controller = new LoginPageController(root);
+        LoginPageController controller = new LoginPageController(root, model);
         //Main.temp = root;
         // Remove Title Bar
         //primaryStage.initStyle(StageStyle.UNIFIED);

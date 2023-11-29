@@ -1,10 +1,8 @@
 package project;
 
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.control.Label;
 
 import java.io.File;
 import java.io.IOException;
