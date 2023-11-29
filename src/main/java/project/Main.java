@@ -7,12 +7,15 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+
 import java.io.IOException;
+import java.lang.ModuleLayer.Controller;
 
 public class Main extends Application {
 
     static Stage primaryStage;
-    static BorderPane root;
+    static VBox root;
     static RecipeListPage temp;
 
     @Override
@@ -23,6 +26,9 @@ public class Main extends Application {
         //RecipeListPage root = new RecipeListPage();
 
         Main.root = root;
+
+
+        LoginPageController controller = new LoginPageController(root);
         //Main.temp = root;
         // Remove Title Bar
         //primaryStage.initStyle(StageStyle.UNIFIED);

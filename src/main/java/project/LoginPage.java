@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -22,7 +23,7 @@ import javafx.event.EventHandler;
 import javafx.application.Application;
 
 
-class LoginBody extends VBox {
+class LoginPage extends VBox {
     private HBox hbox;
 
     private Label title;
@@ -43,7 +44,7 @@ class LoginBody extends VBox {
     private String rememberMeStyle = "-fx-font-size: 12;";
     private String textfieldStyle =  "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #D9D9D9; -fx-font-weight: bold; -fx-font: 11 arial; -fx-top-spacing: 5;";
     private String actionButtonStyle =  "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #D9D9D9; -fx-font-weight: bold; -fx-font: 11 arial; -fx-top-spacing: 5;";
-    LoginBody() {
+    LoginPage() {
         this.setPrefSize(600, 630); // Size of the Body
         this.setStyle("-fx-background-color: #FFFFFF;");
         
@@ -98,6 +99,18 @@ class LoginBody extends VBox {
         this.requestLayout();
     }
 
+    public String getUsername(){
+        return username.getText();
+    }
+
+    public String getPassword(){
+        return password.toString();
+    }
+
+    public boolean getRememberMe(){
+        return rememberMeCB.isSelected();
+    }
+
     public Button getSignInButton() {
         return signInButton;
     }
@@ -105,43 +118,25 @@ class LoginBody extends VBox {
     public Button getCreateAccountButton() {    
         return createAccountButton;
     }
-}
 
-public class LoginPage extends BorderPane{
-    private LoginBody body;
-
-    private Button signInButton;
-    private Button createAccountButton;
-
-    LoginPage() throws IOException{
-        body = new LoginBody();
-        this.setCenter(body);
-
-        signInButton = body.getSignInButton();
-        createAccountButton = body.getCreateAccountButton();
-        addListeners();
+    public void setSignInButtonAction(EventHandler<ActionEvent> eventHandler){
+        signInButton.setOnAction(eventHandler);
     }
 
-    public void addListeners() {
-        signInButton.setOnAction(event -> {
-            RecipeListPage temp;
-            try {
-                temp = new RecipeListPage();
-                Main.setPage(temp);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-
-        createAccountButton.setOnAction(event -> {
-            RecipeListPage temp;
-            try {
-                temp = new RecipeListPage();
-                Main.setPage(temp);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    public void setCreateAccountButtonAction(EventHandler<ActionEvent> eventHandler){
+        createAccountButton.setOnAction(eventHandler);
     }
-   
+
+    public void goToRecipeListPage() throws IOException{
+        this.getScene().setRoot(new RecipeListPage());
+    }
+
+     public void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 }
+
