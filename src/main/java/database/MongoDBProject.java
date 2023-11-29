@@ -4,10 +4,16 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
+
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MongoDBProject {
@@ -89,23 +95,30 @@ public class MongoDBProject {
         }
     }
 
-    public static List<Document> getRecipeList(String username, String password) { // return the RecipeList not yet
-                                                                                   // tested
-        try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
-            MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
-            MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
+    public static List<Document> getRecipeList(String username, String password) {
+    try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
+        MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
+        MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
 
-            // Check if the username and password match
-            Document userDocument = collection.find(new Document("username", username).append("password", password))
-                    .first(); // we assume that the user and password already exist so we just need to return
-                              // the RecipeList
+        // Check if the username and password match
+        Document userDocument = collection.find(new Document("username", username).append("password", password))
+                .first();
+
+        if (userDocument != null) {
+            // User found, get the RecipeList
             List<Document> recipeList = (List<Document>) userDocument.get("RecipeList");
             return recipeList;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        } else {
+            // User not found, handle accordingly (throw exception, return empty list, etc.)
+            System.out.println("User not found");
+            return null; // or return null, or throw an exception, depending on your requirements
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return null;
     }
+}
+
 
     public static void addRecipe(String username, String password, String recipeTitle, String instructions,
             String mealType, String ingredients) {
@@ -150,49 +163,51 @@ public class MongoDBProject {
     }
 
     public static void updateRecipe(String username, String password, String recipeTitle, String updatedInstructions,
-            String updatedMealType, String updatedIngredients) {
-        // updateRecipe overwrites the whole information so we need complete information
-        // on the previous ones that we don't want to change
-        try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
-            MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
-            MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
+        String updatedMealType, String updatedIngredients) {
+    try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
+        MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
+        MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
 
-            // Check if the username and password match
-            Document userDocument = collection.find(new Document("username", username).append("password", password))
-                    .first();
+        // Check if the username and password match
+        Document userDocument = collection.find(new Document("username", username).append("password", password))
+                .first();
 
-            if (userDocument != null) {
-                // Check if the recipe with the specified title exists
-                List<Document> recipeList = (List<Document>) userDocument.get("RecipeList");
-                boolean recipeExists = false;
-
-                for (Document existingRecipe : recipeList) {
-                    if (existingRecipe.getString("recipeTitle").equals(recipeTitle)) {
-                        recipeExists = true;
-                        break;
-                    }
-                }
-
-                // If the recipe exists, proceed with the update
-                if (recipeExists) {
-                    // Update the specified recipe in RecipeList
-                    collection.updateOne(
-                            new Document("username", username).append("password", password)
-                                    .append("RecipeList.recipeTitle", recipeTitle),
-                            new Document("$set", new Document("RecipeList.$.instructions", updatedInstructions)
-                                    .append("RecipeList.$.mealType", updatedMealType)
-                                    .append("RecipeList.$.ingredients", updatedIngredients)));
-                    System.out.println("Recipe updated successfully.");
-                } else {
-                    System.out.println("Recipe with title '" + recipeTitle + "' does not exist. Cannot update.");
-                }
-            } else {
-                System.out.println("Invalid username or password");
+        if (userDocument != null) {
+            // Construct the update based on non-null fields
+            Document updateFields = new Document();
+            if (updatedInstructions != null) {
+                updateFields.append("RecipeList.$.instructions", updatedInstructions);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (updatedMealType != null) {
+                updateFields.append("RecipeList.$.mealType", updatedMealType);
+            }
+            if (updatedIngredients != null) {
+                updateFields.append("RecipeList.$.ingredients", updatedIngredients);
+            }
+            // Update the specified recipe in RecipeList if it exists
+            Bson query = Filters.and(
+                Filters.eq("username", username),
+                Filters.eq("password", password),
+                Filters.elemMatch("RecipeList", Filters.eq("recipeTitle", recipeTitle))
+            );
+
+            Bson update = Updates.combine(updateFields);
+
+            UpdateResult updateResult = collection.updateOne(query, update);
+
+            if (updateResult.getModifiedCount() > 0) {
+                System.out.println("Recipe updated successfully.");
+            } else {
+                System.out.println("Recipe with title '" + recipeTitle + "' does not exist. Cannot update.");
+            }
+        } else {
+            System.out.println("Invalid username or password");
         }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+
 
     public static void deleteRecipe(String username, String password, String recipeTitle) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
