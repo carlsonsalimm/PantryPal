@@ -79,10 +79,10 @@ public class MongoDBProject {
 
             // If the user document is not null, login is successful
             if (userDocument != null) {
-                System.out.println("Login successful for user: " + username);
+                //System.out.println("Login successful for user: " + username);
                 return true;
             } else {
-                System.out.println("Invalid username or password");
+                //System.out.println("Invalid username or password");
                 return false;
             }
         } catch (Exception e) {
@@ -106,8 +106,8 @@ public class MongoDBProject {
                 return recipeList;
             } else {
                 // User not found, handle accordingly (throw exception, return empty list, etc.)
-                System.out.println("User not found");
-                return null; // or return null, or throw an exception, depending on your requirements
+                //System.out.println("User not found");
+                return null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,7 +141,7 @@ public class MongoDBProject {
                                     .append("RecipeList.recipeTitle", recipeTitle),
                             new Document("$set", updateFields)
                     );
-                    System.out.println("Recipe updated successfully.");
+                    //System.out.println("Recipe updated successfully.");
                 } else {
                     // Add a new recipe to RecipeList
                     Document newRecipe = new Document("recipeTitle", recipeTitle)
@@ -154,10 +154,8 @@ public class MongoDBProject {
                             new Document("username", username).append("password", password),
                             new Document("$push", new Document("RecipeList", newRecipe))
                     );
-                    System.out.println("New recipe added successfully.");
+                    //System.out.println("New recipe added successfully.");
                 }
-            } else {
-                System.out.println("Invalid username or password");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -183,12 +181,11 @@ public class MongoDBProject {
                             new Document("username", username).append("password", password),
                             new Document("$pull", new Document("RecipeList", new Document("recipeTitle", recipeTitle)))
                     );
-                    System.out.println("Recipe deleted successfully.");
+                    //System.out.println("Recipe deleted successfully.");
                 } else {
-                    System.out.println("Recipe with title '" + recipeTitle + "' does not exist. Cannot delete.");
+                    return;
+                    //System.out.println("Recipe with title '" + recipeTitle + "' does not exist. Cannot delete.");
                 }
-            } else {
-                System.out.println("Invalid username or password");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -234,9 +231,9 @@ public class MongoDBProject {
                 collection.updateOne(
                         new Document("username", username).append("password", password),
                         new Document("$set", new Document("RecipeList", new ArrayList<>())));
-                System.out.println("All recipes cleared for user: " + username);
+                //System.out.println("All recipes cleared for user: " + username);
             } else {
-                System.out.println("Invalid username or password. Cannot clear recipes.");
+                //System.out.println("Invalid username or password. Cannot clear recipes.");
             }
         } catch (Exception e) {
             e.printStackTrace();
