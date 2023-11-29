@@ -42,12 +42,15 @@ public class LoginPageController {
         String username = view.getUsername();
         String password = view.getPassword();
 
-        if(model.performRequest("GET", null, username, password, null, null, null).equals("true")){
+        if(model.performRequest("POST", "login", username, password, null, null, null, null, null).equals("true")){
+            model.setUsername(username);
+            model.setPassword(password);
             view.goToRecipeListPage();
         }
         else{
             view.showAlert("Error", "Account Not Found");
         }
+
 
         // Remember Me
         if(view.getRememberMe()){
@@ -66,8 +69,9 @@ public class LoginPageController {
         String username = view.getUsername();
         String password = view.getPassword();
 
-        if(model.performRequest("GET", null, username, password, null, null, null).equals("false")){
-            model.performRequest("PUT", null, username, password, null, null, null);
+        if(model.performRequest("POST", "signup", username, password, null, null, null, null, null).equals("true")){
+            model.setUsername(username);
+            model.setPassword(password);
             view.goToRecipeListPage();
         }
         else{
