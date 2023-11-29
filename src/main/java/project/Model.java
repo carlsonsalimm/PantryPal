@@ -24,7 +24,8 @@ public class Model {
         return userInfo;
     }
 
-    public String performRequest(String method, String action, String audioFilePath, String mealType,
+    public String performRequest(String method, String action, String iniUsername, String iniPassword,
+            String audioFilePath, String mealType,
             String ingredients, String title, String instructions) {
 
         try {
@@ -50,13 +51,13 @@ public class Model {
                     // TO-DO: Handle audioFilePath
                     urlString += "?action=transcribeaudioFilePath&audioFilePath=" + audioFilePath;
 
-                } else if (action != null && action.equals("login") && username != null && password != null) {
+                } else if (action != null && action.equals("login") && iniUsername != null && iniPassword != null) {
                     // Login (needs username, password, action)
-                    urlString += "?action=login&username=" + username + "&password=" + password;
+                    urlString += "?action=login&username=" + iniUsername + "&password=" + iniPassword;
 
-                } else if (action != null && action.equals("signup") && username != null && password != null) {
+                } else if (action != null && action.equals("signup") && iniUsername != null && iniPassword != null) {
                     // Sign up (needs username, password, action)
-                    urlString += "?action=signup&username=" + username + "&password=" + password;
+                    urlString += "?action=signup&username=" + iniUsername + "&password=" + iniPassword;
 
                 } else if (username != null && password != null && mealType != null && ingredients != null
                         && title != null && instructions != null) {
