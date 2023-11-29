@@ -1,13 +1,11 @@
 package project;
 
 import com.sun.net.httpserver.*;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.net.*;
 import java.util.concurrent.*;
 
-public class MyServer {
+public class Server {
 
   // initialize server port and hostname
   private static final int SERVER_PORT = 8100;

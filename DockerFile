@@ -1,0 +1,9 @@
+FROM --platform=linux/amd64 openjdk:17
+WORKDIR /server
+COPY ./src/server/java/project/ /server/
+RUN javac server/Server.java server/RequestHandler.java \ 
+          server/ChatGPT.java server/ChatGPT.java \
+          server/GPTInterface.java server/Whisper.java \
+          server/WhisperInterface.java
+EXPOSE 8100
+ENTRYPOINT ["java", "server/Server"]
