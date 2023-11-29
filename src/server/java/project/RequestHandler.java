@@ -10,6 +10,7 @@ import java.util.*;
 
 import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
+import org.json.JSONException;
 
 public class RequestHandler implements HttpHandler {
 
@@ -34,8 +35,6 @@ public class RequestHandler implements HttpHandler {
         response = handleGet(httpExchange);
       } else if (method.equals("POST")) {
         response = handlePost(httpExchange);
-      } else if (method.equals("PUT")) {
-        response = handlePut(httpExchange);
       } else if (method.equals("DELETE")) {
         response = handleDelete(httpExchange);
       } else {
@@ -88,7 +87,15 @@ public class RequestHandler implements HttpHandler {
     if (action.equals("transcribeaudioFilePath")) {
       // transcribe audio to text
       String audioFilePath = queryParams.get("audioFilePath");
-      response = whisper.transcribeAudio(audioFilePath);
+      try {
+        response = whisper.transcribeAudio(audioFilePath);
+      } catch (JSONException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (URISyntaxException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
 
     } else if (action.equals("login")) {
       // try logging in with acct details
@@ -116,7 +123,15 @@ public class RequestHandler implements HttpHandler {
     } else if (action.equals("generateRecipe")) {
       String mealType = queryParams.get("mealType");
       String ingredients = queryParams.get("ingredients");
-      response = chatGPT.getGPTResponse(ingredients, mealType);
+      try {
+        response = chatGPT.getGPTResponse(ingredients, mealType);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (URISyntaxException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
 
     return response;
