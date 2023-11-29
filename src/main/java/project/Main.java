@@ -1,11 +1,13 @@
 package project;
 
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.layout.BorderPane;
+import java.io.IOException;
 
 public class Main extends Application {
 
@@ -14,19 +16,18 @@ public class Main extends Application {
     static RecipeListPage temp;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws Exception, IOException {
 
         Main.primaryStage = primaryStage;
         LoginPage root = new LoginPage();
-
-        
+        //RecipeListPage root = new RecipeListPage();
 
         Main.root = root;
-       
+        //Main.temp = root;
         // Remove Title Bar
-        primaryStage.initStyle(StageStyle.UNIFIED);
+        //primaryStage.initStyle(StageStyle.UNIFIED);
         // Add app icon
-        primaryStage.getIcons().add(new Image("./icons/recipe.png"));
+        //primaryStage.getIcons().add(new Image("./icons/recipe.png"));
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
         // Make window non-resizable
