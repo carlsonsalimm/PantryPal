@@ -9,6 +9,7 @@ import javafx.stage.StageStyle;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.lang.ModuleLayer.Controller;
 
@@ -24,15 +25,14 @@ public class Main extends Application {
         Main.primaryStage = primaryStage;
         LoginPage root = new LoginPage();
         //RecipeListPage root = new RecipeListPage();
+        
 
         Main.root = root;
         Model model = new Model();
 
+        // Set Controller
         LoginPageController controller = new LoginPageController(root, model);
-        //Main.temp = root;
-        // Remove Title Bar
-        //primaryStage.initStyle(StageStyle.UNIFIED);
-        // Add app icon
+        
         //primaryStage.getIcons().add(new Image("./icons/recipe.png"));
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
