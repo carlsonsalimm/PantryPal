@@ -1,32 +1,39 @@
 package project;
 
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.ModuleLayer.Controller;
 
 public class Main extends Application {
 
     static Stage primaryStage;
-    static BorderPane root;
+    static VBox root;
     static RecipeListPage temp;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws Exception, IOException {
 
         Main.primaryStage = primaryStage;
-        RecipeListPage root = new RecipeListPage();
-
+        LoginPage root = new LoginPage();
+        //RecipeListPage root = new RecipeListPage();
         
 
         Main.root = root;
-        Main.temp = root;
-        // Remove Title Bar
-        primaryStage.initStyle(StageStyle.UNIFIED);
-        // Add app icon
-        primaryStage.getIcons().add(new Image("./icons/recipe.png"));
+        Model model = new Model();
+
+        // Set Controller
+        LoginPageController controller = new LoginPageController(root, model);
+        
+        //primaryStage.getIcons().add(new Image("./icons/recipe.png"));
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
         // Make window non-resizable
