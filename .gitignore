@@ -8,3 +8,4 @@ build/
 ./Recipes.csv
 .DS_store
 .gradle
+RememberMe.csv
