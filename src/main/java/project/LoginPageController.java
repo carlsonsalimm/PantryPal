@@ -14,7 +14,7 @@ public class LoginPageController {
     private LoginPage view;
     private Model model;
 
-    public LoginPageController(LoginPage view ,Model model){
+    LoginPageController(LoginPage view ,Model model){
         this.view = view;
         this.model = model;
 
@@ -38,7 +38,7 @@ public class LoginPageController {
         });
     }
 
-    private void handleSignInButton(ActionEvent event) throws IOException{
+    public boolean handleSignInButton(ActionEvent event) throws IOException{
         String username = view.getUsername();
         String password = view.getPassword();
 
@@ -46,36 +46,44 @@ public class LoginPageController {
             model.setUsername(username);
             model.setPassword(password);
             view.goToRecipeListPage();
+
+            if(view.getRememberMe()){
+                FileWriter file = new FileWriter("RememberMe.csv");
+                try {
+                    file.write(1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                file.close();
+            }
+    
+
+            return true;
         }
         else{
             view.showAlert("Error", "Account Not Found");
+            return false;
         }
 
-
-        // Remember Me
-        if(view.getRememberMe()){
-            FileWriter file = new FileWriter("RememberMe.csv");
-
-            try {
-                file.write(1);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            file.close();
-        }
     }
+        
 
-    private void handleCreateAccountButton(ActionEvent event) throws IOException{
+    public boolean handleCreateAccountButton(ActionEvent event) throws IOException{
         String username = view.getUsername();
         String password = view.getPassword();
 
+        // If Account Doesn Not Exist
         if(model.performRequest("POST", "signup", username, password, null, null, null, null, null).equals("true")){
             model.setUsername(username);
             model.setPassword(password);
             view.goToRecipeListPage();
+            return true;
         }
+
+        // If Account Exxists
         else{
             view.showAlert("Error", "Account Already Exist");
+            return false;
         }
     }
 

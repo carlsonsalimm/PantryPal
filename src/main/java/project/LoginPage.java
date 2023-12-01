@@ -99,6 +99,14 @@ class LoginPage extends VBox {
         this.requestLayout();
     }
 
+    public void setUsername(String user) {
+        this.username.setText(user);
+    }
+
+    public void setPassword(String pass) {
+        this.username.setText(pass);
+    }
+
     public String getUsername(){
         return username.getText();
     }
