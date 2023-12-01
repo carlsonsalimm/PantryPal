@@ -216,4 +216,5 @@ public class DetailedRecipePage extends BorderPane {
 
         exitWindow();
     }
+    
 }

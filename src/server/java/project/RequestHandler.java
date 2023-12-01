@@ -14,6 +14,7 @@ public class RequestHandler implements HttpHandler {
   private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
   private static Whisper whisper;
   public static ChatGPT chatGPT;
+  public static DallE dallE;
   // private DALLE dallE;
 
   Map<String, String> queryParams;
@@ -21,6 +22,7 @@ public class RequestHandler implements HttpHandler {
   RequestHandler() {
     whisper = new Whisper();
     chatGPT = new ChatGPT();
+    dallE = new DallE();
   }
 
   public void handle(HttpExchange httpExchange) throws IOException {
@@ -120,18 +122,38 @@ public class RequestHandler implements HttpHandler {
     } else if (action.equals("generateRecipe")) {
       String mealType = queryParams.get("mealType");
       String ingredients = queryParams.get("ingredients");
+      // try {
+      //   response = chatGPT.getGPTResponse(ingredients, mealType);
+      // } catch (InterruptedException e) {
+      //   // TODO Auto-generated catch block
+      //   e.printStackTrace();
+      // } catch (URISyntaxException e) {
+      //   // TODO Auto-generated catch block
+      //   e.printStackTrace();
+      // }
       try {
-        response = chatGPT.getGPTResponse(ingredients, mealType);
-      } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
+        // Get response from ChatGPT
+        String chatGPTResponse = chatGPT.getGPTResponse(ingredients, mealType);
+        response = chatGPTResponse;
+
+        // Use ChatGPT response as a prompt for DallE to generate an image
+        try {
+            dallE.generateImage(chatGPTResponse); // This will generate an image based on the response
+            // response will get the image url at the end of the response
+            response = response + dallE.getImageURL();
+
+        } catch (InterruptedException | URISyntaxException e) {
+            e.printStackTrace();
+            // Handle exceptions appropriately
+        }
+    } catch (InterruptedException | URISyntaxException e) {
         e.printStackTrace();
-      } catch (URISyntaxException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+        // Handle exceptions appropriately
+    }
     }
 
-    return response;
+    //response include generated recipe and image url (in the last part)
+    return response; 
   }
 
   // deleteRecipe
