@@ -14,12 +14,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.geometry.Pos;
 
 class SpecifyMealTypePage extends VBox {
 
     // Audio
-    private AudioRecording recordButton;
+    private Button recordButton;
     private TargetDataLine targetDataLine;
     private AudioFormat audioFormat;
     private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
@@ -59,7 +60,6 @@ class SpecifyMealTypePage extends VBox {
         subPrompt.setStyle(subPromptStyle);
 
         //button to record audio
-        recordButton = new AudioRecording();
         recorderButton = new Button("Hold to Record");
         recorderButton.setStyle(recorderButtonStyle);
             
@@ -93,6 +93,14 @@ class SpecifyMealTypePage extends VBox {
 
     public AudioRecording getAudioRecording() {
         return this.recordButton;
+    }
+
+    public void setRecordHoldAction(EventHandler<? super MouseEvent> eventHandler){
+        recordButton.setOnMousePressed(eventHandler);
+    }
+
+    public void setRecordReleaseAction(EventHandler<? super MouseEvent> eventHandler){
+        recordButton.setOnMouseReleased(eventHandler);
     }
 
     public void setBackButtonAction(EventHandler<ActionEvent> eventHandler){
