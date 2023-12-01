@@ -19,9 +19,16 @@ public class Model {
         this.password = password;
     }
 
-    public String encode(String userInfo) {
-        // Encode user information
-        return userInfo;
+    public String encode(String requestArgument) {
+        // Encode request argument
+        String encodedArgument = "";
+        return encodedArgument;
+    }
+
+    public String decode(String requestResponse) {
+        // Encode request response
+        String decodedResponse = "";
+        return decodedResponse;
     }
 
     public String performRequest(String method, String action, String iniUsername, String iniPassword,
@@ -29,7 +36,7 @@ public class Model {
             String ingredients, String title, String instructions) {
 
         try {
-            String urlString = "https://pantrypal-team31.onrender.com/"; // TO-DO: Add server url
+            String urlString = "https://pantrypal-team31.onrender.com/";
 
             if (method.equals("GET")) {
 
@@ -71,13 +78,18 @@ public class Model {
                     // Generate recipe instructions w/GPT (needs meal type and ingredients, returns
                     // instructions as string)
                     urlString += "?action=generateRecipe&mealType=" + mealType + "&ingredients=" + ingredients;
+
                 }
 
             } else if (method.equals("DELETE")) {
-                // Deletes an existing recipe (requires username, password, title)
                 if (username != null && password != null && title != null) {
+                    // Deletes an existing recipe (requires username, password, title)
                     urlString += "?action=deleteRecipe&username=" + username + "&password=" + password + "&title="
                             + title;
+
+                } else if (username != null && password != null && title == null) {
+                    // Deletes an existing user (requires username, password)
+                    urlString += "?action=deleteUser&username=" + username + "&password=" + password;
                 }
 
             }
