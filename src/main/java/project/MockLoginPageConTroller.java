@@ -10,13 +10,13 @@ import org.json.Cookie;
 
 import javafx.event.ActionEvent;
 
-class MockLoginPageController implements LoginControllerInterface{
+class MockLoginPageController implements LoginControllerInterface {
     private Model model;
 
     String username;
     String password;
 
-    MockLoginPageController(Model model){
+    MockLoginPageController(Model model) {
         this.model = model;
     }
 
@@ -25,39 +25,35 @@ class MockLoginPageController implements LoginControllerInterface{
     }
 
     public void setPassword(String pass) {
-        this.username = pass;
+        this.password = pass;
     }
 
-
-    public boolean handleSignInButton(ActionEvent event) throws IOException{
+    public boolean handleSignInButton(ActionEvent event) throws IOException {
 
         // Has Login Information
-        if(model.performRequest("POST", "login", username, password, null, null, null, null, null).equals("true")){
+        if (model.performRequest("POST", "login", username, password, null, null, null, null, null).equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
             return true;
-        }
-        else{
+        } else {
             return false;
         }
 
     }
-        
 
-    public boolean handleCreateAccountButton(ActionEvent event) throws IOException{
+    public boolean handleCreateAccountButton(ActionEvent event) throws IOException {
 
         // If Account Doesn Not Exist
-        if(model.performRequest("POST", "signup", username, password, null, null, null, null, null).equals("true")){
+        if (model.performRequest("POST", "signup", username, password, null, null, null, null, null).equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
             return true;
         }
 
         // If Account Exxists
-        else{
+        else {
             return false;
         }
     }
 
-   
 }

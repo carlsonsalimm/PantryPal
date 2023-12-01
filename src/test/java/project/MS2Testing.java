@@ -31,10 +31,10 @@ public class MS2Testing {
 
         controller.setUsername(username);
         controller.setPassword(password);
-        boolean result = controller.handleSignInButton(new ActionEvent());
+        Boolean result = controller.handleSignInButton(new ActionEvent());
 
         assertEquals(true, result);
-        
+
     }
 
     @Test
