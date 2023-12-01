@@ -13,16 +13,31 @@ public class DetailedRecipePageController {
         this.model = model;
 
         this.view.setDeleteButtonAction(event -> {
-                handleDeleteButton(event);
+                try {
+                    handleDeleteButton(event);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
         });
 
 
         this.view.setSaveButtonAction(event -> {
-                handleSaveButton(event);
+                try {
+                    handleSaveButton(event);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
         });
 
         this.view.setBackButtonAction(event -> {
-                handleBackButton(event);
+                try {
+                    handleBackButton(event);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
         });
     }
 
@@ -31,6 +46,31 @@ public class DetailedRecipePageController {
         
         CSVHandler.deleteRecipe(recipe);
 
+        // Exit Window
+        RecipeListPage temp = new RecipeListPage();
+        Main.setPage(temp);
+    }
+
+    public void handleSaveButton(ActionEvent event) throws IOException {
+        Recipe oldRecipe = view.getRecipe();
+        String recipe = view.getTitle();
+        String instructions = view.getInstructions();
+        
+        if (oldRecipe.getInstructions().equals(instructions)) {
+            CSVHandler.writeRecipes(oldRecipe);
+        }
+        else {
+            CSVHandler.updateRecipe(oldRecipe, new Recipe(recipe, instructions));
+        }
+
+        // Exit Window
+        RecipeListPage temp = new RecipeListPage();
+        Main.setPage(temp);
+    }
+
+    public void handleBackButton(ActionEvent event) throws IOException{
+        
+        // Exit Window
         RecipeListPage temp = new RecipeListPage();
         Main.setPage(temp);
     }

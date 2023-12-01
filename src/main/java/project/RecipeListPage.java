@@ -31,7 +31,6 @@ class RecipeListHeader extends HBox {
         pane.setPrefSize(565, 40); // sets size of Recipe
 
         title = new Label("My Recipes"); // Text of the Header
-
         title.setStyle("-fx-font-size: 20;-fx-font-weight: bold;");
         title.setPrefSize(475, 40); // sets size of Recipe
         title.setTextAlignment(TextAlignment.CENTER);
@@ -55,6 +54,11 @@ class RecipeListHeader extends HBox {
     public Button getAddButton() {
         return addButton;
     }
+
+    public Label getTitle() {
+        return title;
+    }
+    
 }
 
 class RecipeItem extends HBox {
@@ -64,8 +68,7 @@ class RecipeItem extends HBox {
     private BorderPane pane;
     private StackPane viewContainer;
 
-    RecipeItem(Recipe recipe) {
-        this.recipe = recipe;
+    RecipeItem() {
         pane = new BorderPane();
         pane.setPrefSize(550, 40); // sets size of Recipe
         pane.setStyle(" -fx-background-color:E1EAF3; -fx-background-radius: 5; -fx-font-weight: bold;"); // sets
@@ -90,11 +93,18 @@ class RecipeItem extends HBox {
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
 
-       
-        detailedViewButton.setOnAction(e -> {
-            Main.setPage(new DetailedRecipePage(recipe));
-            // add controller for the DetailedRecipePage creation here
-        });
+    }
+
+    public void setRecipe(Recipe recipe){
+        this.recipe = recipe;
+    }
+
+    public Button getDetailedViewButton() {
+        return detailedViewButton;
+    }
+
+    public Recipe getRecipe() {
+        return recipe;
     }
 }
 
@@ -115,7 +125,8 @@ class RecipeList extends VBox {
         this.setStyle("-fx-background-color: #FFFFFF;");
 
         for (Recipe recipe : recipes) {
-            RecipeItem Item = new RecipeItem(recipe);
+            RecipeItem Item = new RecipeItem();
+            Item.setRecipe(recipe);
             this.getChildren().add(Item);
         }
     }
@@ -124,7 +135,13 @@ class RecipeList extends VBox {
 
 public class RecipeListPage extends BorderPane {
     private RecipeListHeader header;
+
+    private Button detailedViewButton;
     private Button addButton;
+
+    private RecipeItem recipteItem;
+    private Recipe recipe;
+
     private RecipeList recipeList;
 
     RecipeListPage() throws IOException {
@@ -143,26 +160,28 @@ public class RecipeListPage extends BorderPane {
         // Add scroller to the centre of the BorderPane
         this.setCenter(scroller);
 
-        // Add footer to the bottom of the BorderPane
-
         // Initialise Button Variables through the getters in Footer
         addButton = header.getAddButton();
         // Call Event Listeners for the Buttons
-        addListeners();
-    }
-
-    // public void setAddButtonAction(EventHandler<ActionEvent> eventHandler) {
-    //     addButton.setOnAction(eventHandler);
-    // }
-
-    // Add Event Listeners for the Buttons to redirect to meal type page
-    public void addListeners() {
-        addButton.setOnAction(e -> {
-            Main.setPage(new SpecifyMealTypePage());
-        });
+        //addListeners();
     }
 
     public RecipeList getRecipeList() {
-        return recipeList;
+        return this.recipeList;
     }
+
+    public void setAddButtonAction(EventHandler<ActionEvent> eventHandler){
+        addButton.setOnAction(eventHandler);
+    }
+
+    public void setDetailedViewButtonAction(EventHandler<ActionEvent> eventHandler){
+        detailedViewButton.setOnAction(eventHandler);
+    }
+    
+    // Add Event Listeners for the Buttons to redirect to meal type page
+    // public void addListeners() {
+    //     addButton.setOnAction(e -> {
+    //         Main.setPage(new SpecifyMealTypePage());
+    //     });
+    // }
 }

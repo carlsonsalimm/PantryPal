@@ -10,11 +10,11 @@ import org.json.Cookie;
 
 import javafx.event.ActionEvent;
 
-public class LoginPageController {
+public class SpecifyMealTypePageController {
     private LoginPage view;
     private Model model;
 
-    public LoginPageController(LoginPage view ,Model model){
+    public SpecifyMealTypePageController(LoginPage view ,Model model){
         this.view = view;
         this.model = model;
 
@@ -45,8 +45,7 @@ public class LoginPageController {
         if(model.performRequest("POST", "login", username, password, null, null, null, null, null).equals("true")){
             model.setUsername(username);
             model.setPassword(password);
-
-            Main.setPage(new RecipeListPage());
+            view.goToRecipeListPage();
         }
         else{
             view.showAlert("Error", "Account Not Found");
@@ -73,7 +72,7 @@ public class LoginPageController {
         if(model.performRequest("POST", "signup", username, password, null, null, null, null, null).equals("true")){
             model.setUsername(username);
             model.setPassword(password);
-            Main.setPage(new RecipeListPage());
+            view.goToRecipeListPage();
         }
         else{
             view.showAlert("Error", "Account Already Exist");

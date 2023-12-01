@@ -11,72 +11,41 @@ import org.json.Cookie;
 import javafx.event.ActionEvent;
 
 public class RecipeListPageController {
-    private LoginPage view;
+    // actions to account for: addButton, RecipeItem, detailedViewButton
+    private RecipeListPage view;
     private Model model;
 
-    public RecipeListPageController(LoginPage view ,Model model){
+    public RecipeListPageController(RecipeListPage view ,Model model){
         this.view = view;
         this.model = model;
 
-        this.view.setSignInButtonAction(event -> {
+        this.view.setAddButtonAction(event -> {
             try {
-                handleSignInButton(event);
+                handleAddButton(event);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         });
 
 
-        this.view.setCreateAccountButtonAction(event -> {
+        this.view.setDetailedViewButtonAction(event -> {
             try {
-                handleCreateAccountButton(event);
+                handleDetailedViewButton(event);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         });
     }
 
-    private void handleSignInButton(ActionEvent event) throws IOException{
-        String username = view.getUsername();
-        String password = view.getPassword();
-
-        if(model.performRequest("POST", "login", username, password, null, null, null, null, null).equals("true")){
-            model.setUsername(username);
-            model.setPassword(password);
-            view.goToRecipeListPage();
-        }
-        else{
-            view.showAlert("Error", "Account Not Found");
-        }
-
-
-        // Remember Me
-        if(view.getRememberMe()){
-            FileWriter file = new FileWriter("RememberMe.csv");
-
-            try {
-                file.write(1);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            file.close();
-        }
+    private void handleAddButton(ActionEvent event) throws IOException{
+        SpecifyMealTypePage temp = new SpecifyMealTypePage();
+        Main.setPage(temp);
     }
 
-    private void handleCreateAccountButton(ActionEvent event) throws IOException{
-        String username = view.getUsername();
-        String password = view.getPassword();
-
-        if(model.performRequest("POST", "signup", username, password, null, null, null, null, null).equals("true")){
-            model.setUsername(username);
-            model.setPassword(password);
-            view.goToRecipeListPage();
-        }
-        else{
-            view.showAlert("Error", "Account Already Exist");
-        }
+    private void handleDetailedViewButton(ActionEvent event) throws IOException{
+        Recipe recipe = recipe.getRecipe();
+        DetailedRecipePage temp = new DetailedRecipePage(recipe);
+        Main.setPage(temp);
     }
 
    

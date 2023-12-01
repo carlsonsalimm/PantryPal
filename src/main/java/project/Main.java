@@ -2,6 +2,7 @@ package project;
 
 
 import javafx.application.Application;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -16,7 +17,7 @@ import java.lang.ModuleLayer.Controller;
 public class Main extends Application {
 
     static Stage primaryStage;
-    static VBox root;
+    static Parent root;
     static RecipeListPage temp;
 
     @Override
@@ -31,7 +32,7 @@ public class Main extends Application {
         Model model = new Model();
 
         // Set Controller
-        LoginPageController controller = new LoginPageController(root, model);
+        //LoginPageController controller = new LoginPageController(root, model);
         
         //primaryStage.getIcons().add(new Image("./icons/recipe.png"));
         // Create scene of mentioned size with the border pane
@@ -42,7 +43,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void setPage(BorderPane page) {
+    public static void setPage(Parent page) {
         primaryStage.getScene().setRoot(page);
     }
 

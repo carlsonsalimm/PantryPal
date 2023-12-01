@@ -78,6 +78,8 @@ public class SpecifyIngredientPage extends BorderPane {
         addListeners();
     }
 
+    
+
     public void addListeners() {
         cancelButton.setOnAction(event -> {
             RecipeListPage temp;
