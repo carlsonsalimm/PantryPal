@@ -38,8 +38,46 @@ public class MS2Testing {
     }
 
     @Test
-    void testValidAccountCreation() throws IOException, InterruptedException, URISyntaxException {
+    void testInvalidLogin() throws IOException, InterruptedException, URISyntaxException {
 
+        MockLoginPageController controller = new MockLoginPageController(model);
+        String username = "carl";
+        String password = "4109247189274891";
+
+        controller.setUsername(username);
+        controller.setPassword(password);
+        Boolean result = controller.handleSignInButton(new ActionEvent());
+
+        assertEquals(false, result);
+
+    }
+
+    @Test
+    void testValidAccountCreation() throws IOException, InterruptedException, URISyntaxException {
+        // TODO make sure to delete account after
+        MockLoginPageController controller = new MockLoginPageController(model);
+        String username = "userApple12341";
+        String password = "passpass";
+
+        controller.setUsername(username);
+        controller.setPassword(password);
+        Boolean result = controller.handleCreateAccountButton(new ActionEvent());
+        // MongoDBProject.deleteUser(username, password);
+
+        assertEquals(true, result);
+    }
+
+    @Test
+    void testInvalidAccountCreation() throws IOException, InterruptedException, URISyntaxException {
+        MockLoginPageController controller = new MockLoginPageController(model);
+        String username = "carl";
+        String password = "passpass";
+
+        controller.setUsername(username);
+        controller.setPassword(password);
+        Boolean result = controller.handleSignInButton(new ActionEvent());
+
+        assertEquals(false, result);
     }
 
 }
