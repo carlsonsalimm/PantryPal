@@ -1,20 +1,21 @@
-# FROM --platform=linux/amd64 openjdk:17
-# WORKDIR /server
-# COPY ./src/server/java/project/ /server/
-# RUN javac Server.java RequestHandler.java \ 
-#           ChatGPT.java GPTInterface.java \
-#           Whisper.java WhisperInterface.java \
-#           MongoDBProject.java
-# EXPOSE 8100
-# ENTRYPOINT ["java", "server/Server"]
+FROM --platform=linux/amd64 openjdk:17
+WORKDIR /project
+COPY ./src/server/java/project/ /project/
+COPY ./build/install/cse-110-project-team-31/lib/ /project/
+RUN javac -cp "./*" MyServer.java RequestHandler.java \ 
+          ChatGPT.java GPTInterface.java \
+          Whisper.java WhisperInterface.java \
+          MongoDBProject.java
+EXPOSE 8100
+ENTRYPOINT ["java", "-cp", "./*", "project/MyServer"]
 
 
 # temp container to build using gradle
-FROM --platform=linux/amd64 gradle:8.4-jdk17 AS GRADLE_BUILD
-WORKDIR /app/
-COPY . .
-RUN gradle build
-ENTRYPOINT [ "gradle", "run" ]
+# FROM --platform=linux/amd64 gradle:8.4-jdk17 AS GRADLE_BUILD
+# WORKDIR /app/
+# COPY . .
+# RUN gradle build
+# ENTRYPOINT [ "gradle", "run" ]
     
 # Package stage
 # FROM --platform=linux/amd64 openjdk:17
