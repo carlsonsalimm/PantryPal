@@ -16,7 +16,7 @@ import java.net.URISyntaxException;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class MyCreationTest {
+public class MS1Testing {
     Recipe recipe1 = new Recipe("scrambled eggs", "heat pan then scramble desired amount of eggs");
     Recipe recipe2 = new Recipe("sunnyside eggs", "just eggs");
     MockGPT gpt = new MockGPT();
