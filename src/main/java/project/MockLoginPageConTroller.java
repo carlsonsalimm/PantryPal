@@ -11,7 +11,6 @@ import org.json.Cookie;
 import javafx.event.ActionEvent;
 
 class MockLoginPageController implements LoginControllerInterface{
-    private LoginPage view;
     private Model model;
 
     String username;

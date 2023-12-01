@@ -36,4 +36,10 @@ public class MS2Testing {
         assertEquals(true, result);
         
     }
+
+    @Test
+    void testValidAccountCreation() throws IOException, InterruptedException, URISyntaxException {
+
+    }
+
 }
