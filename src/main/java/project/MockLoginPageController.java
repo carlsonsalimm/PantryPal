@@ -25,7 +25,8 @@ class MockLoginPageController implements LoginControllerInterface {
     public boolean handleSignInButton(ActionEvent event) throws IOException {
 
         // Has Login Information
-        if (model.performRequest("POST", "login", username, password, null, null, null, null, null).equals("true")) {
+        if (model.performRequest("POST", "login", username, password, null, null, null, null, null, null)
+                .equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
             return true;
@@ -38,7 +39,8 @@ class MockLoginPageController implements LoginControllerInterface {
     public boolean handleCreateAccountButton(ActionEvent event) throws IOException {
 
         // If Account Doesn Not Exist
-        if (model.performRequest("POST", "signup", username, password, null, null, null, null, null).equals("true")) {
+        if (model.performRequest("POST", "signup", username, password, null, null, null, null, null, null)
+                .equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
             return true;

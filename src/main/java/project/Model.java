@@ -33,7 +33,7 @@ public class Model {
 
     public String performRequest(String method, String action, String iniUsername, String iniPassword,
             String audioFilePath, String mealType,
-            String ingredients, String title, String instructions) {
+            String ingredients, String title, String instructions, String creationTime) {
 
         try {
             String urlString = "https://pantrypal-team31.onrender.com/";
@@ -67,12 +67,20 @@ public class Model {
                     urlString += "?action=signup&username=" + iniUsername + "&password=" + iniPassword;
 
                 } else if (username != null && password != null && mealType != null && ingredients != null
-                        && title != null && instructions != null) {
-                    // Creates/updates an existing recipe (requires username, password, mealType,
+                        && title != null && instructions != null && creationTime == null) {
+                    // Create a new recipe (requires username, password, mealType,
                     // ingredients, title, instructions)
-                    urlString += "?action=updateRecipe&username=" + username + "&password=" + password + "&mealType="
+                    urlString += "?action=createRecipe&username=" + username + "&password=" + password + "&mealType="
                             + mealType + "&ingredients=" + ingredients + "&title=" + title + "&instructions="
                             + instructions;
+
+                } else if (username != null && password != null && title != null && instructions != null
+                        && creationTime != null) {
+                    // Updates an existing recipe (requires username, password, ingredients, title,
+                    // instructions, creationTime)
+                    urlString += "?action=updateRecipe&username=" + username + "&password=" + password + "&ingredients="
+                            + ingredients + "&title=" + title + "&instructions=" + instructions + "&creationTime="
+                            + creationTime;
 
                 } else if (mealType != null && ingredients != null) {
                     // Generate recipe instructions w/GPT (needs meal type and ingredients, returns

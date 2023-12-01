@@ -10,11 +10,11 @@ import org.json.Cookie;
 
 import javafx.event.ActionEvent;
 
-public class LoginPageController implements LoginControllerInterface{
+public class LoginPageController implements LoginControllerInterface {
     private LoginPage view;
     private Model model;
 
-    LoginPageController(LoginPage view ,Model model){
+    LoginPageController(LoginPage view, Model model) {
         this.view = view;
         this.model = model;
 
@@ -27,7 +27,6 @@ public class LoginPageController implements LoginControllerInterface{
             }
         });
 
-
         this.view.setCreateAccountButtonAction(event -> {
             try {
                 handleCreateAccountButton(event);
@@ -38,16 +37,17 @@ public class LoginPageController implements LoginControllerInterface{
         });
     }
 
-    public boolean handleSignInButton(ActionEvent event) throws IOException{
+    public boolean handleSignInButton(ActionEvent event) throws IOException {
         String username = view.getUsername();
         String password = view.getPassword();
 
-        if(model.performRequest("POST", "login", username, password, null, null, null, null, null).equals("true")){
+        if (model.performRequest("POST", "login", username, password, null, null, null, null, null, null)
+                .equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
             view.goToRecipeListPage();
 
-            if(view.getRememberMe()){
+            if (view.getRememberMe()) {
                 FileWriter file = new FileWriter("RememberMe.csv");
                 try {
                     file.write(1);
@@ -56,24 +56,22 @@ public class LoginPageController implements LoginControllerInterface{
                 }
                 file.close();
             }
-    
 
             return true;
-        }
-        else{
+        } else {
             view.showAlert("Error", "Account Not Found");
             return false;
         }
 
     }
-        
 
-    public boolean handleCreateAccountButton(ActionEvent event) throws IOException{
+    public boolean handleCreateAccountButton(ActionEvent event) throws IOException {
         String username = view.getUsername();
         String password = view.getPassword();
 
         // If Account Doesn Not Exist
-        if(model.performRequest("POST", "signup", username, password, null, null, null, null, null).equals("true")){
+        if (model.performRequest("POST", "signup", username, password, null, null, null, null, null, null)
+                .equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
             view.goToRecipeListPage();
@@ -81,11 +79,10 @@ public class LoginPageController implements LoginControllerInterface{
         }
 
         // If Account Exxists
-        else{
+        else {
             view.showAlert("Error", "Account Already Exist");
             return false;
         }
     }
 
-   
 }
