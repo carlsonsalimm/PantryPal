@@ -104,7 +104,7 @@ class LoginPage extends VBox {
     }
 
     public String getPassword(){
-        return password.toString();
+        return password.getText();
     }
 
     public boolean getRememberMe(){
