@@ -17,8 +17,9 @@ public class DallE implements DallEInterface {
     private static final String API_KEY = "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";
     private static final String MODEL = "dall-e-2";
 
+    //method to return the generated image url
     @Override
-    public void generateImage(String prompt) throws IOException, InterruptedException, URISyntaxException {
+    public String generateImageURL(String prompt) throws IOException, InterruptedException, URISyntaxException {
         // Set request parameters
         int n = 1;
 
@@ -54,5 +55,8 @@ public class DallE implements DallEInterface {
         try (InputStream in = new URI(generatedImageURL).toURL().openStream()) {
             Files.copy(in, Paths.get("image.jpg"));
         }
+
+        return generatedImageURL;
     }
+
 }
