@@ -56,7 +56,7 @@ class SpecifyMealTypePage extends VBox {
         // Set up labels
         prompt = new Label("What kind of meal are you making?");
         prompt.setStyle(promptStyle);
-        subPrompt = new Label("Say \"breakfast, \"lunch,\" or \"dinner.\"");
+        subPrompt = new Label("Say \"Breakfast\", \"Lunch,\" or \"Dinner.\"");
         subPrompt.setStyle(subPromptStyle);
 
         //button to record audio
@@ -65,13 +65,8 @@ class SpecifyMealTypePage extends VBox {
             
         recorderButton.setPrefSize(300, 50);
         this.getChildren().add(recorderButton);
-    
-        // Set the button actions for mouse press and release
-        recorderButton.setOnMousePressed(event -> startRecording());
-        recorderButton.setOnMouseReleased(event -> stopRecordingAndProcessMealType());
-
-
         
+        // UI Container
         promptContainer = new HBox(prompt);
         promptContainer.setAlignment(Pos.CENTER);
         subPromptContainer = new HBox(subPrompt);
@@ -82,17 +77,9 @@ class SpecifyMealTypePage extends VBox {
         // Setting the Back Button
         backButton = new Button("x");
         backButton.setStyle(backButtonStyle);
-        
-        //place stack panges onto border pane
 
         this.getChildren().addAll(promptContainer, subPromptContainer, recordButtonContainer, backButton);
         this.requestLayout();
-
-        //cancelButton.setOnAction(event -> Main.setPage(Main.temp));
-    }
-
-    public AudioRecording getAudioRecording() {
-        return this.recordButton;
     }
 
     public void setRecordHoldAction(EventHandler<? super MouseEvent> eventHandler){
@@ -105,10 +92,6 @@ class SpecifyMealTypePage extends VBox {
 
     public void setBackButtonAction(EventHandler<ActionEvent> eventHandler){
         backButton.setOnAction(eventHandler);
-    }
-
-    public void setRecordButtonAction(EventHandler<ActionEvent> eventHandler){
-        recordButton.setOnAction(eventHandler);
     }
 
 }

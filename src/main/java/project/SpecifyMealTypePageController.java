@@ -11,16 +11,16 @@ import org.json.Cookie;
 import javafx.event.ActionEvent;
 
 public class SpecifyMealTypePageController {
-    private LoginPage view;
+    private SpecifyMealTypePage view;
     private Model model;
 
-    public SpecifyMealTypePageController(LoginPage view ,Model model){
+    public SpecifyMealTypePageController(SpecifyMealTypePage view ,Model model){
         this.view = view;
         this.model = model;
 
-        this.view.setSignInButtonAction(event -> {
+        this.view.setRecordHoldAction(event -> {
             try {
-                handleSignInButton(event);
+                handleRecordHoldButton(event);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -28,9 +28,9 @@ public class SpecifyMealTypePageController {
         });
 
 
-        this.view.setCreateAccountButtonAction(event -> {
+        this.view.setRecordReleaseAction(event -> {
             try {
-                handleCreateAccountButton(event);
+                handleRecordReleasetButton(event);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -38,45 +38,12 @@ public class SpecifyMealTypePageController {
         });
     }
 
-    private void handleSignInButton(ActionEvent event) throws IOException{
-        String username = view.getUsername();
-        String password = view.getPassword();
-
-        if(model.performRequest("POST", "login", username, password, null, null, null, null, null).equals("true")){
-            model.setUsername(username);
-            model.setPassword(password);
-            view.goToRecipeListPage();
-        }
-        else{
-            view.showAlert("Error", "Account Not Found");
-        }
-
-
-        // Remember Me
-        if(view.getRememberMe()){
-            FileWriter file = new FileWriter("RememberMe.csv");
-
-            try {
-                file.write(1);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            file.close();
-        }
+    private void handleRecordHoldButton(ActionEvent event) throws IOException{
+       
     }
 
-    private void handleCreateAccountButton(ActionEvent event) throws IOException{
-        String username = view.getUsername();
-        String password = view.getPassword();
-
-        if(model.performRequest("POST", "signup", username, password, null, null, null, null, null).equals("true")){
-            model.setUsername(username);
-            model.setPassword(password);
-            view.goToRecipeListPage();
-        }
-        else{
-            view.showAlert("Error", "Account Already Exist");
-        }
+    private void handleRecordReleasetButton(ActionEvent event) throws IOException{
+      
     }
 
    

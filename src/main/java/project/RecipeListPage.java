@@ -178,10 +178,4 @@ public class RecipeListPage extends BorderPane {
         detailedViewButton.setOnAction(eventHandler);
     }
     
-    // Add Event Listeners for the Buttons to redirect to meal type page
-    // public void addListeners() {
-    //     addButton.setOnAction(e -> {
-    //         Main.setPage(new SpecifyMealTypePage());
-    //     });
-    // }
 }

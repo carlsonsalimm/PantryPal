@@ -91,5 +91,6 @@ public class SpecifyIngredientPage extends BorderPane {
             }
         });
     }
+
     
 }
