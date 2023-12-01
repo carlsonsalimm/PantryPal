@@ -20,17 +20,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MS2Testing {
-    
+    Model model = new Model();
 
     @Test
     void testValidLogin() throws IOException, InterruptedException, URISyntaxException {
-        LoginPage login = new LoginPage();
-        LoginPageController controller = new LoginPageController(login, new Model());
-        String username = "Carl";
+
+        MockLoginPageController controller = new MockLoginPageController(model);
+        String username = "carl";
         String password = "1234";
 
-        login.setUsername(username);
-        login.setPassword(password);
+        controller.setUsername(username);
+        controller.setPassword(password);
         boolean result = controller.handleSignInButton(new ActionEvent());
 
         assertEquals(true, result);
