@@ -1,17 +1,15 @@
 package project;
 
 import com.sun.net.httpserver.*;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.net.*;
 import java.util.concurrent.*;
 
 public class MyServer {
 
   // initialize server port and hostname
   private static final int SERVER_PORT = 8100;
-  private static final String SERVER_HOSTNAME = "localhost";
+  private static final String SERVER_HOSTNAME = "0.0.0.0";
 
   public static void main(String[] args) throws IOException {
     // create a thread pool to handle requests

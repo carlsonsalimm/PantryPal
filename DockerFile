@@ -1,0 +1,23 @@
+# FROM --platform=linux/amd64 openjdk:17
+# WORKDIR /project
+# COPY ./src/server/java/project/ /project/
+# COPY ./build/install/cse-110-project-team-31/lib/bson-4.11.0.jar /project/
+# COPY ./build/install/cse-110-project-team-31/lib/bson-record-codec-4.11.0.jar /project/
+# COPY ./build/install/cse-110-project-team-31/lib/json-20230227.jar /project/
+# COPY ./build/install/cse-110-project-team-31/lib/mongodb-driver-core-4.11.0.jar /project/
+# COPY ./build/install/cse-110-project-team-31/lib/mongodb-driver-sync-4.11.0.jar /project/
+# RUN javac -cp "./*" MyServer.java RequestHandler.java ChatGPT.java GPTInterface.java Whisper.java WhisperInterface.java MongoDBProject.java
+# EXPOSE 8100
+# ENTRYPOINT ["java", "-cp", ".", "project/MyServer"]
+
+FROM --platform=linux/amd64 openjdk:17
+WORKDIR /project
+COPY ./build/libs/cse-110-project-team-31.jar /project/
+COPY ./build/install/cse-110-project-team-31/lib/bson-4.11.0.jar /project/
+COPY ./build/install/cse-110-project-team-31/lib/bson-record-codec-4.11.0.jar /project/
+COPY ./build/install/cse-110-project-team-31/lib/json-20230227.jar /project/
+COPY ./build/install/cse-110-project-team-31/lib/mongodb-driver-core-4.11.0.jar /project/
+COPY ./build/install/cse-110-project-team-31/lib/mongodb-driver-sync-4.11.0.jar /project/
+EXPOSE 8100
+ENTRYPOINT ["java", "-cp", "./*", "project/MyServer"]
+

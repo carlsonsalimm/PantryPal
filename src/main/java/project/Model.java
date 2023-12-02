@@ -29,7 +29,7 @@ public class Model {
             String ingredients, String title, String instructions) {
 
         try {
-            String urlString = "PLACEHOLDER"; // TO-DO: Add server url
+            String urlString = "https://pantrypal-team31.onrender.com/"; // TO-DO: Add server url
 
             if (method.equals("GET")) {
 

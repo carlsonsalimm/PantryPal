@@ -30,12 +30,18 @@ dependencies {
     // JUnit dependencies
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 
+    implementation 'org.mongodb:mongodb-driver-sync:4.11.0'
+
     // Add any other dependencies your project may need
 }
 
 application {
     mainClassName = 'project.Main' // Replace with your main class
 }
+
+// application {
+//     mainClassName = 'project.Server' // alt for making docker image
+// }
 
 javafx {
     version = "16"
