@@ -14,20 +14,21 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
-public class SpecifyMealTypePageController {
-    private SpecifyMealTypePage view;
+public class SpecifyIngredientsPageController {
+    private SpecifyIngredientsPage view;
     private Model model;
-    private RecipeListPage temp;
 
     private TargetDataLine targetDataLine;
     private AudioFormat audioFormat;
     private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
+    private String recorderButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
+    private Button recorderButton;
     public String mealType;
     private String errorMsgStyle = "-fx-font-size: 20;-fx-font-weight: bold; -fx-text-fill: #DF0000;";
     private Text errorMsg;
     private Boolean errorFlag = false;
 
-    public SpecifyMealTypePageController(SpecifyMealTypePage view ,Model model){
+    public SpecifyIngrecientsPageController(SpecifyIngredientsPage view ,Model model){
         this.view = view;
         this.model = model;
 
@@ -40,18 +41,10 @@ public class SpecifyMealTypePageController {
             }
         });
 
+
         this.view.setRecordReleaseAction(event -> {
             try {
                 handleRecordReleasetButton(event);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        });
-
-        this.view.setBackButtonAction(event -> {
-            try {
-                handleBackButton(event);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -67,11 +60,6 @@ public class SpecifyMealTypePageController {
     private void handleRecordReleasetButton(MouseEvent event) throws IOException{
         stopRecordingAndProcessMealType();
       
-    }
-
-    private void handleBackButton(ActionEvent event) throws IOException{
-        temp = new RecipeListPage();
-        Main.setPage(temp);
     }
 
 

@@ -1,19 +1,27 @@
 package project;
 import java.io.IOException;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 // import org.junit.platform.reporting.shadow.org.opentest4j.reporting.events.core.Sources;
 
-class SpecifyIngredientContent extends VBox {
+
+class SpecifyIngredientPage extends VBox {
+    private String cancelButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
+    private Button cancelButton;
+
     private AudioRecording recordButton;
 
+    private HBox cancelContainer;
     private HBox promptContainer;
     private HBox subPromptContainer;
     private HBox recordButtonContainer;
@@ -24,14 +32,15 @@ class SpecifyIngredientContent extends VBox {
     private Label prompt;
     private Label subPrompt;
 
-
-    SpecifyIngredientContent(String mealType) {
-        this.setPrefSize(600, 700); // Size of the header
-        this.setStyle("-fx-background-color: #FFFFFF;");
-        this.setSpacing(10);
-        this.setAlignment(Pos.CENTER);
+    SpecifyIngredientPage(String mealType) {
+        // this.setPrefSize(600, 700); // Size of the header
+        // this.setStyle("-fx-background-color: #FFFFFF;");
+        // this.setSpacing(10);
+        // this.setAlignment(Pos.CENTER);
         //button to cancel recording and return to recipe list page
-        
+        cancelButton = new Button("x");
+        cancelButton.setStyle(cancelButtonStyle);
+        cancelButton.setPadding(new Insets(10, 0, 0, 10));
 
         // Set up labels
         prompt = new Label("What ingredients do you have?");
@@ -43,6 +52,8 @@ class SpecifyIngredientContent extends VBox {
         recordButton = new AudioRecording(mealType);
         //bodyContainer = new StackPane();
         
+        cancelContainer = new HBox(cancelButton);
+        cancelContainer.setAlignment(Pos.CENTER);
         promptContainer = new HBox(prompt);
         promptContainer.setAlignment(Pos.CENTER);
         subPromptContainer = new HBox(subPrompt);
@@ -52,45 +63,20 @@ class SpecifyIngredientContent extends VBox {
         
         //place stack panges onto border pane
 
-        this.getChildren().addAll(promptContainer, subPromptContainer, recordButtonContainer);
+        this.getChildren().addAll(cancelContainer, promptContainer, subPromptContainer, recordButtonContainer);
         this.requestLayout();
     }
 
-    public AudioRecording getAudioRecording() {
-        return this.recordButton;
+        public void setRecordHoldAction(EventHandler<? super MouseEvent> eventHandler){
+        recordButton.setOnMousePressed(eventHandler);
     }
 
-}
-
-public class SpecifyIngredientPage extends BorderPane {
-    private SpecifyIngredientContent content;
-    private String cancelButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
-    private Button cancelButton;
-
-    SpecifyIngredientPage(String mealType) {
-        content = new SpecifyIngredientContent(mealType);
-        cancelButton = new Button("x");
-        cancelButton.setStyle(cancelButtonStyle);
-        cancelButton.setPadding(new Insets(10, 0, 0, 10));
-
-        this.setTop(cancelButton);
-        this.setCenter(content);
-        addListeners();
+    public void setRecordReleaseAction(EventHandler<? super MouseEvent> eventHandler){
+        recordButton.setOnMouseReleased(eventHandler);
     }
 
-    
-
-    public void addListeners() {
-        cancelButton.setOnAction(event -> {
-            RecipeListPage temp;
-            try {
-                temp = new RecipeListPage();
-                Main.setPage(temp);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    public void setCancelButtonAction(EventHandler<ActionEvent> eventHandler){
+        cancelButton.setOnAction(eventHandler);
     }
 
-    
 }
