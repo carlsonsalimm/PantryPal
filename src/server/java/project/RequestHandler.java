@@ -14,6 +14,7 @@ public class RequestHandler implements HttpHandler {
   private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
   private static Whisper whisper;
   public static ChatGPT chatGPT;
+  public static DallE dallE;
   // private DALLE dallE;
 
   Map<String, String> queryParams;
@@ -21,6 +22,7 @@ public class RequestHandler implements HttpHandler {
   RequestHandler() {
     whisper = new Whisper();
     chatGPT = new ChatGPT();
+    dallE = new DallE();
   }
 
   public void handle(HttpExchange httpExchange) throws IOException {
@@ -131,7 +133,8 @@ public class RequestHandler implements HttpHandler {
       }
     }
 
-    return response;
+    //response include generated recipe and image url (in the last part)
+    return response; 
   }
 
   // deleteRecipe
