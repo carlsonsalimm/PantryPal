@@ -148,6 +148,9 @@ public class RecipeListPage extends BorderPane {
         header = new RecipeListHeader();
         addButton = header.getAddButton();
 
+        recipteItem = new RecipeItem();
+        this.recipe = recipteItem.getRecipe();
+
         // Create a RecipeList Object to hold the Recipes
         recipeList = new RecipeList();
 
@@ -164,6 +167,10 @@ public class RecipeListPage extends BorderPane {
         addButton = header.getAddButton();
         // Call Event Listeners for the Buttons
         //addListeners();
+    }
+
+    public Recipe getRecipe() {
+        return recipe;
     }
 
     public RecipeList getRecipeList() {

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javafx.event.ActionEvent;
 
-public class DetailedRecipePageController {
+public class DetailedRecipePageController implements Controller{
     private DetailedRecipePage view;
     private Model model;
 

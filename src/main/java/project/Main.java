@@ -19,6 +19,7 @@ public class Main extends Application {
     static Stage primaryStage;
     static Parent root;
     static RecipeListPage temp;
+    static Controller controller;
 
     @Override
     public void start(Stage primaryStage) throws Exception, IOException {
@@ -31,8 +32,11 @@ public class Main extends Application {
         Main.root = root;
         Model model = new Model();
 
+        LoginPageController controller = new LoginPageController(root, model);
+        Main.setController(controller);
+
         // Set Controller
-        //LoginPageController controller = new LoginPageController(root, model);
+        Main.setController(new LoginPageController(root, model));
         
         //primaryStage.getIcons().add(new Image("./icons/recipe.png"));
         // Create scene of mentioned size with the border pane
@@ -45,6 +49,10 @@ public class Main extends Application {
 
     public static void setPage(Parent page) {
         primaryStage.getScene().setRoot(page);
+    }
+
+    public static void setController(Controller controller){
+        Main.controller = controller;
     }
 
     public static void callLoadMethod() {

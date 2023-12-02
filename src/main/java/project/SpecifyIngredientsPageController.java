@@ -14,7 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
-public class SpecifyIngredientsPageController {
+public class SpecifyIngredientsPageController implements Controller{
     private SpecifyIngredientsPage view;
     private Model model;
 
@@ -28,7 +28,7 @@ public class SpecifyIngredientsPageController {
     private Text errorMsg;
     private Boolean errorFlag = false;
 
-    public SpecifyIngrecientsPageController(SpecifyIngredientsPage view ,Model model){
+    public SpecifyIngredientsPageController(SpecifyIngredientsPage view ,Model model){
         this.view = view;
         this.model = model;
 
@@ -112,15 +112,12 @@ public class SpecifyIngredientsPageController {
             String mealType = detectMealType(transcribedText);
 
             if (mealType != null) {
-                Main.setPage(new SpecifyIngredientPage(mealType));
+                Main.setPage(new SpecifyIngredientsPage(mealType));
             } else {
                 System.out.println("Please try again");
 
                 if(!errorFlag) {
-                    // Add label child to layout here
-                    errorMsg = new Text("Sorry, we didn't catch that. Please Try Again");
-                    errorMsg.setStyle(errorMsgStyle);
-                    this.getChildren().add(errorMsg);
+                   
                     errorFlag = true;
                 }
             }

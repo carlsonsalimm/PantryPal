@@ -144,7 +144,7 @@ public class AudioRecording extends VBox {
             String mealType = detectMealType(transcribedText);
 
             if (mealType != null) {
-                Main.setPage(new SpecifyIngredientPage(mealType));
+               // Main.setPage(new SpecifyIngredientPage(mealType));
             } else {
                 System.out.println("Please try again");
 

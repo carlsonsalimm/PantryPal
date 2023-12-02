@@ -14,7 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
-public class SpecifyMealTypePageController {
+public class SpecifyMealTypePageController implements Controller {
     private SpecifyMealTypePage view;
     private Model model;
     private RecipeListPage temp;
@@ -124,7 +124,7 @@ public class SpecifyMealTypePageController {
             String mealType = detectMealType(transcribedText);
 
             if (mealType != null) {
-                Main.setPage(new SpecifyIngredientPage(mealType));
+                Main.setPage(new SpecifyIngredientsPage(mealType));
             } else {
                 System.out.println("Please try again");
 

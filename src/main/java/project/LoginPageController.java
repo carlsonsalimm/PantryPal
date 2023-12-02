@@ -10,7 +10,7 @@ import org.json.Cookie;
 
 import javafx.event.ActionEvent;
 
-public class LoginPageController implements LoginControllerInterface{
+public class LoginPageController implements Controller{
     private LoginPage view;
     private Model model;
 

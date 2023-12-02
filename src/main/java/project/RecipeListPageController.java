@@ -10,7 +10,7 @@ import org.json.Cookie;
 
 import javafx.event.ActionEvent;
 
-public class RecipeListPageController {
+public class RecipeListPageController implements Controller {
     // actions to account for: addButton, RecipeItem, detailedViewButton
     private RecipeListPage view;
     private Model model;
@@ -43,7 +43,7 @@ public class RecipeListPageController {
     }
 
     private void handleDetailedViewButton(ActionEvent event) throws IOException{
-        Recipe recipe = recipe.getRecipe();
+        Recipe recipe = view.getRecipe();
         DetailedRecipePage temp = new DetailedRecipePage(recipe);
         Main.setPage(temp);
     }

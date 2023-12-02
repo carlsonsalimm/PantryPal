@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 // import org.junit.platform.reporting.shadow.org.opentest4j.reporting.events.core.Sources;
 
 
-class SpecifyIngredientPage extends VBox {
+class SpecifyIngredientsPage extends VBox {
     private String cancelButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
     private Button cancelButton;
 
@@ -32,7 +32,7 @@ class SpecifyIngredientPage extends VBox {
     private Label prompt;
     private Label subPrompt;
 
-    SpecifyIngredientPage(String mealType) {
+    SpecifyIngredientsPage(String mealType) {
         // this.setPrefSize(600, 700); // Size of the header
         // this.setStyle("-fx-background-color: #FFFFFF;");
         // this.setSpacing(10);
