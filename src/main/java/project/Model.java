@@ -40,14 +40,19 @@ public class Model {
 
             if (method.equals("GET")) {
 
-                if (username != null && password != null && title == null) {
+                if (username != null && password != null && title == null && creationTime == null) {
                     // Get recipe list (needs username, password)
                     urlString += "?action=getRecipeList&username=" + username + "&password=" + password;
 
-                } else if (username != null && password != null && title != null) {
+                } else if (username != null && password != null && title != null && creationTime == null) {
                     // Generate image for recipe (needs username, password, title, returns url of
                     // image)
                     urlString += "?action=getImage&title=" + title;
+
+                } else if (username != null && password != null && title == null && creationTime != null) {
+                    // Get share URL for recipe (needs username, password, creationTime)
+                    urlString += "?action=getShare&username=" + username + "&password=" + password + "&creationTime="
+                            + creationTime;
                 }
 
             } else if (method.equals("POST")) {
