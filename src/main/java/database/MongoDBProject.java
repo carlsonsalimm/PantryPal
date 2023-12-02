@@ -11,16 +11,26 @@ import com.mongodb.client.result.UpdateResult;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.Binary;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MongoDBProject {
     private static final String CONNECTION_STRING = "mongodb+srv://carlsonsalimm:bADauWkgMpSjWAfw@cluster0.zha98w6.mongodb.net/?retryWrites=true&w=majority";
     private static final String DATABASE_NAME = "PantryPal";
     private static final String COLLECTION_NAME = "users";
-
+    private static final int BUFFER_SIZE = 4096;
+    //this should be changed based on where we want to store the image we got from mongodb, output.jpg is the name of the image file we got from mongodb
+    private static final String imagePath = "C:\\Users\\carls\\OneDrive\\Documents\\GitHub\\cse-110-project-team-31\\output.jpg"; 
     public static void main(String[] args) {
         String username = "carl";
         String password = "1234";
@@ -119,7 +129,7 @@ public class MongoDBProject {
     //if it is 0 that means we want to add a new recipe, but if it's not !=0 then we just want to update a existing one
     public static void updateRecipe(String username, String password, String recipeTitle,
                                 String updatedMealType, String updatedIngredients,
-                                String updatedInstructions, long creationTime) {
+                                String updatedInstructions, long creationTime, String imageUrl) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
             MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
             MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
@@ -131,16 +141,21 @@ public class MongoDBProject {
                 // Check if the recipe with the specified creationTime exists
                 List<Document> recipeList = (List<Document>) userDocument.get("RecipeList");
                 boolean recipeExists = recipeExistsWithTitle(recipeList, recipeTitle);
-                
-
-                if (recipeExists == true) {
+                if (recipeExists) {
                     // Update the existing recipe based on creationTime
                     Document existingRecipe = findRecipeByCreationTime(recipeList, creationTime);
                     existingRecipe.put("recipeTitle", recipeTitle);
                     existingRecipe.put("mealType", updatedMealType);
                     existingRecipe.put("ingredients", updatedIngredients);
                     existingRecipe.put("instructions", updatedInstructions);
-
+                     // Convert the image file to a byte array to store in mongodb
+                    byte[] imageData = downloadImageFromUrl(imageUrl);     //assuming the imageUrl is a url given my dallE
+                    if (imageData != null) {
+                        existingRecipe.put("imageData", new Binary(imageData)); // Store the image data as Binary
+                    } else {
+                        System.out.println("Failed to download image from URL.");
+                    }
+                    existingRecipe.put("imageData", new Binary(imageData));
                     collection.updateOne(
                             new Document("username", username).append("password", password)
                                     .append("RecipeList.creationTime", creationTime),
@@ -158,7 +173,12 @@ public class MongoDBProject {
                             .append("ingredients", updatedIngredients)
                             .append("instructions", updatedInstructions)
                             .append("creationTime", creationTime);
-
+                    byte[] imageData = downloadImageFromUrl(imageUrl);     //assuming the imageUrl is a url given my dallE
+                    if (imageData != null) {
+                        newRecipe.put("imageData", new Binary(imageData)); // Store the image data as Binary
+                    } else {
+                        System.out.println("Failed to download image from URL.");
+                    }
                     collection.updateOne(
                             new Document("username", username).append("password", password),
                             new Document("$push", new Document("RecipeList", newRecipe))
@@ -172,6 +192,7 @@ public class MongoDBProject {
             e.printStackTrace();
         }
     }
+
     //delete user in mongodb based on username and password
     public static boolean deleteUser(String username, String password) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
@@ -272,6 +293,38 @@ public class MongoDBProject {
             e.printStackTrace();
         }
     }
+    //given username, password, recipeTitle, get the binary file for the image with the recipeTitle from mongodb
+    public static byte[] getImageDataByUsernamePasswordAndTitle(String username, String password, String recipeTitle) {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
+            MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
+            MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
+    
+            // Check if the username and password match
+            Document userDocument = collection.find(new Document("username", username).append("password", password)).first();
+    
+            if (userDocument != null) {
+                // Check if the recipe with the specified title exists
+                List<Document> recipeList = (List<Document>) userDocument.get("RecipeList");
+                Document matchingRecipe = findRecipeByTitle(recipeList, recipeTitle);
+    
+                if (matchingRecipe != null) {
+                    // Retrieve the image data from the recipe
+                    Binary imageData = matchingRecipe.get("imageData", Binary.class);
+                    return imageData.getData();
+                } else {
+                    System.out.println("Recipe with title '" + recipeTitle + "' not found.");
+                }
+            } else {
+                System.out.println("Invalid username or password");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        return null; // Return null if there is an error or if the recipe is not found
+    }
+
+    //helper method to determine if there exists a recipe with the title
     private static boolean recipeExistsWithTitle(List<Document> recipeList, String recipeTitle) {
         for (Document existingRecipe : recipeList) {
             String existingTitle = existingRecipe.getString("recipeTitle");
@@ -292,7 +345,7 @@ public class MongoDBProject {
         }
         return null;
     }
-    //helper function to getCreationTimeByTitle so we can get the creationDate before updating it
+    //helper method to getCreationTimeByTitle so we can get the creationDate before updating it
     public static Long getCreationTimeByTitle(String username, String password, String recipeTitle) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
             MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
@@ -330,5 +383,39 @@ public class MongoDBProject {
             }
         }
         return null;
+    }
+
+    //Given a imageUrl convert it to a binary file so we can store it in mongodb
+    private static byte[] downloadImageFromUrl(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+    
+            try (InputStream inputStream = connection.getInputStream()) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                byte[] buffer = new byte[BUFFER_SIZE];
+                int bytesRead;
+    
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    baos.write(buffer, 0, bytesRead);
+                }
+    
+                return baos.toByteArray();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //this is a helper function to save the binary image file to a jpg, filePath = the directory that we want to store the image at.
+    public static void saveByteArrayToFile(byte[] data, String filePath) {
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            fos.write(data);
+            System.out.println("File saved successfully: " + filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Failed to save file: " + filePath);
+        }
     }
 }
