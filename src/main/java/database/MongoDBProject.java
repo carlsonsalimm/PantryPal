@@ -115,8 +115,65 @@ public class MongoDBProject {
         }
     }
 
-    //updateRecipe creates a new recipe if the recipeTitle does not exist, and updates if it exists.
-    public static void updateRecipe(String username, String password, String recipeTitle, String updatedMealType, String updatedIngredients,String updatedInstructions) {
+    //we can determine if we want to update or add a new recipe by specifying the creationTime, 
+    //if it is 0 that means we want to add a new recipe, but if it's not !=0 then we just want to update a existing one
+    public static void updateRecipe(String username, String password, String recipeTitle,
+                                String updatedMealType, String updatedIngredients,
+                                String updatedInstructions, long creationTime) {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
+            MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
+            MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
+
+            // Check if the username and password match
+            Document userDocument = collection.find(new Document("username", username).append("password", password)).first();
+
+            if (userDocument != null) {
+                // Check if the recipe with the specified creationTime exists
+                List<Document> recipeList = (List<Document>) userDocument.get("RecipeList");
+                boolean recipeExists = recipeExistsWithTitle(recipeList, recipeTitle);
+                
+
+                if (recipeExists == true) {
+                    // Update the existing recipe based on creationTime
+                    Document existingRecipe = findRecipeByCreationTime(recipeList, creationTime);
+                    existingRecipe.put("recipeTitle", recipeTitle);
+                    existingRecipe.put("mealType", updatedMealType);
+                    existingRecipe.put("ingredients", updatedIngredients);
+                    existingRecipe.put("instructions", updatedInstructions);
+
+                    collection.updateOne(
+                            new Document("username", username).append("password", password)
+                                    .append("RecipeList.creationTime", creationTime),
+                            new Document("$set", new Document("RecipeList.$", existingRecipe))
+                    );
+                    //System.out.println("Recipe updated successfully.");
+                } else {
+                    if (creationTime == 0) {
+                        // Add a new recipe to RecipeList with current timestamp as creationTime
+                        creationTime = System.currentTimeMillis();
+                    }
+
+                    Document newRecipe = new Document("recipeTitle", recipeTitle)
+                            .append("mealType", updatedMealType)
+                            .append("ingredients", updatedIngredients)
+                            .append("instructions", updatedInstructions)
+                            .append("creationTime", creationTime);
+
+                    collection.updateOne(
+                            new Document("username", username).append("password", password),
+                            new Document("$push", new Document("RecipeList", newRecipe))
+                    );
+                    //System.out.println("Recipe added successfully.");
+                }
+            } else {
+                System.out.println("Invalid username or password");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    //delete user in mongodb based on username and password
+    public static boolean deleteUser(String username, String password) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
             MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
             MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
@@ -125,43 +182,19 @@ public class MongoDBProject {
             Document userDocument = collection.find(new Document("username", username).append("password", password)).first();
     
             if (userDocument != null) {
-                // Check if the recipe with the specified title exists
-                List<Document> recipeList = (List<Document>) userDocument.get("RecipeList");
-    
-                if (recipeExistsWithTitle(recipeList, recipeTitle)) {
-                    // Update the specified recipe in RecipeList
-                    Document updateFields = new Document("RecipeList.$.recipeTitle", recipeTitle)
-                            .append("RecipeList.$.mealType", updatedMealType)
-                            .append("RecipeList.$.ingredients", updatedIngredients)
-                            .append("RecipeList.$.instructions", updatedInstructions)
-                            .append("RecipeList.$.creation_date", System.currentTimeMillis());
-    
-                    collection.updateOne(
-                            new Document("username", username).append("password", password)
-                                    .append("RecipeList.recipeTitle", recipeTitle),
-                            new Document("$set", updateFields)
-                    );
-                    //System.out.println("Recipe updated successfully.");
-                } else {
-                    // Add a new recipe to RecipeList
-                    Document newRecipe = new Document("recipeTitle", recipeTitle)
-                            .append("mealType", updatedMealType)
-                            .append("ingredients", updatedIngredients)
-                            .append("instructions", updatedInstructions)
-                            .append("creation_date", System.currentTimeMillis());
-    
-                    collection.updateOne(
-                            new Document("username", username).append("password", password),
-                            new Document("$push", new Document("RecipeList", newRecipe))
-                    );
-                    //System.out.println("New recipe added successfully.");
-                }
+                // Delete the user document from the collection
+                collection.deleteOne(new Document("username", username).append("password", password));
+                //System.out.println("User deleted successfully.");
+                return true;
+            } else {
+                //System.out.println("User with username '" + username + "' does not exist. Cannot delete.");
+                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false; // An error occurred
         }
     }
-    
     
     public static void deleteRecipe(String username, String password, String recipeTitle) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
@@ -249,4 +282,53 @@ public class MongoDBProject {
         return false;
     }
 
+    //helper method to find recipe by creation time
+    private static Document findRecipeByCreationTime(List<Document> recipeList, long creationTime) {
+        for (Document existingRecipe : recipeList) {
+            Long existingCreationTime = existingRecipe.getLong("creationTime");
+            if (existingCreationTime != null && existingCreationTime.equals(creationTime)) {
+                return existingRecipe;
+            }
+        }
+        return null;
+    }
+    //helper function to getCreationTimeByTitle so we can get the creationDate before updating it
+    public static Long getCreationTimeByTitle(String username, String password, String recipeTitle) {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
+            MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
+            MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
+    
+            // Check if the username and password match
+            Document userDocument = collection.find(new Document("username", username).append("password", password)).first();
+    
+            if (userDocument != null) {
+                // Check if the recipe with the specified title exists
+                List<Document> recipeList = (List<Document>) userDocument.get("RecipeList");
+                Document matchingRecipe = findRecipeByTitle(recipeList, recipeTitle);
+    
+                if (matchingRecipe != null) {
+                    // Retrieve and return the creationTime of the matching recipe
+                    return matchingRecipe.getLong("creationTime");
+                } else {
+                    //System.out.println("Recipe with title '" + recipeTitle + "' not found.");
+                }
+            } else {
+                //System.out.println("Invalid username or password");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        return null;
+    }
+    //helper function to find recipe by title and returns the recipe
+    private static Document findRecipeByTitle(List<Document> recipeList, String recipeTitle) {
+        for (Document existingRecipe : recipeList) {
+            String existingTitle = existingRecipe.getString("recipeTitle");
+            if (existingTitle != null && existingTitle.equals(recipeTitle)) {
+                return existingRecipe;
+            }
+        }
+        return null;
+    }
 }
