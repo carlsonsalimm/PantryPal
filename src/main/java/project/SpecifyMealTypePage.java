@@ -94,5 +94,12 @@ class SpecifyMealTypePage extends VBox {
         backButton.setOnAction(eventHandler);
     }
 
+    public void errorMsg(){
+        errorMsg = new Text("Sorry, we didn't catch that. Please Try Again");
+        errorMsg.setStyle(errorMsgStyle);
+        this.getChildren().add(errorMsg);
+       
+    }
+
 }
 

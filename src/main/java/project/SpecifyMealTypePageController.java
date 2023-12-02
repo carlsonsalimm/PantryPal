@@ -130,9 +130,7 @@ public class SpecifyMealTypePageController {
 
                 if(!errorFlag) {
                     // Add label child to layout here
-                    errorMsg = new Text("Sorry, we didn't catch that. Please Try Again");
-                    errorMsg.setStyle(errorMsgStyle);
-                    this.getChildren().add(errorMsg);
+                    view.errorMsg();
                     errorFlag = true;
                 }
             }
