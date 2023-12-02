@@ -32,7 +32,6 @@ public class MS2Testing {
         controller.setUsername(username);
         controller.setPassword(password);
         Boolean result = controller.handleSignInButton(new ActionEvent());
-
         assertEquals(true, result);
 
     }

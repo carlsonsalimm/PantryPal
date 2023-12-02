@@ -68,11 +68,11 @@ class RecipeItem extends HBox {
     private BorderPane pane;
     private StackPane viewContainer;
 
-    RecipeItem() {
+    RecipeItem(Recipe recipe) {
         pane = new BorderPane();
         pane.setPrefSize(550, 40); // sets size of Recipe
         pane.setStyle(" -fx-background-color:E1EAF3; -fx-background-radius: 5; -fx-font-weight: bold;"); // sets
-                                                                                                         // background
+        this.recipe = recipe;
 
         recipeName = new Label(this.recipe.getTitle()); // create RecipeItem name text field
         recipeName.setPrefSize(475, 40); // sets size of Recipe
@@ -125,7 +125,7 @@ class RecipeList extends VBox {
         this.setStyle("-fx-background-color: #FFFFFF;");
 
         for (Recipe recipe : recipes) {
-            RecipeItem Item = new RecipeItem();
+            RecipeItem Item = new RecipeItem(recipe);
             Item.setRecipe(recipe);
             this.getChildren().add(Item);
         }
@@ -139,7 +139,7 @@ public class RecipeListPage extends BorderPane {
     private Button detailedViewButton;
     private Button addButton;
 
-    private RecipeItem recipteItem;
+   
     private Recipe recipe;
 
     private RecipeList recipeList;
@@ -148,7 +148,6 @@ public class RecipeListPage extends BorderPane {
         header = new RecipeListHeader();
         addButton = header.getAddButton();
 
-        recipteItem = new RecipeItem();
         this.recipe = recipteItem.getRecipe();
 
         // Create a RecipeList Object to hold the Recipes
@@ -164,6 +163,7 @@ public class RecipeListPage extends BorderPane {
         this.setCenter(scroller);
 
         // Initialise Button Variables through the getters in Footer
+        
         addButton = header.getAddButton();
         // Call Event Listeners for the Buttons
         //addListeners();

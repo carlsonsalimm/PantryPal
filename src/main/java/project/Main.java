@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.ModuleLayer.Controller;
+
 
 public class Main extends Application {
 
@@ -20,25 +20,16 @@ public class Main extends Application {
     static Parent root;
     static RecipeListPage temp;
     static Controller controller;
+    static Model model;
 
     @Override
     public void start(Stage primaryStage) throws Exception, IOException {
-
+        Main.model = new Model();
         Main.primaryStage = primaryStage;
-        LoginPage root = new LoginPage();
-        //RecipeListPage root = new RecipeListPage();
+        Main.root = new LoginPage();
         
-
-        Main.root = root;
-        Model model = new Model();
-
-        LoginPageController controller = new LoginPageController(root, model);
-        Main.setController(controller);
-
-        // Set Controller
-        Main.setController(new LoginPageController(root, model));
-        
-        //primaryStage.getIcons().add(new Image("./icons/recipe.png"));
+        Main.controller = new LoginPageController((LoginPage) root, model);
+       
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
         // Make window non-resizable

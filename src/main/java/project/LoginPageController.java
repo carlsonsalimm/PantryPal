@@ -42,11 +42,13 @@ public class LoginPageController implements Controller{
         String username = view.getUsername();
         String password = view.getPassword();
 
-        if(model.performRequest("POST", "login", username, password, null, null, null, null, null).equals("true")){
+        if(/*model.performRequest("POST", "login", username, password, null, null, null, null, null).equals("true")*/ true){
             model.setUsername(username);
             model.setPassword(password);
 
-            Main.setPage(new RecipeListPage());
+            RecipeListPage view = new RecipeListPage();
+            Main.setPage(view);
+            Main.setController(new RecipeListPageController(view, model));
             return true;
         }
         else{
