@@ -43,7 +43,7 @@ public class DetailedRecipePageController implements Controller{
 
     private void handleDeleteButton(ActionEvent event) throws IOException {
         Recipe recipe = view.getRecipe();
-        
+       
         CSVHandler.deleteRecipe(recipe);
 
         // Exit Window
