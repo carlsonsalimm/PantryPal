@@ -63,12 +63,8 @@ class RecipeItem extends HBox {
     private Button detailedViewButton;
     private BorderPane pane;
     private StackPane viewContainer;
-    private String username;
-    private String password;
 
-    RecipeItem(Recipe recipe, String username, String password) {
-        this.username = username;
-        this.password = password;
+    RecipeItem(Recipe recipe) {
         this.recipe = recipe;
         pane = new BorderPane();
         pane.setPrefSize(550, 40); // sets size of Recipe
@@ -96,25 +92,22 @@ class RecipeItem extends HBox {
 
        
         detailedViewButton.setOnAction(e -> {
-            Main.setPage(new DetailedRecipePage(recipe, this.username, this.password));
+            Main.setPage(new DetailedRecipePage(recipe));
+            // add controller for the DetailedRecipePage creation here
         });
     }
 }
 
 class RecipeList extends VBox {
     public List<Recipe> recipes;
-    private String username;
-    private String password;
 
-    RecipeList(String username, String password) throws IOException {
-        this.username = username;
-        this.password = password;
+    RecipeList() throws IOException {
         loadRecipe();
     }
 
     public void loadRecipe() throws IOException {
         // TO-DO: Replace with GET request
-        this.recipes = CSVHandler.readRecipes(this.username , this.password);
+        this.recipes = CSVHandler.readRecipes();
 
         this.setSpacing(7);
         this.setPadding(new Insets(10, 0, 30, 0));
@@ -122,7 +115,7 @@ class RecipeList extends VBox {
         this.setStyle("-fx-background-color: #FFFFFF;");
 
         for (Recipe recipe : recipes) {
-            RecipeItem Item = new RecipeItem(recipe, this.username, this.password);
+            RecipeItem Item = new RecipeItem(recipe);
             this.getChildren().add(Item);
         }
     }
@@ -134,12 +127,12 @@ public class RecipeListPage extends BorderPane {
     private Button addButton;
     private RecipeList recipeList;
 
-    RecipeListPage(String username, String password) throws IOException {
+    RecipeListPage() throws IOException {
         header = new RecipeListHeader();
         addButton = header.getAddButton();
 
         // Create a RecipeList Object to hold the Recipes
-        recipeList = new RecipeList(username, password);
+        recipeList = new RecipeList();
 
         ScrollPane scroller = new ScrollPane(recipeList);
         scroller.setFitToHeight(isCache());

@@ -33,13 +33,13 @@ public class MS1Testing {
     // Test for Duplicates
     @Test
     void testUpdate() throws IOException {
-        int size = CSVHandler.readRecipes(null, null).size();
-        if(CSVHandler.writeRecipes(null, null, recipe1)){
+        int size = CSVHandler.readRecipes().size();
+        if(CSVHandler.writeRecipes(recipe1)){
             size += 1;
         }
-        CSVHandler.writeRecipes(null, null, recipe1);
+        CSVHandler.writeRecipes(recipe1);
         
-        assertEquals(size , CSVHandler.readRecipes(null, null).size());
+        assertEquals(size , CSVHandler.readRecipes().size());
     }
 
 
@@ -74,18 +74,18 @@ public class MS1Testing {
     @Test
     void testRecipeDisplay() throws IOException{
         
-        CSVHandler.clearAll(null, null);
-        CSVHandler.writeRecipes(null, null, recipe2);
+        CSVHandler.clearAll();
+        CSVHandler.writeRecipes(recipe2);
        
-        assertEquals(recipe2.getTitle(), CSVHandler.readRecipes(null, null).get(0).getTitle());
-        assertEquals(recipe2.getInstructions(), CSVHandler.readRecipes(null, null).get(0).getInstructions());
+        assertEquals(recipe2.getTitle(), CSVHandler.readRecipes().get(0).getTitle());
+        assertEquals(recipe2.getInstructions(), CSVHandler.readRecipes().get(0).getInstructions());
     }
 
     // Test Recipe Saving
     @Test
     void testRecipeSaving() throws IOException{
-        CSVHandler.clearAll(null, null);
-        CSVHandler.writeRecipes(null, null, recipe1);
+        CSVHandler.clearAll();
+        CSVHandler.writeRecipes(recipe1);
        
         assertEquals(recipe1.getTitle(), CSVHandler.readRecipes().get(0).getTitle());
         assertEquals(recipe1.getInstructions(), CSVHandler.readRecipes().get(0).getInstructions());

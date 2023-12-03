@@ -19,8 +19,6 @@ public class AudioRecording extends VBox {
     private String errorMsgStyle = "-fx-font-size: 20;-fx-font-weight: bold; -fx-text-fill: #DF0000;";
     private Text errorMsg;
     private Boolean errorFlag = false;
-    private String username;
-    private String password;
 
     // Constructor for Specify Meal Type Page
     AudioRecording() {
@@ -40,9 +38,7 @@ public class AudioRecording extends VBox {
     }
 
     // Constructor for Specify Ingredient Page
-    AudioRecording(String mealType, String username, String password) {
-        this.username = username;
-        this.password = password;
+    AudioRecording(String mealType) {
         // Create a button that the user can press and hold to record
         this.setPrefSize(100, 100);
         this.setStyle("-fx-background-color: #FFFFFF;");
@@ -109,7 +105,7 @@ public class AudioRecording extends VBox {
                 System.out.println("ChatGPT Response: " + response);
 
             
-                Main.setPage(new DetailedRecipePage(createRecipe(response), this.username, this.password));
+                Main.setPage(new DetailedRecipePage(createRecipe(response)));
 
                 // Handle the UI update or user notification with the generated recipe response
             } catch (Exception e) {
@@ -148,7 +144,7 @@ public class AudioRecording extends VBox {
             String mealType = detectMealType(transcribedText);
 
             if (mealType != null) {
-                Main.setPage(new SpecifyIngredientPage(mealType, this.username, this.password));
+                Main.setPage(new SpecifyIngredientPage(mealType));
             } else {
                 System.out.println("Please try again");
 

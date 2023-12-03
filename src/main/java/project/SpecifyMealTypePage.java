@@ -68,8 +68,6 @@ public class SpecifyMealTypePage extends BorderPane{
     private SpecifyMealTypeContent content;
     private String cancelButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
     private Button cancelButton;
-    private String password;
-    private String username;
 
     SpecifyMealTypePage() {
         content = new SpecifyMealTypeContent();
@@ -86,7 +84,7 @@ public class SpecifyMealTypePage extends BorderPane{
         cancelButton.setOnAction(event -> {
             RecipeListPage temp;
             try {
-                temp = new RecipeListPage(this.username, this.password);
+                temp = new RecipeListPage();
                 Main.setPage(temp);
             } catch (IOException e) {
                 e.printStackTrace();

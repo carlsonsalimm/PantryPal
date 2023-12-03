@@ -24,12 +24,8 @@ class SpecifyIngredientContent extends VBox {
     private Label prompt;
     private Label subPrompt;
 
-    private String username;
 
-    private String password;
-
-
-    SpecifyIngredientContent(String mealType, String username, String password) {
+    SpecifyIngredientContent(String mealType) {
         this.setPrefSize(600, 700); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
         this.setSpacing(10);
@@ -44,7 +40,7 @@ class SpecifyIngredientContent extends VBox {
         subPrompt.setStyle(subPromptStyle);
 
         //button to record audio
-        recordButton = new AudioRecording(mealType, this.username, this.password);
+        recordButton = new AudioRecording(mealType);
         //bodyContainer = new StackPane();
         
         promptContainer = new HBox(prompt);
@@ -70,14 +66,9 @@ public class SpecifyIngredientPage extends BorderPane {
     private SpecifyIngredientContent content;
     private String cancelButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
     private Button cancelButton;
-    private String username;
-    private String password;
 
-    SpecifyIngredientPage(String mealType, String username, String password) {
-        this.username = username;
-        this.password = password;
-        
-        content = new SpecifyIngredientContent(mealType, username, password);
+    SpecifyIngredientPage(String mealType) {
+        content = new SpecifyIngredientContent(mealType);
         cancelButton = new Button("x");
         cancelButton.setStyle(cancelButtonStyle);
         cancelButton.setPadding(new Insets(10, 0, 0, 10));
@@ -91,7 +82,7 @@ public class SpecifyIngredientPage extends BorderPane {
         cancelButton.setOnAction(event -> {
             RecipeListPage temp;
             try {
-                temp = new RecipeListPage(this.username, this.password);
+                temp = new RecipeListPage();
                 Main.setPage(temp);
             } catch (IOException e) {
                 e.printStackTrace();

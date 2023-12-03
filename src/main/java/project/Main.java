@@ -18,8 +18,6 @@ public class Main extends Application {
     static Stage primaryStage;
     static VBox root;
     static RecipeListPage temp;
-    private String username;
-    private String password;
 
     @Override
     public void start(Stage primaryStage) throws Exception, IOException {
