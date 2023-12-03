@@ -19,28 +19,40 @@ public class Model {
         this.password = password;
     }
 
-    public String encode(String userInfo) {
-        // Encode user information
-        return userInfo;
+    public String encode(String requestArgument) {
+        // Encode request argument
+        String encodedArgument = "";
+        return encodedArgument;
+    }
+
+    public String decode(String requestResponse) {
+        // Encode request response
+        String decodedResponse = "";
+        return decodedResponse;
     }
 
     public String performRequest(String method, String action, String iniUsername, String iniPassword,
             String audioFilePath, String mealType,
-            String ingredients, String title, String instructions) {
+            String ingredients, String title, String instructions, String creationTime) {
 
         try {
-            String urlString = "https://pantrypal-team31.onrender.com/"; // TO-DO: Add server url
+            String urlString = "https://pantrypal-team31.onrender.com/";
 
             if (method.equals("GET")) {
 
-                if (username != null && password != null && title == null) {
+                if (username != null && password != null && title == null && creationTime == null) {
                     // Get recipe list (needs username, password)
                     urlString += "?action=getRecipeList&username=" + username + "&password=" + password;
 
-                } else if (username != null && password != null && title != null) {
+                } else if (username != null && password != null && title != null && creationTime == null) {
                     // Generate image for recipe (needs username, password, title, returns url of
                     // image)
                     urlString += "?action=getImage&title=" + title;
+
+                } else if (username != null && password != null && title == null && creationTime != null) {
+                    // Get share URL for recipe (needs username, password, creationTime)
+                    urlString += "?action=getShare&username=" + username + "&password=" + password + "&creationTime="
+                            + creationTime;
                 }
 
             } else if (method.equals("POST")) {
@@ -60,24 +72,37 @@ public class Model {
                     urlString += "?action=signup&username=" + iniUsername + "&password=" + iniPassword;
 
                 } else if (username != null && password != null && mealType != null && ingredients != null
-                        && title != null && instructions != null) {
-                    // Creates/updates an existing recipe (requires username, password, mealType,
+                        && title != null && instructions != null && creationTime == null) {
+                    // Create a new recipe (requires username, password, mealType,
                     // ingredients, title, instructions)
-                    urlString += "?action=updateRecipe&username=" + username + "&password=" + password + "&mealType="
+                    urlString += "?action=createRecipe&username=" + username + "&password=" + password + "&mealType="
                             + mealType + "&ingredients=" + ingredients + "&title=" + title + "&instructions="
                             + instructions;
+
+                } else if (username != null && password != null && title != null && instructions != null
+                        && creationTime != null) {
+                    // Updates an existing recipe (requires username, password, ingredients, title,
+                    // instructions, creationTime)
+                    urlString += "?action=updateRecipe&username=" + username + "&password=" + password + "&ingredients="
+                            + ingredients + "&title=" + title + "&instructions=" + instructions + "&creationTime="
+                            + creationTime;
 
                 } else if (mealType != null && ingredients != null) {
                     // Generate recipe instructions w/GPT (needs meal type and ingredients, returns
                     // instructions as string)
                     urlString += "?action=generateRecipe&mealType=" + mealType + "&ingredients=" + ingredients;
+
                 }
 
             } else if (method.equals("DELETE")) {
-                // Deletes an existing recipe (requires username, password, title)
                 if (username != null && password != null && title != null) {
+                    // Deletes an existing recipe (requires username, password, title)
                     urlString += "?action=deleteRecipe&username=" + username + "&password=" + password + "&title="
                             + title;
+
+                } else if (username != null && password != null && title == null) {
+                    // Deletes an existing user (requires username, password)
+                    urlString += "?action=deleteUser&username=" + username + "&password=" + password;
                 }
 
             }

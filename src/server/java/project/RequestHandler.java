@@ -57,6 +57,9 @@ public class RequestHandler implements HttpHandler {
     String response = "Invalid GET Request";
     queryParams = parseQueryParams(httpExchange.getRequestURI().getQuery());
     String action = queryParams.get("action");
+    if (action == null) {
+      return response;
+    }
 
     if (action.equals("getRecipeList")) {
       // get recipe list for acct
@@ -72,6 +75,18 @@ public class RequestHandler implements HttpHandler {
     } else if (action.equals("getImage")) {
       // Do DALL-E call
       String title = queryParams.get("password");
+    } else if(action.equals("getRecipeDetails")){
+      // Fetch a specific recipe's details
+      String username = queryParams.get("username");
+      String password = queryParams.get("password");
+      String title = queryParams.get("title");
+      
+      Document recipe = MongoDBProject.getRecipeByTitle(username, password, title);
+      if (recipe != null) {
+          response = recipe.toJson();
+      } else {
+          response = "Recipe not found";
+      }
     }
 
     return response;
@@ -82,6 +97,9 @@ public class RequestHandler implements HttpHandler {
     String response = "Invalid POST Request";
     queryParams = parseQueryParams(httpExchange.getRequestURI().getQuery());
     String action = queryParams.get("action");
+    if (action == null) {
+      return response;
+    }
 
     if (action.equals("transcribeaudioFilePath")) {
       // transcribe audio to text
@@ -89,10 +107,8 @@ public class RequestHandler implements HttpHandler {
       try {
         response = whisper.transcribeAudio(audioFilePath);
       } catch (JSONException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       } catch (URISyntaxException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
 
@@ -108,6 +124,18 @@ public class RequestHandler implements HttpHandler {
       String password = queryParams.get("password");
       response = String.valueOf(MongoDBProject.createUser(username, password)); 
 
+    } else if (action.equals("createRecipe")) {
+      String username = queryParams.get("username");
+      String password = queryParams.get("password");
+      String mealType = queryParams.get("mealType");
+      String ingredients = queryParams.get("ingredients");
+      String title = queryParams.get("title");
+      String instructions = queryParams.get("instructions");
+      String imageURL = queryParams.get("imageURL");
+      // TODO change to addRecipe once the method is added in MongoDBProject
+      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0, imageURL);
+      response = "Added recipe: " + title;
+
     } else if (action.equals("updateRecipe")) {
       // update/add recipe
       String username = queryParams.get("username");
@@ -116,19 +144,20 @@ public class RequestHandler implements HttpHandler {
       String ingredients = queryParams.get("ingredients");
       String title = queryParams.get("title");
       String instructions = queryParams.get("instructions");
-      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients);
+      Long creationTime = Long.parseLong(queryParams.get("creationTime"));
+      String imageURL = queryParams.get("imageURL");
+      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime ,imageURL);
       response = "Updated recipe: " + title;
       // replace with what we are expecting as a response
+
     } else if (action.equals("generateRecipe")) {
       String mealType = queryParams.get("mealType");
       String ingredients = queryParams.get("ingredients");
       try {
         response = chatGPT.getGPTResponse(ingredients, mealType);
       } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       } catch (URISyntaxException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -142,6 +171,9 @@ public class RequestHandler implements HttpHandler {
     String response = "Invalid DELETE request";
     queryParams = parseQueryParams(httpExchange.getRequestURI().getQuery());
     String action = queryParams.get("action");
+    if (action == null) {
+      return response;
+    }
 
     if (action.equals("deleteRecipe")) {
       String username = queryParams.get("username");
@@ -167,4 +199,6 @@ public class RequestHandler implements HttpHandler {
     }
     return params;
   }
+
+  
 }

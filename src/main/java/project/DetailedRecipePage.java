@@ -1,9 +1,13 @@
 package project;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -18,6 +22,7 @@ class Header extends HBox {
     private Button delButton;
     private Button saveButton;
     private Button backButton;
+    private Button shareButton;
     private BorderPane pane;
     private Pane titleContainer;
     private Pane addContainer;
@@ -56,15 +61,23 @@ class Header extends HBox {
         backButton.setGraphic(back);
         backButton.setStyle(defaultButtonStyle); // styling the button
 
+        shareButton = new Button(); // text displayed on add button
+        ImageView share = new ImageView("./icons/share.png");
+        share.setFitWidth(20);
+        share.setFitHeight(20);
+        shareButton.setGraphic(share);
+        shareButton.setStyle(defaultButtonStyle); // styling the button
+
         titleContainer = new Pane();
         titleContainer.getChildren().addAll(backButton, title);
         title.relocate(20, 30);
         backButton.relocate(20, 0);
 
         addContainer = new Pane();
-        addContainer.getChildren().addAll(delButton, saveButton);
-        delButton.relocate(-20, 0);
-        saveButton.relocate(30, 0);
+        addContainer.getChildren().addAll(delButton, saveButton, shareButton);
+        delButton.relocate(-40, 0);
+        saveButton.relocate(10, 0);
+        shareButton.relocate(60, 0);
 
         pane.setLeft(titleContainer);
         pane.setRight(addContainer);
@@ -83,6 +96,10 @@ class Header extends HBox {
     public Button getBackButton() {
         return backButton;
     }
+
+    public Button getShareButton() {
+        return shareButton;
+    }
 }
 
 public class DetailedRecipePage extends BorderPane {
@@ -98,6 +115,8 @@ public class DetailedRecipePage extends BorderPane {
     private Button backButton;
     private Button saveButton;
 
+    private Button shareButton;
+
     private TextField title = new TextField();
     private TextArea instructions = new TextArea(); // includes ingredients
 
@@ -109,6 +128,7 @@ public class DetailedRecipePage extends BorderPane {
         deleteButton = header.getDelButton();
         backButton = header.getBackButton();
         saveButton = header.getSaveButton();
+        shareButton = header.getShareButton();
 
         title.setText(recipe.getTitle());
         instructions.setText(recipe.getInstructions());
@@ -178,6 +198,11 @@ public class DetailedRecipePage extends BorderPane {
             }
 
         });
+
+        //share recipe
+        shareButton.setOnAction(e -> {
+            shareRecipe(recipe);
+        });
     }
 
     private void exitWindow() throws IOException {
@@ -216,5 +241,24 @@ public class DetailedRecipePage extends BorderPane {
 
         exitWindow();
     }
+
+    // In DetailedRecipePage.java
+    private void shareRecipe(Recipe recipe) {
+    String shareableUrl = " https://pantrypal-team31.onrender.com/" + recipe.getTitle(); // Where each recipe have unique title
+    // Copy shareableUrl to clipboard
+    // Show confirmation to the user (e.g., "URL copied to clipboard!")
+    final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+        content.putString(shareableUrl);
+        clipboard.setContent(content);
+    
+    // Alert user that URL has been copied to clipboard
+    Alert alert = new Alert(AlertType.INFORMATION);
+    alert.setTitle("Share Recipe");
+    alert.setHeaderText("Shareable URL copied to clipboard!");
+    alert.setContentText("Shareable URL: " + shareableUrl);
+    alert.showAndWait();
+}
+
     
 }
