@@ -25,7 +25,6 @@ class SpecifyMealTypePage extends VBox {
     private AudioFormat audioFormat;
     private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
     private String recorderButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
-    private Button recorderButton;
     public String mealType;
     private String errorMsgStyle = "-fx-font-size: 20;-fx-font-weight: bold; -fx-text-fill: #DF0000;";
     private Text errorMsg;
@@ -34,6 +33,7 @@ class SpecifyMealTypePage extends VBox {
     private HBox promptContainer;
     private HBox subPromptContainer;
     private HBox recordButtonContainer;
+    private HBox backButtonContainer;
 
     private String promptStyle = "-fx-font-size: 20;-fx-font-weight: bold;";
     private String subPromptStyle = "-fx-font-size: 20;";
@@ -48,10 +48,6 @@ class SpecifyMealTypePage extends VBox {
     SpecifyMealTypePage() {
         this.setPrefSize(600, 700); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
-        this.setSpacing(10);
-        this.setAlignment(Pos.CENTER);
-        //button to cancel recording and return to recipe list page
-        
 
         // Set up labels
         prompt = new Label("What kind of meal are you making?");
@@ -60,11 +56,13 @@ class SpecifyMealTypePage extends VBox {
         subPrompt.setStyle(subPromptStyle);
 
         //button to record audio
-        recorderButton = new Button("Hold to Record");
-        recorderButton.setStyle(recorderButtonStyle);
-            
-        recorderButton.setPrefSize(300, 50);
-        this.getChildren().add(recorderButton);
+        recordButton = new Button("Hold to Record");
+        recordButton.setStyle(recorderButtonStyle);
+        recordButton.setPrefSize(300, 50);
+       
+        backButton = new Button("x");
+        backButton.setStyle(backButtonStyle);
+        backButton.setPrefSize(50, 50);
         
         // UI Container
         promptContainer = new HBox(prompt);
@@ -73,12 +71,11 @@ class SpecifyMealTypePage extends VBox {
         subPromptContainer.setAlignment(Pos.CENTER);
         recordButtonContainer = new HBox(recordButton);
         recordButtonContainer.setAlignment(Pos.CENTER);
-        
-        // Setting the Back Button
-        backButton = new Button("x");
-        backButton.setStyle(backButtonStyle);
+        backButtonContainer = new HBox(backButton);
+        backButtonContainer.setAlignment(Pos.CENTER);
 
-        this.getChildren().addAll(promptContainer, subPromptContainer, recordButtonContainer, backButton);
+        this.getChildren().addAll(promptContainer, subPromptContainer, recordButtonContainer, backButtonContainer);
+        this.setSpacing(10);
         this.requestLayout();
     }
 
@@ -97,8 +94,7 @@ class SpecifyMealTypePage extends VBox {
     public void errorMsg(){
         errorMsg = new Text("Sorry, we didn't catch that. Please Try Again");
         errorMsg.setStyle(errorMsgStyle);
-        this.getChildren().add(errorMsg);
-       
+        this.getChildren().add(errorMsg); 
     }
 
 }

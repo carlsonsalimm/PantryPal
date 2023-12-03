@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 // import org.junit.platform.reporting.shadow.org.opentest4j.reporting.events.core.Sources;
 
@@ -28,6 +29,10 @@ class SpecifyIngredientsPage extends VBox {
 
     private String promptStyle = "-fx-font-size: 20;-fx-font-weight: bold;";
     private String subPromptStyle = "-fx-font-size: 20;";
+
+    private String errorMsgStyle = "-fx-font-size: 20;-fx-font-weight: bold; -fx-text-fill: #DF0000;";
+    private Text errorMsg;
+    private Boolean errorFlag = false;
 
     private Label prompt;
     private Label subPrompt;
@@ -77,6 +82,12 @@ class SpecifyIngredientsPage extends VBox {
 
     public void setCancelButtonAction(EventHandler<ActionEvent> eventHandler){
         cancelButton.setOnAction(eventHandler);
+    }
+
+    public void errorMsg(){
+        errorMsg = new Text("Sorry, we didn't catch that. Please Try Again");
+        errorMsg.setStyle(errorMsgStyle);
+        this.getChildren().add(errorMsg); 
     }
 
 }

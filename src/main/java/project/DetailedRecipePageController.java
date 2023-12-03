@@ -49,6 +49,7 @@ public class DetailedRecipePageController implements Controller{
         // Exit Window
         RecipeListPage temp = new RecipeListPage();
         Main.setPage(temp);
+        Main.setController(new RecipeListPageController(temp,model));
     }
 
     public void handleSaveButton(ActionEvent event) throws IOException {
@@ -66,6 +67,7 @@ public class DetailedRecipePageController implements Controller{
         // Exit Window
         RecipeListPage temp = new RecipeListPage();
         Main.setPage(temp);
+        Main.setController(new RecipeListPageController(temp,model));
     }
 
     public void handleBackButton(ActionEvent event) throws IOException{
@@ -73,5 +75,6 @@ public class DetailedRecipePageController implements Controller{
         // Exit Window
         RecipeListPage temp = new RecipeListPage();
         Main.setPage(temp);
+        Main.setController(new RecipeListPageController(temp,model));
     }
 }

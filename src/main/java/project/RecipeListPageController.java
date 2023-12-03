@@ -40,12 +40,14 @@ public class RecipeListPageController implements Controller {
     private void handleAddButton(ActionEvent event) throws IOException{
         SpecifyMealTypePage temp = new SpecifyMealTypePage();
         Main.setPage(temp);
+        Main.setController(new SpecifyMealTypePageController(temp, model));
     }
 
     private void handleDetailedViewButton(ActionEvent event) throws IOException{
         Recipe recipe = view.getRecipe();
         DetailedRecipePage temp = new DetailedRecipePage(recipe);
         Main.setPage(temp);
+        Main.setController(new DetailedRecipePageController(temp, model));
     }
 
    

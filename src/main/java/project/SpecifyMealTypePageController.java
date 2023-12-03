@@ -72,6 +72,7 @@ public class SpecifyMealTypePageController implements Controller {
     private void handleBackButton(ActionEvent event) throws IOException{
         temp = new RecipeListPage();
         Main.setPage(temp);
+        Main.setController(new RecipeListPageController(temp,model));
     }
 
 
@@ -124,7 +125,9 @@ public class SpecifyMealTypePageController implements Controller {
             String mealType = detectMealType(transcribedText);
 
             if (mealType != null) {
+                SpecifyIngredientsPage temp = new SpecifyIngredientsPage(mealType);
                 Main.setPage(new SpecifyIngredientsPage(mealType));
+                Main.setController(new SpecifyIngredientsPageController(temp,model));
             } else {
                 System.out.println("Please try again");
 

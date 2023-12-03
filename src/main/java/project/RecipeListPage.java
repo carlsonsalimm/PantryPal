@@ -68,12 +68,15 @@ class RecipeItem extends HBox {
     private BorderPane pane;
     private StackPane viewContainer;
 
-    RecipeItem(Recipe recipe) {
+    RecipeItem() {
         pane = new BorderPane();
         pane.setPrefSize(550, 40); // sets size of Recipe
         pane.setStyle(" -fx-background-color:E1EAF3; -fx-background-radius: 5; -fx-font-weight: bold;"); // sets
-        this.recipe = recipe;
+    }
 
+    public void setRecipe(Recipe recipe){
+
+        this.recipe = recipe;
         recipeName = new Label(this.recipe.getTitle()); // create RecipeItem name text field
         recipeName.setPrefSize(475, 40); // sets size of Recipe
         recipeName.setPadding(new Insets(0, 10, 0, 20));
@@ -93,10 +96,9 @@ class RecipeItem extends HBox {
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
 
-    }
-
-    public void setRecipe(Recipe recipe){
-        this.recipe = recipe;
+        detailedViewButton.setOnAction(event -> {
+            // Send recipe data to RecipeListPage
+        });
     }
 
     public Button getDetailedViewButton() {
@@ -107,6 +109,7 @@ class RecipeItem extends HBox {
         return recipe;
     }
 }
+
 
 class RecipeList extends VBox {
     public List<Recipe> recipes;
@@ -125,7 +128,7 @@ class RecipeList extends VBox {
         this.setStyle("-fx-background-color: #FFFFFF;");
 
         for (Recipe recipe : recipes) {
-            RecipeItem Item = new RecipeItem(recipe);
+            RecipeItem Item = new RecipeItem();
             Item.setRecipe(recipe);
             this.getChildren().add(Item);
         }
@@ -139,7 +142,7 @@ public class RecipeListPage extends BorderPane {
     private Button detailedViewButton;
     private Button addButton;
 
-   
+    private RecipeItem recipeItem;
     private Recipe recipe;
 
     private RecipeList recipeList;
@@ -147,8 +150,8 @@ public class RecipeListPage extends BorderPane {
     RecipeListPage() throws IOException {
         header = new RecipeListHeader();
         addButton = header.getAddButton();
-
-        this.recipe = recipteItem.getRecipe();
+        recipeItem = new RecipeItem();
+        detailedViewButton = recipeItem.getDetailedViewButton();
 
         // Create a RecipeList Object to hold the Recipes
         recipeList = new RecipeList();
@@ -162,11 +165,10 @@ public class RecipeListPage extends BorderPane {
         // Add scroller to the centre of the BorderPane
         this.setCenter(scroller);
 
-        // Initialise Button Variables through the getters in Footer
-        
-        addButton = header.getAddButton();
-        // Call Event Listeners for the Buttons
-        //addListeners();
+    }
+
+    public void setRecipe(Recipe recipe){
+        this.recipe = recipe;
     }
 
     public Recipe getRecipe() {

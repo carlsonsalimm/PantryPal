@@ -58,7 +58,7 @@ public class SpecifyIngredientsPageController implements Controller{
     }
 
     private void handleRecordReleasetButton(MouseEvent event) throws IOException{
-        stopRecordingAndProcessMealType();
+        stopRecordingAndProcessRecipe();
       
     }
 
@@ -95,36 +95,43 @@ public class SpecifyIngredientsPageController implements Controller{
 
     // Returns the audio format to use for the recording for SpecifyMealTypePage
     // and Specify Meal Type Page
-    private void stopRecordingAndProcessMealType() {
-        if (targetDataLine == null) {
-            return;
-        }
+    private void stopRecordingAndProcessRecipe() {
+        if (targetDataLine != null) {
+            targetDataLine.stop();
+            targetDataLine.close();
+            System.out.println("Recording stopped.");
 
-        targetDataLine.stop();
-        targetDataLine.close();
-        System.out.println("Recording stopped.");
+            try {
+                // Transcribe the audio file to text using Whisper
+                Whisper whisper = new Whisper();
 
-        try {
-            Whisper whisper = new Whisper();
-            String transcribedText = whisper.transcribeAudio(TEMP_AUDIO_FILE_PATH);
-            System.out.println("Transcription: " + transcribedText);
+                String transcribedText = whisper.transcribeAudio(TEMP_AUDIO_FILE_PATH);
+                System.out.println("Transcription: " + transcribedText);
 
-            String mealType = detectMealType(transcribedText);
+                // Send the transcribed text to ChatGPT and get a response
+                ChatGPT chatGPT = new ChatGPT();
 
-            if (mealType != null) {
-                Main.setPage(new SpecifyIngredientsPage(mealType));
-            } else {
-                System.out.println("Please try again");
+                String response = chatGPT.getGPTResponse(transcribedText, mealType);
+                System.out.println("ChatGPT Response: " + response);
 
-                if(!errorFlag) {
-                   
-                    errorFlag = true;
-                }
+                DetailedRecipePage temp = new DetailedRecipePage(createRecipe(response));
+                Main.setPage(temp);
+                Main.setController(new DetailedRecipePageController(temp,model));
+
+                // Handle the UI update or user notification with the generated recipe response
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Handle exceptions appropriately
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Handle exceptions appropriately
         }
+    }
+    
+    public static Recipe createRecipe(String gptResponse) {
+        String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
+        String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
+
+        Recipe recipe = new Recipe(recipeTitle, recipeInstructions);
+        return recipe;
     }
 
     // Returns the meal type if it is found in the transcribed text, otherwise
