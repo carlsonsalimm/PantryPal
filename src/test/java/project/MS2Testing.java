@@ -56,13 +56,13 @@ public class MS2Testing {
     void testValidAccountCreation() throws IOException, InterruptedException, URISyntaxException {
         // TODO make sure to delete account after
         MockLoginPageController controller = new MockLoginPageController(model);
-        String username = "userApple12341";
+        String username = "deleteTest";
         String password = "passpass";
 
         controller.setUsername(username);
         controller.setPassword(password);
         Boolean result = controller.handleCreateAccountButton(new ActionEvent());
-        // MongoDBProject.deleteUser(username, password);
+        MongoDBProject.deleteUser(username, password);
 
         assertEquals(true, result);
     }
