@@ -18,7 +18,7 @@ public class Main extends Application {
 
     static Stage primaryStage;
     static Parent root;
-    static RecipeListPage temp;
+    static DetailedRecipePage temp;
     static Controller controller;
     static Model model;
 
@@ -26,9 +26,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception, IOException {
         Main.model = new Model();
         Main.primaryStage = primaryStage;
-        Main.root = new LoginPage();
+        Recipe mock = new Recipe("title test", "instruction test");
+        Main.root = new DetailedRecipePage(mock);
         
-        Main.controller = new LoginPageController((LoginPage) root, model);
+        Main.controller = new DetailedRecipePageController((DetailedRecipePage) root, model);
        
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
@@ -46,9 +47,9 @@ public class Main extends Application {
         Main.controller = controller;
     }
 
-    public static void callLoadMethod() {
-        temp.getRecipeList();
-    }
+    // public static void callLoadMethod() {
+    //     temp.getRecipeList();
+    // }
 
     public static void main(String[] args) {
         launch(args);

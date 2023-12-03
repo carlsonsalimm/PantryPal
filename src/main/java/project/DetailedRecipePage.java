@@ -20,6 +20,7 @@ class Header extends HBox {
     private Button delButton;
     private Button saveButton;
     private Button backButton;
+    private Button refreshButton;
     private BorderPane pane;
     private Pane titleContainer;
     private Pane addContainer;
@@ -59,10 +60,18 @@ class Header extends HBox {
         backButton.setGraphic(back);
         backButton.setStyle(defaultButtonStyle); // styling the button
 
+        refreshButton = new Button(); // text displayed on add button
+        ImageView refresh = new ImageView("./icons/refresh.png");
+        refresh.setFitWidth(20);
+        refresh.setFitHeight(20);
+        refreshButton.setGraphic(refresh);
+        refreshButton.setStyle(defaultButtonStyle); // styling the button
+
         titleContainer = new Pane();
-        titleContainer.getChildren().addAll(backButton, title);
-        title.relocate(20, 30);
+        titleContainer.getChildren().addAll(backButton, title, refreshButton);
+        title.relocate(20, 35);
         backButton.relocate(20, 0);
+        refreshButton.relocate(70,0);
 
         addContainer = new Pane();
         addContainer.getChildren().addAll(delButton, saveButton);
@@ -71,6 +80,8 @@ class Header extends HBox {
 
         pane.setLeft(titleContainer);
         pane.setRight(addContainer);
+        BorderPane.setMargin(titleContainer,new Insets(10,0,0,0));
+        BorderPane.setMargin(addContainer,new Insets(10,0,0,0));
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
     }
