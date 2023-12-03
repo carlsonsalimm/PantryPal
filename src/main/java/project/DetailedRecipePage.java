@@ -61,6 +61,13 @@ class Header extends HBox {
         backButton.setGraphic(back);
         backButton.setStyle(defaultButtonStyle); // styling the button
 
+        shareButton = new Button(); // text displayed on add button
+        ImageView share = new ImageView("./icons/share.png");
+        share.setFitWidth(20);
+        share.setFitHeight(20);
+        shareButton.setGraphic(share);
+        shareButton.setStyle(defaultButtonStyle); // styling the button
+
         titleContainer = new Pane();
         titleContainer.getChildren().addAll(backButton, title);
         title.relocate(20, 30);
@@ -68,8 +75,8 @@ class Header extends HBox {
 
         addContainer = new Pane();
         addContainer.getChildren().addAll(delButton, saveButton, shareButton);
-        delButton.relocate(-20, 0);
-        saveButton.relocate(30, 0);
+        delButton.relocate(-40, 0);
+        saveButton.relocate(10, 0);
         shareButton.relocate(60, 0);
 
         pane.setLeft(titleContainer);
