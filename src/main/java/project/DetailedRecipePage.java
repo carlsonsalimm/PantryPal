@@ -21,6 +21,8 @@ class Header extends HBox {
     private Button saveButton;
     private Button backButton;
     private Button refreshButton;
+    private Button shareButton;
+    private Button editButton;
     private BorderPane pane;
     private Pane titleContainer;
     private Pane addContainer;
@@ -67,6 +69,20 @@ class Header extends HBox {
         refreshButton.setGraphic(refresh);
         refreshButton.setStyle(defaultButtonStyle); // styling the button
 
+        shareButton = new Button(); // text displayed on add button
+        ImageView share = new ImageView("./icons/share.png");
+        share.setFitWidth(20);
+        share.setFitHeight(20);
+        shareButton.setGraphic(share);
+        shareButton.setStyle(defaultButtonStyle); // styling the button
+
+        editButton = new Button(); // text displayed on add button
+        ImageView edit = new ImageView("./icons/edit.png");
+        edit.setFitWidth(20);
+        edit.setFitHeight(20);
+        editButton.setGraphic(edit);
+        editButton.setStyle(defaultButtonStyle); // styling the button
+
         titleContainer = new Pane();
         titleContainer.getChildren().addAll(backButton, title, refreshButton);
         title.relocate(20, 35);
@@ -74,9 +90,11 @@ class Header extends HBox {
         refreshButton.relocate(70,0);
 
         addContainer = new Pane();
-        addContainer.getChildren().addAll(delButton, saveButton);
-        delButton.relocate(-20, 0);
-        saveButton.relocate(30, 0);
+        addContainer.getChildren().addAll(delButton, shareButton, editButton, saveButton);
+        delButton.relocate(-100, 0);
+        shareButton.relocate(-50, 0);
+        editButton.relocate(0,0);
+        saveButton.relocate(50,0);
 
         pane.setLeft(titleContainer);
         pane.setRight(addContainer);
@@ -97,6 +115,18 @@ class Header extends HBox {
     public Button getBackButton() {
         return backButton;
     }
+
+    public Button getRefreshButton() {
+        return refreshButton;
+    }
+
+    public Button getEditButton() {
+        return editButton;
+    }
+
+    public Button getShareButton() {
+        return shareButton;
+    }
 }
 
 public class DetailedRecipePage extends BorderPane {
@@ -111,6 +141,9 @@ public class DetailedRecipePage extends BorderPane {
     private Button deleteButton;
     private Button backButton;
     private Button saveButton;
+    private Button refreshButton;
+    private Button shareButton;
+    private Button editButton;
 
     private TextField title;
     private TextArea instructions; // includes ingredients
@@ -128,6 +161,9 @@ public class DetailedRecipePage extends BorderPane {
         this.deleteButton = header.getDelButton();
         this.backButton = header.getBackButton();
         this.saveButton = header.getSaveButton();
+        this.refreshButton = header.getRefreshButton();
+        this.shareButton = header.getShareButton();
+        this.editButton = header.getEditButton();
 
         this.title = new TextField();
         this.instructions = new TextArea();
