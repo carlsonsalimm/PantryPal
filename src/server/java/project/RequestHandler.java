@@ -131,8 +131,9 @@ public class RequestHandler implements HttpHandler {
       String ingredients = queryParams.get("ingredients");
       String title = queryParams.get("title");
       String instructions = queryParams.get("instructions");
+      String imageURL = queryParams.get("imageURL");
       // TODO change to addRecipe once the method is added in MongoDBProject
-      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions);
+      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0, imageURL);
       response = "Added recipe: " + title;
 
     } else if (action.equals("updateRecipe")) {
