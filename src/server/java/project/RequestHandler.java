@@ -14,6 +14,7 @@ public class RequestHandler implements HttpHandler {
   private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
   private static Whisper whisper;
   public static ChatGPT chatGPT;
+  public static DallE dallE;
   // private DALLE dallE;
 
   Map<String, String> queryParams;
@@ -21,6 +22,7 @@ public class RequestHandler implements HttpHandler {
   RequestHandler() {
     whisper = new Whisper();
     chatGPT = new ChatGPT();
+    dallE = new DallE();
   }
 
   public void handle(HttpExchange httpExchange) throws IOException {
@@ -73,6 +75,18 @@ public class RequestHandler implements HttpHandler {
     } else if (action.equals("getImage")) {
       // Do DALL-E call
       String title = queryParams.get("password");
+    } else if(action.equals("getRecipeDetails")){
+      // Fetch a specific recipe's details
+      String username = queryParams.get("username");
+      String password = queryParams.get("password");
+      String title = queryParams.get("title");
+      
+      Document recipe = MongoDBProject.getRecipeByTitle(username, password, title);
+      if (recipe != null) {
+          response = recipe.toJson();
+      } else {
+          response = "Recipe not found";
+      }
     }
 
     return response;
@@ -129,7 +143,9 @@ public class RequestHandler implements HttpHandler {
       String ingredients = queryParams.get("ingredients");
       String title = queryParams.get("title");
       String instructions = queryParams.get("instructions");
-      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients);
+      Long creationTime = Long.parseLong(queryParams.get("creationTime"));
+      String imageURL = queryParams.get("imageURL");
+      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime ,imageURL);
       response = "Updated recipe: " + title;
       // replace with what we are expecting as a response
 
@@ -145,7 +161,8 @@ public class RequestHandler implements HttpHandler {
       }
     }
 
-    return response;
+    //response include generated recipe and image url (in the last part)
+    return response; 
   }
 
   // deleteRecipe
@@ -181,4 +198,6 @@ public class RequestHandler implements HttpHandler {
     }
     return params;
   }
+
+  
 }
