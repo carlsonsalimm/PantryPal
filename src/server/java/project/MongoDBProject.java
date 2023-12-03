@@ -19,10 +19,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class MongoDBProject {
     private static final String CONNECTION_STRING = "mongodb+srv://carlsonsalimm:bADauWkgMpSjWAfw@cluster0.zha98w6.mongodb.net/?retryWrites=true&w=majority";
@@ -151,7 +154,8 @@ public class MongoDBProject {
                      // Convert the image file to a byte array to store in mongodb
                     byte[] imageData = downloadImageFromUrl(imageUrl);     //assuming the imageUrl is a url given my dallE
                     if (imageData != null) {
-                        existingRecipe.put("imageData", new Binary(imageData)); // Store the image data as Binary
+                        String base64ImageData = Base64.getEncoder().encodeToString(imageData);
+                        existingRecipe.put("imageData", base64ImageData); // Store the image data as Binary
                     } else {
                         System.out.println("Failed to download image from URL.");
                     }
@@ -175,7 +179,8 @@ public class MongoDBProject {
                             .append("creationTime", creationTime);
                     byte[] imageData = downloadImageFromUrl(imageUrl);     //assuming the imageUrl is a url given my dallE
                     if (imageData != null) {
-                        newRecipe.put("imageData", new Binary(imageData)); // Store the image data as Binary
+                        String base64ImageData = Base64.getEncoder().encodeToString(imageData);
+                        newRecipe.put("imageData", base64ImageData); // Store the image data as Binary
                     } else {
                         System.out.println("Failed to download image from URL.");
                     }
@@ -293,8 +298,9 @@ public class MongoDBProject {
             e.printStackTrace();
         }
     }
-    //given username, password, recipeTitle, get the binary file for the image with the recipeTitle from mongodb
-    public static byte[] getImageDataByUsernamePasswordAndTitle(String username, String password, String recipeTitle) {
+
+    //helper method to getCreationTimeByTitle so we can get the creationDate before updating it
+    public static Long getCreationTimeByTitle(String username, String password, String recipeTitle) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
             MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
             MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
@@ -308,9 +314,44 @@ public class MongoDBProject {
                 Document matchingRecipe = findRecipeByTitle(recipeList, recipeTitle);
     
                 if (matchingRecipe != null) {
-                    // Retrieve the image data from the recipe
-                    Binary imageData = matchingRecipe.get("imageData", Binary.class);
-                    return imageData.getData();
+                    // Retrieve and return the creationTime of the matching recipe
+                    return matchingRecipe.getLong("creationTime");
+                } else {
+                    //System.out.println("Recipe with title '" + recipeTitle + "' not found.");
+                }
+            } else {
+                //System.out.println("Invalid username or password");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        return null;
+    }
+
+    //given username, password, recipeTitle, get the encoded string to make the jpg file
+    public static String getImageDataByUsernamePasswordAndTitle(String username, String password, String recipeTitle) {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
+            MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
+            MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
+    
+            // Check if the username and password match
+            Document userDocument = collection.find(new Document("username", username).append("password", password)).first();
+    
+            if (userDocument != null) {
+                // Check if the recipe with the specified title exists
+                List<Document> recipeList = (List<Document>) userDocument.get("RecipeList");
+                Document matchingRecipe = findRecipeByTitle(recipeList, recipeTitle);
+    
+                if (matchingRecipe != null) {
+                    // Retrieve the image data from the recipe as a string
+                    String imageData = matchingRecipe.getString("imageData");
+    
+                    if (imageData != null) {
+                        return imageData;
+                    } else {
+                        System.out.println("Image data not found for recipe with title '" + recipeTitle + "'.");
+                    }
                 } else {
                     System.out.println("Recipe with title '" + recipeTitle + "' not found.");
                 }
@@ -345,35 +386,7 @@ public class MongoDBProject {
         }
         return null;
     }
-    //helper method to getCreationTimeByTitle so we can get the creationDate before updating it
-    public static Long getCreationTimeByTitle(String username, String password, String recipeTitle) {
-        try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
-            MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
-            MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
     
-            // Check if the username and password match
-            Document userDocument = collection.find(new Document("username", username).append("password", password)).first();
-    
-            if (userDocument != null) {
-                // Check if the recipe with the specified title exists
-                List<Document> recipeList = (List<Document>) userDocument.get("RecipeList");
-                Document matchingRecipe = findRecipeByTitle(recipeList, recipeTitle);
-    
-                if (matchingRecipe != null) {
-                    // Retrieve and return the creationTime of the matching recipe
-                    return matchingRecipe.getLong("creationTime");
-                } else {
-                    //System.out.println("Recipe with title '" + recipeTitle + "' not found.");
-                }
-            } else {
-                //System.out.println("Invalid username or password");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    
-        return null;
-    }
     //helper function to find recipe by title and returns the recipe
     private static Document findRecipeByTitle(List<Document> recipeList, String recipeTitle) {
         for (Document existingRecipe : recipeList) {
@@ -409,15 +422,20 @@ public class MongoDBProject {
         }
     }
     //this is a helper function to save the binary image file to a jpg, filePath = the directory that we want to store the image at.
-    public static void saveByteArrayToFile(byte[] data, String filePath) {
-        try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            fos.write(data);
-            System.out.println("File saved successfully: " + filePath);
-        } catch (IOException e) {
+    public static void saveBase64ImageToFile(String base64ImageData, String filePath) {
+        try {
+            // Decode the Base64 string to binary data
+            byte[] imageData = Base64.getDecoder().decode(base64ImageData);
+
+            // Save the binary data as an image file
+            Files.write(Paths.get(filePath), imageData);
+            System.out.println("Image saved successfully: " + filePath);
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Failed to save file: " + filePath);
+            System.out.println("Failed to save image: " + filePath);
         }
     }
+
 
     // Method to fetch a recipe by its title and return it as a Document
     public static Document getRecipeByTitle(String username, String password, String recipeTitle) {
