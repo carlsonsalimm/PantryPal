@@ -33,6 +33,8 @@ dependencies {
     implementation 'org.mongodb:mongodb-driver-sync:4.11.0'
 
     // Add any other dependencies your project may need
+     // This dependency is used by the application.
+    implementation 'com.google.guava:guava:31.1-jre'
 }
 
 application {
