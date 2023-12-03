@@ -128,7 +128,7 @@ class LoginPage extends VBox {
     }
 
     public void goToRecipeListPage() throws IOException{
-        this.getScene().setRoot(new RecipeListPage(this.getUsername(), this.getPassword()));
+        this.getScene().setRoot(new RecipeListPage());
     }
 
     public void showAlert(String title, String content) {
