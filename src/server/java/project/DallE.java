@@ -51,10 +51,10 @@ public class DallE implements DallEInterface {
         System.out.println("DALL-E Response:");
         System.out.println(generatedImageURL);
 
-        // Download the Generated Image to Current Directory
-        try (InputStream in = new URI(generatedImageURL).toURL().openStream()) {
-            Files.copy(in, Paths.get("image.jpg"));
-        }
+        // // Download the Generated Image to Current Directory (save locally not needed just a backup)
+        // try (InputStream in = new URI(generatedImageURL).toURL().openStream()) {
+        //     Files.copy(in, Paths.get("image.jpg"));
+        // }
 
         return generatedImageURL;
     }

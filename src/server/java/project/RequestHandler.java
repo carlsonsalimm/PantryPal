@@ -72,6 +72,18 @@ public class RequestHandler implements HttpHandler {
     } else if (action.equals("getImage")) {
       // Do DALL-E call
       String title = queryParams.get("password");
+    } else if(action.equals("getRecipeDetails")){
+      // Fetch a specific recipe's details
+      String username = queryParams.get("username");
+      String password = queryParams.get("password");
+      String title = queryParams.get("title");
+      
+      Document recipe = MongoDBProject.getRecipeByTitle(username, password, title);
+      if (recipe != null) {
+          response = recipe.toJson();
+      } else {
+          response = "Recipe not found";
+      }
     }
 
     return response;
@@ -116,7 +128,9 @@ public class RequestHandler implements HttpHandler {
       String ingredients = queryParams.get("ingredients");
       String title = queryParams.get("title");
       String instructions = queryParams.get("instructions");
-      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients);
+      Long creationTime = Long.parseLong(queryParams.get("creationTime"));
+      String imageURL = queryParams.get("imageURL");
+      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime ,imageURL);
       response = "Updated recipe: " + title;
       // replace with what we are expecting as a response
     } else if (action.equals("generateRecipe")) {
@@ -167,4 +181,6 @@ public class RequestHandler implements HttpHandler {
     }
     return params;
   }
+
+  
 }
