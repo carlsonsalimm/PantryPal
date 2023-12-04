@@ -80,4 +80,14 @@ public class MS2Testing {
         assertEquals(false, result);
     }
 
+    @Test
+    void testSendAudio() throws IOException, InterruptedException, URISyntaxException {
+        String response = model.performRequest("POST", null, null, null, 
+        "testIngredients.wav", null, null, null, null, null);
+        System.out.println(response);
+        assertTrue(response.toLowerCase().contains("eggs") &&
+                    response.toLowerCase().contains("rice") &&
+                    response.toLowerCase().contains("sausage"));
+    }
+
 }

@@ -1,10 +1,10 @@
 package project;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URI;
+import java.io.*;
+import java.net.*;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Model {
 
@@ -35,8 +35,10 @@ public class Model {
             String audioFilePath, String mealType,
             String ingredients, String title, String instructions, String creationTime) {
 
+        File file = new File("dwukadhkadwa");
         try {
             String urlString = "https://pantrypal-team31.onrender.com/";
+            // String urlString = "http://localhost:8100/";
 
             if (method.equals("GET")) {
 
@@ -61,8 +63,11 @@ public class Model {
                     // Transcribe audioFilePath (needs audioFilePath, returns mealType/ingredients
                     // as string)
                     // TO-DO: Handle audioFilePath
-                    urlString += "?action=transcribeaudioFilePath&audioFilePath=" + audioFilePath;
-
+                    file = new File(audioFilePath);
+                    if (!file.exists()) {
+                        throw new FileNotFoundException("File not found: " + audioFilePath);
+                    }
+                    urlString += "?action=transcribeaudioFile&audioFile=" + file.getName();
                 } else if (action != null && action.equals("login") && iniUsername != null && iniPassword != null) {
                     // Login (needs username, password, action)
                     urlString += "?action=login&username=" + iniUsername + "&password=" + iniPassword;
@@ -112,6 +117,9 @@ public class Model {
             conn.setRequestMethod(method);
             conn.setDoOutput(true);
 
+            if (audioFilePath != null) {
+                setConnectionHeaders(conn, file);
+            }
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String response = in.readLine();
             in.close();
@@ -123,4 +131,70 @@ public class Model {
         }
     }
 
+    private void setConnectionHeaders(HttpURLConnection conn, File audioFile) throws IOException {
+        // Set up request headers
+        String boundary = "Boundary-" + System.currentTimeMillis();
+        conn.setRequestProperty(
+                "Content-Type",
+                "multipart/form-data; boundary=" + boundary);
+        conn.setRequestProperty("Content-Length", String.valueOf(audioFile.length()));
+
+        // Set up output stream to write request body
+        OutputStream outputStream = conn.getOutputStream();
+
+        // Write file parameter to request body
+        writeFileToOutputStream(outputStream, audioFile, boundary);
+
+        // Write closing boundary to request body
+        // outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
+
+        // Flush and close output stream
+        outputStream.flush();
+        outputStream.close();
+
+    }
+
+    private void writeFileToOutputStream(OutputStream outputStream, File file, String boundary)
+            throws IOException {
+        outputStream.write(("--" + boundary + "\r\n").getBytes());
+        outputStream.write(
+                ("Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"\r\n").getBytes());
+        outputStream.write("Content-Type: audio/wav\r\n\r\n".getBytes());
+
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        }
+    }
+
 }
+
+//     private String handleSuccessResponse(HttpURLConnection connection) throws IOException, JSONException {
+//         StringBuilder response = new StringBuilder();
+//         try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+//             String inputLine;
+//             while ((inputLine = in.readLine()) != null) {
+//                 response.append(inputLine);
+//             }
+//         }
+
+//         JSONObject responseJson = new JSONObject(response.toString());
+//         return responseJson.getString("text");
+//     }
+
+//     private void handleErrorResponse(HttpURLConnection connection) throws IOException, JSONException {
+//         StringBuilder errorResponse = new StringBuilder();
+//         try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(connection.getErrorStream()))) {
+//             String errorLine;
+//             while ((errorLine = errorReader.readLine()) != null) {
+//                 errorResponse.append(errorLine);
+//             }
+//         }
+//         System.err.println("Error during transcription: " +
+//                 errorResponse.toString());
+//         // Here you might want to throw an exception instead
+//     }
+// }
