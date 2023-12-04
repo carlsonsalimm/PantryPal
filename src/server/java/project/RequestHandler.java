@@ -68,24 +68,24 @@ public class RequestHandler implements HttpHandler {
       List<Document> recipes = MongoDBProject.getRecipeList(username, password);
       // ArrayList<String> jsons = new ArrayList<String>();
       response = "{";
-      for (Document d : recipes) {
+      for (Document d: recipes) {
         response += d.toJson() + ",";
       }
       response += "}";
     } else if (action.equals("getImage")) {
       // Do DALL-E call
       String title = queryParams.get("password");
-    } else if (action.equals("getRecipeDetails")) {
+    } else if(action.equals("getRecipeDetails")){
       // Fetch a specific recipe's details
       String username = queryParams.get("username");
       String password = queryParams.get("password");
       String title = queryParams.get("title");
-
+      
       Document recipe = MongoDBProject.getRecipeByTitle(username, password, title);
       if (recipe != null) {
-        response = recipe.toJson();
+          response = recipe.toJson();
       } else {
-        response = "Recipe not found";
+          response = "Recipe not found";
       }
     }
 
@@ -116,13 +116,13 @@ public class RequestHandler implements HttpHandler {
       // try logging in with acct details
       String username = queryParams.get("username");
       String password = queryParams.get("password");
-      response = String.valueOf(MongoDBProject.login(username, password));
+      response = String.valueOf(MongoDBProject.login(username, password)); 
 
     } else if (action.equals("signup")) {
       // try signing up with acct details
       String username = queryParams.get("username");
       String password = queryParams.get("password");
-      response = String.valueOf(MongoDBProject.createUser(username, password));
+      response = String.valueOf(MongoDBProject.createUser(username, password)); 
 
     } else if (action.equals("createRecipe")) {
       String username = queryParams.get("username");
@@ -146,8 +146,7 @@ public class RequestHandler implements HttpHandler {
       String instructions = queryParams.get("instructions");
       Long creationTime = Long.parseLong(queryParams.get("creationTime"));
       String imageURL = queryParams.get("imageURL");
-      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime,
-          imageURL);
+      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime ,imageURL);
       response = "Updated recipe: " + title;
       // replace with what we are expecting as a response
 
@@ -163,8 +162,8 @@ public class RequestHandler implements HttpHandler {
       }
     }
 
-    // response include generated recipe and image url (in the last part)
-    return response;
+    //response include generated recipe and image url (in the last part)
+    return response; 
   }
 
   // deleteRecipe
@@ -183,12 +182,7 @@ public class RequestHandler implements HttpHandler {
       MongoDBProject.deleteRecipe(username, password, title);
       response = "Deleted recipe: " + title;
       // replace with what we are expecting as a response
-    } else if (action.equals("deleteUser")) {
-      String username = queryParams.get("username");
-      String password = queryParams.get("password");
-      MongoDBProject.deleteUser(username, password);
-      response = "Deleted user: " + username + ", " + password;
-    }
+    } 
     return response;
   }
 
@@ -206,4 +200,5 @@ public class RequestHandler implements HttpHandler {
     return params;
   }
 
+  
 }
