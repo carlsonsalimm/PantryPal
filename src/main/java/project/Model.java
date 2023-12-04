@@ -95,14 +95,17 @@ public class Model {
                 }
 
             } else if (method.equals("DELETE")) {
-                if (username != null && password != null && title != null) {
+                if (username != null && password != null && title != null && iniUsername == null
+                        && iniPassword == null) {
                     // Deletes an existing recipe (requires username, password, title)
                     urlString += "?action=deleteRecipe&username=" + username + "&password=" + password + "&title="
                             + title;
 
-                } else if (username != null && password != null && title == null) {
-                    // Deletes an existing user (requires username, password)
-                    urlString += "?action=deleteUser&username=" + username + "&password=" + password;
+                } else if (username == null && password == null && title == null && iniUsername != null
+                        && iniPassword != null) {
+                    // Deletes an existing user (requires iniUsername, iniPassword)
+                    urlString += "?action=deleteUser&username=" + iniUsername + "&password=" + iniPassword;
+
                 }
 
             }
