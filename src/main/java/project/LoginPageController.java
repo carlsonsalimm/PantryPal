@@ -14,7 +14,7 @@ public class LoginPageController implements Controller{
     private LoginPage view;
     private Model model;
 
-    LoginPageController(LoginPage view ,Model model){
+    LoginPageController(LoginPage view, Model model) {
         this.view = view;
         this.model = model;
 
@@ -27,7 +27,6 @@ public class LoginPageController implements Controller{
             }
         });
 
-
         this.view.setCreateAccountButtonAction(event -> {
             try {
                 handleCreateAccountButton(event);
@@ -38,7 +37,7 @@ public class LoginPageController implements Controller{
         });
     }
 
-    public boolean handleSignInButton(ActionEvent event) throws IOException{
+    public boolean handleSignInButton(ActionEvent event) throws IOException {
         String username = view.getUsername();
         String password = view.getPassword();
 
@@ -50,21 +49,20 @@ public class LoginPageController implements Controller{
             Main.setPage(view);
             Main.setController(new RecipeListPageController(view, model));
             return true;
-        }
-        else{
+        } else {
             view.showAlert("Error", "Account Not Found");
             return false;
         }
 
     }
-        
 
-    public boolean handleCreateAccountButton(ActionEvent event) throws IOException{
+    public boolean handleCreateAccountButton(ActionEvent event) throws IOException {
         String username = view.getUsername();
         String password = view.getPassword();
 
         // If Account Doesn Not Exist
-        if(model.performRequest("POST", "signup", username, password, null, null, null, null, null).equals("true")){
+        if (model.performRequest("POST", "signup", username, password, null, null, null, null, null, null)
+                .equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
             RecipeListPage temp = new RecipeListPage();
@@ -74,11 +72,10 @@ public class LoginPageController implements Controller{
         }
 
         // If Account Exxists
-        else{
+        else {
             view.showAlert("Error", "Account Already Exist");
             return false;
         }
     }
 
-   
 }
