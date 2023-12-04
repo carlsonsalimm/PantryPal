@@ -35,6 +35,14 @@ public class RecipeListPageController implements Controller {
             }
         });
 
+        this.view.setSignOutButtonAction(event -> {
+            try {
+                handleSignOutButton(event);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
         // this.view.setSortBoxAction(event -> {
         //     try {
         //         handleSortBoxButton(event);
@@ -80,6 +88,20 @@ public class RecipeListPageController implements Controller {
     //     else if (selectedItem == 'Lunch') {show only lunch items}
     //     else { default; All }
     // }
+
+    private void handleSignOutButton(ActionEvent event) throws IOException{
+        LoginPage loginPage = new LoginPage();
+        LoginPageController controller = new LoginPageController(loginPage, new Model());
+        
+        // Reset Rememvber Me Logic
+        FileWriter file = new FileWriter("RememberMe.csv", false);
+        file.write("0");
+        file.close();
+
+        // Set Page
+        Main.setPage(loginPage);
+        Main.setController(controller);
+    }
 
    
 }
