@@ -15,7 +15,7 @@ import javafx.event.ActionEvent;
 public class LoginPageController implements Controller{
     private LoginPage view;
     private Model model;
-    private List<Recipe> fullRecipe;
+    
 
     LoginPageController(LoginPage view, Model model) {
         this.view = view;
@@ -47,13 +47,21 @@ public class LoginPageController implements Controller{
         if(model.performRequest("POST", "login", username, password, null, null, null, null, null, null).equals("true")){
             model.setUsername(username);
             model.setPassword(password);
+            if(view.getRememberMe()){
+                FileWriter file = new FileWriter("RememberMe.csv");
+                file.write("1\n" +username+"\n"+password);
+                file.close();
+            }
 
             
             String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
-            List<Recipe> recipes = extractRecipeInfo(convertStringToRecipeList(JSON));
-            RecipeListPage view = new RecipeListPage(recipes);
-            Main.setPage(view);
-            Main.setController(new RecipeListPageController(view, model));
+            List<Recipe> recipes = Main.extractRecipeInfo(Main.convertStringToRecipeList(JSON));
+            RecipeListPage listPage = new RecipeListPage(recipes);
+            Main.setPage(listPage);
+            Main.setController(new RecipeListPageController(listPage, model));
+
+    
+
             return true;
         } else {
             view.showAlert("Error", "Account Not Found");
@@ -85,33 +93,6 @@ public class LoginPageController implements Controller{
             return false;
         }
     }
-    //helper method to store recipeList as a List of recipes
-    public List<Recipe> extractRecipeInfo(List<Document> recipeList) {
-        for(Document recipe: recipeList){
-            String recipeTitle = recipe.getString("recipeTitle");
-            String mealType = recipe.getString("mealType");
-            String ingredients = recipe.getString("ingredients");
-            String instructions = recipe.getString("instructions");
-            Long creationTime = recipe.getLong("creationTime");
-            // Create a Recipe object and add it to the fullRecipe list
-            Recipe recipe1 = new Recipe(recipeTitle, mealType, ingredients, instructions, String.valueOf(creationTime));
-            fullRecipe.add(recipe1);
-        }
-        return fullRecipe;  //fullRecipe will now contain all the recipeList  
-    }
 
-    public List<Document> convertStringToRecipeList(String jsonString) {
-        List<Document> recipeList = new ArrayList<>();
-
-        // Parse the JSON string and convert it to a list of documents
-        List<Document> documents = (List<Document>) Document.parse(jsonString);
-
-        // Add each document to the recipe list
-        for (Document document : documents) {
-            recipeList.add(document);
-        }
-
-        return recipeList;
-    }
 
 }
