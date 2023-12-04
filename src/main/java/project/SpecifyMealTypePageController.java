@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.CookieHandler;
+import java.util.ArrayList;
+
 import org.json.Cookie;
 import javax.sound.sampled.*;
 
@@ -70,9 +72,11 @@ public class SpecifyMealTypePageController implements Controller {
     }
 
     private void handleBackButton(ActionEvent event) throws IOException{
-        temp = new RecipeListPage();
-        Main.setPage(temp);
-        Main.setController(new RecipeListPageController(temp,model));
+
+        // Add Recipe Information
+        RecipeListPage listPage = new RecipeListPage(new ArrayList<Recipe>());
+        Main.setPage(listPage);
+        Main.setController(new RecipeListPageController(listPage, model));
     }
 
 

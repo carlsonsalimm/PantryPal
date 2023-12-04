@@ -160,7 +160,6 @@ public class DetailedRecipePage extends BorderPane {
         this.header = new Header();
 
         this.recipe = recipe;
-
         // Getting Header Buttons
         this.deleteButton = header.getDelButton();
         this.backButton = header.getBackButton();

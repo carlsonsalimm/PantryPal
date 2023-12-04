@@ -20,7 +20,7 @@ class SpecifyIngredientsPage extends VBox {
     private String cancelButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
     private Button cancelButton;
 
-    private AudioRecording recordButton;
+    private Button recordButton;
 
     private HBox cancelContainer;
     private HBox promptContainer;
@@ -37,7 +37,11 @@ class SpecifyIngredientsPage extends VBox {
     private Label prompt;
     private Label subPrompt;
 
+
+
     SpecifyIngredientsPage(String mealType) {
+
+
         // this.setPrefSize(600, 700); // Size of the header
         // this.setStyle("-fx-background-color: #FFFFFF;");
         // this.setSpacing(10);
@@ -54,7 +58,7 @@ class SpecifyIngredientsPage extends VBox {
         subPrompt.setStyle(subPromptStyle);
 
         //button to record audio
-        recordButton = new AudioRecording(mealType);
+        recordButton = new Button();
         //bodyContainer = new StackPane();
         
         cancelContainer = new HBox(cancelButton);
@@ -72,7 +76,7 @@ class SpecifyIngredientsPage extends VBox {
         this.requestLayout();
     }
 
-        public void setRecordHoldAction(EventHandler<? super MouseEvent> eventHandler){
+    public void setRecordHoldAction(EventHandler<? super MouseEvent> eventHandler){
         recordButton.setOnMousePressed(eventHandler);
     }
 

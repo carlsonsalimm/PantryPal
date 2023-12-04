@@ -26,10 +26,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception, IOException {
         Main.model = new Model();
         Main.primaryStage = primaryStage;
-        Recipe mock = new Recipe("title test", "instruction test");
-        Main.root = new DetailedRecipePage(mock);
+        //Recipe mock = new Recipe("title test", "instruction test");
+        Main.root = new LoginPage();
         
-        Main.controller = new DetailedRecipePageController((DetailedRecipePage) root, model);
+        Main.controller = new LoginPageController((LoginPage) root, model);
        
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));

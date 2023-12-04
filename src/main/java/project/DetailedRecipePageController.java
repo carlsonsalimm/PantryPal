@@ -44,37 +44,29 @@ public class DetailedRecipePageController implements Controller{
     private void handleDeleteButton(ActionEvent event) throws IOException {
         Recipe recipe = view.getRecipe();
        
-        CSVHandler.deleteRecipe(recipe);
+        model.performRequest("DELETE", "deleteRecipe", null, null, null, null, null, recipe.getTitle(), null, null);
 
         // Exit Window
-        RecipeListPage temp = new RecipeListPage();
-        Main.setPage(temp);
-        Main.setController(new RecipeListPageController(temp,model));
+        // Add login stuff
+        RecipeListPage listPage = new RecipeListPage(null);
+        Main.setPage(listPage);
+        Main.setController(new RecipeListPageController(listPage,model));
     }
 
     public void handleSaveButton(ActionEvent event) throws IOException {
-        Recipe oldRecipe = view.getRecipe();
-        String recipe = view.getTitle();
-        String instructions = view.getInstructions();
-        
-        if (oldRecipe.getInstructions().equals(instructions)) {
-            CSVHandler.writeRecipes(oldRecipe);
-        }
-        else {
-            CSVHandler.updateRecipe(oldRecipe, new Recipe(recipe, instructions));
-        }
+        model.performRequest("POST", "updateRecipe", null, null, null, null, null, view.getTitle(), view.getInstructions(), null);
 
         // Exit Window
-        RecipeListPage temp = new RecipeListPage();
-        Main.setPage(temp);
-        Main.setController(new RecipeListPageController(temp,model));
+         RecipeListPage listPage = new RecipeListPage(null);
+        Main.setPage(listPage);
+        Main.setController(new RecipeListPageController(listPage,model));
     }
 
     public void handleBackButton(ActionEvent event) throws IOException{
         
         // Exit Window
-        RecipeListPage temp = new RecipeListPage();
-        Main.setPage(temp);
-        Main.setController(new RecipeListPageController(temp,model));
+         RecipeListPage listPage = new RecipeListPage(null);
+        Main.setPage(listPage);
+        Main.setController(new RecipeListPageController(listPage,model));
     }
 }

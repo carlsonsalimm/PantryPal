@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.CookieHandler;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.Cookie;
 
 import javafx.event.ActionEvent;
@@ -41,11 +44,14 @@ public class LoginPageController implements Controller{
         String username = view.getUsername();
         String password = view.getPassword();
 
-        if(/*model.performRequest("POST", "login", username, password, null, null, null, null, null).equals("true")*/ true){
+        if(model.performRequest("POST", "login", username, password, null, null, null, null, null, null).equals("true")){
             model.setUsername(username);
             model.setPassword(password);
 
-            RecipeListPage view = new RecipeListPage();
+            
+            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
+            List<Recipe> recipes = new ArrayList<Recipe>();
+            RecipeListPage view = new RecipeListPage(recipes);
             Main.setPage(view);
             Main.setController(new RecipeListPageController(view, model));
             return true;
@@ -65,7 +71,9 @@ public class LoginPageController implements Controller{
                 .equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
-            RecipeListPage temp = new RecipeListPage();
+
+            List<Recipe> recipes = new ArrayList<Recipe>();
+            RecipeListPage temp = new RecipeListPage(recipes);
             Main.setPage(temp);
             Main.setController(new RecipeListPageController(temp,model));
             return true;

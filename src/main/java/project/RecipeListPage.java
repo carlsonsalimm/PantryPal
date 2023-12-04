@@ -122,7 +122,7 @@ class RecipeListHeader extends VBox {
     
 }
 
-class RecipeItem extends HBox {
+class RecipeItem extends VBox {
     public Recipe recipe;
     private Label recipeName;
     private Button detailedViewButton;
@@ -158,7 +158,7 @@ class RecipeItem extends HBox {
         this.setAlignment(Pos.CENTER);
 
         detailedViewButton.setOnAction(event -> {
-            // Send recipe data to RecipeListPage
+            
         });
     }
 
@@ -171,32 +171,6 @@ class RecipeItem extends HBox {
     }
 }
 
-
-class RecipeList extends VBox {
-    public List<Recipe> recipes;
-
-    RecipeList() throws IOException {
-        loadRecipe();
-    }
-
-    public void loadRecipe() throws IOException {
-        // TO-DO: Replace with GET request
-        this.recipes = CSVHandler.readRecipes();
-
-        this.setSpacing(7);
-        this.setPadding(new Insets(10, 0, 30, 0));
-        // this.setPrefSize(600, 560);
-        this.setStyle("-fx-background-color: #FFFFFF;");
-
-        for (Recipe recipe : recipes) {
-            RecipeItem Item = new RecipeItem();
-            Item.setRecipe(recipe);
-            this.getChildren().add(Item);
-        }
-    }
-
-}
-
 public class RecipeListPage extends BorderPane {
     private RecipeListHeader header;
 
@@ -205,11 +179,10 @@ public class RecipeListPage extends BorderPane {
     private Button signOutButton;
 
     private RecipeItem recipeItem;
+    private List<Recipe> recipes;
     private Recipe recipe;
 
-    private RecipeList recipeList;
-
-    RecipeListPage() throws IOException {
+    RecipeListPage(List<Recipe> recipes) throws IOException {
         header = new RecipeListHeader();
         addButton = header.getAddButton();
         signOutButton = header.getSignOutButton();
@@ -217,31 +190,38 @@ public class RecipeListPage extends BorderPane {
         recipeItem = new RecipeItem();
         detailedViewButton = recipeItem.getDetailedViewButton();
 
-        // Create a RecipeList Object to hold the Recipes
-        recipeList = new RecipeList();
-
-        ScrollPane scroller = new ScrollPane(recipeList);
-        scroller.setFitToHeight(isCache());
-        scroller.setFitToWidth(true);
+        this.recipes = recipes;
 
         // Add header to the top of the BorderPane
         this.setTop(header);
-        // Add scroller to the centre of the BorderPane
-        this.setCenter(scroller);
+        // Populate the Body
+        populateRecipe();
 
     }
 
-    public void setRecipe(Recipe recipe){
-        this.recipe = recipe;
+    public void populateRecipe(){
+        VBox vbox = new VBox();
+        vbox.setSpacing(7);
+        vbox.setPadding(new Insets(10, 0, 30, 0));
+        vbox.setStyle("-fx-background-color: #FFFFFF;");
+
+        for (Recipe recipe : recipes) {
+            RecipeItem Item = new RecipeItem();
+            Item.setRecipe(recipe);
+            vbox.getChildren().add(Item);
+        }
+
+        ScrollPane scroller = new ScrollPane(vbox);
+        scroller.setFitToHeight(isCache());
+        scroller.setFitToWidth(true);
+
+        this.setCenter(scroller);
     }
 
     public Recipe getRecipe() {
         return recipe;
     }
 
-    public RecipeList getRecipeList() {
-        return this.recipeList;
-    }
 
     public void setAddButtonAction(EventHandler<ActionEvent> eventHandler){
         addButton.setOnAction(eventHandler);
@@ -249,6 +229,8 @@ public class RecipeListPage extends BorderPane {
 
     public void setSignOutButtonAction(EventHandler<ActionEvent> eventHandler){
         signOutButton.setOnAction(eventHandler);
+
+
     }
 
     public void setDetailedViewButtonAction(EventHandler<ActionEvent> eventHandler){

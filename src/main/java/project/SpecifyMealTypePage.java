@@ -45,9 +45,11 @@ class SpecifyMealTypePage extends VBox {
     private Button backButton;
 
 
+
     SpecifyMealTypePage() {
         this.setPrefSize(600, 700); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
+
 
         // Set up labels
         prompt = new Label("What kind of meal are you making?");
@@ -78,6 +80,7 @@ class SpecifyMealTypePage extends VBox {
         this.setSpacing(10);
         this.requestLayout();
     }
+    
 
     public void setRecordHoldAction(EventHandler<? super MouseEvent> eventHandler){
         recordButton.setOnMousePressed(eventHandler);
