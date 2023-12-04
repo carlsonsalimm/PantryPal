@@ -36,14 +36,6 @@ class RecipeListHeader extends VBox {
     private ObservableList<String> filterOptions;
     private final ComboBox<String> filterBox;
 
-//     ObservableList<String> options = 
-//     FXCollections.observableArrayList(
-//         "Option 1",
-//         "Option 2",
-//         "Option 3"
-//     );
-// final ComboBox comboBox = new ComboBox(options);
-
     private BorderPane bottomPane;
     private StackPane sortContainer;
     private StackPane filterContainer;
@@ -157,9 +149,8 @@ class RecipeItem extends VBox {
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
 
-        detailedViewButton.setOnAction(event -> {
-            
-        });
+         detailedViewButton.setOnAction(event -> RecipeListPage.showDetailedView(this.recipe));
+
     }
 
     public Button getDetailedViewButton() {
@@ -180,7 +171,8 @@ public class RecipeListPage extends BorderPane {
 
     private RecipeItem recipeItem;
     private List<Recipe> recipes;
-    private Recipe recipe;
+
+    public static Recipe recipe;
 
     RecipeListPage(List<Recipe> recipes) throws IOException {
         header = new RecipeListHeader();
@@ -218,6 +210,10 @@ public class RecipeListPage extends BorderPane {
         this.setCenter(scroller);
     }
 
+    public static void showDetailedView(Recipe r) {
+        recipe = r;
+    }
+
     public Recipe getRecipe() {
         return recipe;
     }
@@ -229,8 +225,6 @@ public class RecipeListPage extends BorderPane {
 
     public void setSignOutButtonAction(EventHandler<ActionEvent> eventHandler){
         signOutButton.setOnAction(eventHandler);
-
-
     }
 
     public void setDetailedViewButtonAction(EventHandler<ActionEvent> eventHandler){
