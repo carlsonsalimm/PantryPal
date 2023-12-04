@@ -31,6 +31,8 @@ class Header extends HBox {
     private Pane titleContainer;
     private Pane addContainer;
 
+    private Boolean newMealFlag;
+
     static String defaultButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
 
     Header() {

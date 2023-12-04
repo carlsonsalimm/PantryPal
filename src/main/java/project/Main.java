@@ -34,7 +34,7 @@ public class Main extends Application {
         //Main.root = new RecipeListPage(recipes);
         
         //Main.controller = new RecipeListPageController((RecipeListPage) root, model);
-
+        
         Main.root = new DetailedRecipePage(mock);
         Main.controller = new DetailedRecipePageController((DetailedRecipePage) root, model);
        
