@@ -157,7 +157,7 @@ class RecipeItem extends VBox {
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
 
-        detailedViewButton.setOnAction(event -> RecipeListPage.showDetailedView(this.recipe));
+      
 
     }
 
@@ -192,7 +192,6 @@ public class RecipeListPage extends BorderPane {
         filterBox = header.getFilterBox();
         
         this.recipes = recipes;
-
         // Add header to the top of the BorderPane
         this.setTop(header);
         // Populate the Body
@@ -210,7 +209,15 @@ public class RecipeListPage extends BorderPane {
             RecipeItem Item = new RecipeItem();
             Item.setRecipe(recipe);
             vbox.getChildren().add(Item);
-            detailedViewButton = Item.getDetailedViewButton();
+
+            Item.getDetailedViewButton().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Handle the button click
+                showDetailedView(recipe);
+            }
+        });
+            
         }
 
 

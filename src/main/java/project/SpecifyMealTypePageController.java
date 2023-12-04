@@ -122,8 +122,7 @@ public class SpecifyMealTypePageController implements Controller {
         System.out.println("Recording stopped.");
 
         try {
-            Whisper whisper = new Whisper();
-            String transcribedText = whisper.transcribeAudio(TEMP_AUDIO_FILE_PATH);
+            String transcribedText = model.performRequest("POST",null,null,null,TEMP_AUDIO_FILE_PATH,null,null,null,null,null);
             System.out.println("Transcription: " + transcribedText);
 
             String mealType = detectMealType(transcribedText);
