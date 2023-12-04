@@ -127,11 +127,10 @@ public class SpecifyIngredientsPageController implements Controller{
     }
     
     public static Recipe createRecipe(String gptResponse) {
-        String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
-        String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
+        //String r = model.performRequest("")
 
-        Recipe recipe = new Recipe(recipeTitle, recipeInstructions);
-        return recipe;
+       // Recipe recipe = new Recipe(recipeTitle, recipeInstructions);
+        return null;
     }
 
     // Returns the meal type if it is found in the transcribed text, otherwise

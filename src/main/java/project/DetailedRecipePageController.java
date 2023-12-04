@@ -16,17 +16,14 @@ public class DetailedRecipePageController implements Controller{
                 try {
                     handleDeleteButton(event);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
         });
-
 
         this.view.setSaveButtonAction(event -> {
                 try {
                     handleSaveButton(event);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
         });
@@ -35,7 +32,6 @@ public class DetailedRecipePageController implements Controller{
                 try {
                     handleBackButton(event);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
         });

@@ -12,6 +12,8 @@ import javafx.scene.layout.VBox;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main extends Application {
@@ -26,10 +28,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception, IOException {
         Main.model = new Model();
         Main.primaryStage = primaryStage;
-        //Recipe mock = new Recipe("title test", "instruction test");
-        Main.root = new LoginPage();
+        Recipe mock = new Recipe("title test", "instruction test", "test", "123");
+        List<Recipe> recipes = new ArrayList<Recipe>();
+        Main.root = new RecipeListPage(recipes);
         
-        Main.controller = new LoginPageController((LoginPage) root, model);
+        Main.controller = new RecipeListPageController((RecipeListPage) root, model);
        
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));

@@ -1,6 +1,7 @@
 package project;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.geometry.Pos;
@@ -92,7 +93,6 @@ class RecipeListHeader extends VBox {
         filterContainer = new StackPane(filterBox);
         StackPane.setMargin(filterBox, new Insets(10, 300, 10, 0));
 
-
         bottomPane.setLeft(sortContainer);
         bottomPane.setCenter(filterContainer);
 
@@ -110,6 +110,14 @@ class RecipeListHeader extends VBox {
 
     public Label getTitle() {
         return title;
+    }
+
+    public ComboBox<String> getSortBox() {
+        return sortBox;
+    }
+    
+    public ComboBox<String> getFilterBox() {
+        return filterBox;
     }
     
 }
@@ -149,7 +157,7 @@ class RecipeItem extends VBox {
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
 
-         detailedViewButton.setOnAction(event -> RecipeListPage.showDetailedView(this.recipe));
+        detailedViewButton.setOnAction(event -> RecipeListPage.showDetailedView(this.recipe));
 
     }
 
@@ -169,7 +177,9 @@ public class RecipeListPage extends BorderPane {
     private Button addButton;
     private Button signOutButton;
 
-    private RecipeItem recipeItem;
+    private ComboBox<String> sortBox; 
+    private ComboBox<String> filterBox; 
+
     private List<Recipe> recipes;
 
     public static Recipe recipe;
@@ -178,10 +188,9 @@ public class RecipeListPage extends BorderPane {
         header = new RecipeListHeader();
         addButton = header.getAddButton();
         signOutButton = header.getSignOutButton();
-
-        recipeItem = new RecipeItem();
-        detailedViewButton = recipeItem.getDetailedViewButton();
-
+        sortBox = header.getSortBox();
+        filterBox = header.getFilterBox();
+        
         this.recipes = recipes;
 
         // Add header to the top of the BorderPane
@@ -201,7 +210,9 @@ public class RecipeListPage extends BorderPane {
             RecipeItem Item = new RecipeItem();
             Item.setRecipe(recipe);
             vbox.getChildren().add(Item);
+            detailedViewButton = Item.getDetailedViewButton();
         }
+
 
         ScrollPane scroller = new ScrollPane(vbox);
         scroller.setFitToHeight(isCache());
@@ -218,6 +229,13 @@ public class RecipeListPage extends BorderPane {
         return recipe;
     }
 
+    public ComboBox<String> getSortBox() {
+        return sortBox;
+    }
+    
+    public ComboBox<String> getFilterBox() {
+        return filterBox;
+    }
 
     public void setAddButtonAction(EventHandler<ActionEvent> eventHandler){
         addButton.setOnAction(eventHandler);
@@ -229,6 +247,14 @@ public class RecipeListPage extends BorderPane {
 
     public void setDetailedViewButtonAction(EventHandler<ActionEvent> eventHandler){
         detailedViewButton.setOnAction(eventHandler);
+    }
+
+    public void setSortBoxAction(EventHandler<ActionEvent> eventHandler){
+        sortBox.setOnAction(eventHandler);
+    }
+
+    public void setFilterBoxAction(EventHandler<ActionEvent> eventHandler){
+        filterBox.setOnAction(eventHandler);
     }
     
 }

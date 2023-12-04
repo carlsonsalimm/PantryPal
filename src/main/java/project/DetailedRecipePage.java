@@ -149,8 +149,11 @@ public class DetailedRecipePage extends BorderPane {
     private Button shareButton;
     private Button editButton;
 
+    private ImageView image;
+    private Text mealType;
     private TextField title;
     private TextArea instructions; // includes ingredients
+
 
     private Recipe recipe;
 
@@ -232,6 +235,18 @@ public class DetailedRecipePage extends BorderPane {
 
     public void setBackButtonAction(EventHandler<ActionEvent> eventHandler){
         backButton.setOnAction(eventHandler);
+    }
+
+    public void setRefreshButtonAction(EventHandler<ActionEvent> eventHandler){
+        refreshButton.setOnAction(eventHandler);
+    }
+
+    public void setShareButtonAction(EventHandler<ActionEvent> eventHandler){
+        shareButton.setOnAction(eventHandler);
+    }
+
+    public void setEditButtonAction(EventHandler<ActionEvent> eventHandler){
+        editButton.setOnAction(eventHandler);
     }
 
 }
