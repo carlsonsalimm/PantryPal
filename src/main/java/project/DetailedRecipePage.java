@@ -236,7 +236,8 @@ public class DetailedRecipePage extends BorderPane {
         if (oldRecipe.getInstructions().equals(this.instructions.getText())) {
             CSVHandler.writeRecipes(oldRecipe);
         } else {
-            CSVHandler.updateRecipe(oldRecipe, new Recipe(this.title.getText(), this.instructions.getText()));
+            CSVHandler.updateRecipe(oldRecipe, new Recipe(this.title.getText(), this.instructions.getText(), null,null));
+            //CSVHandler.updateRecipe(oldRecipe, new Recipe(this.title.getText(), this.instructions.getText());
         }
 
         exitWindow();

@@ -6,13 +6,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.CookieHandler;
+import java.util.ArrayList;
+import java.util.List;
+import org.bson.Document;
 import org.json.Cookie;
-
 import javafx.event.ActionEvent;
 
 public class LoginPageController implements LoginControllerInterface {
     private LoginPage view;
     private Model model;
+    private List<Recipe> fullRecipe;
 
     LoginPageController(LoginPage view, Model model) {
         this.view = view;
@@ -83,6 +86,21 @@ public class LoginPageController implements LoginControllerInterface {
             view.showAlert("Error", "Account Already Exist");
             return false;
         }
+    }
+    //helper method to store recipeList as a List of recipes
+    public List<Recipe> extractRecipeInfo(List<Document> recipeList) {
+        for(Document recipe: recipeList){
+            String recipeTitle = recipe.getString("recipeTitle");
+            String mealType = recipe.getString("mealType");
+            String ingredients = recipe.getString("ingredients");
+            String instructions = recipe.getString("instructions");
+            Long creationTime = recipe.getLong("creationTime");
+            // Create a Recipe object and add it to the fullRecipe list
+            Recipe recipe1 = new Recipe(recipeTitle, mealType, ingredients, instructions, String.valueOf(creationTime));
+            fullRecipe.add(recipe1);
+        }
+        return fullRecipe;  //fullRecipe will now contain all the recipeList
+       
     }
 
 }

@@ -176,7 +176,7 @@ public class RequestHandler implements HttpHandler {
       String instructions = queryParams.get("instructions");
       String imageURL = queryParams.get("imageURL");
       // TODO change to addRecipe once the method is added in MongoDBProject
-      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0, imageURL);
+      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0);
       response = "Added recipe: " + title;
 
     } else if (action.equals("updateRecipe")) {
@@ -188,9 +188,8 @@ public class RequestHandler implements HttpHandler {
       String title = queryParams.get("title");
       String instructions = queryParams.get("instructions");
       Long creationTime = Long.parseLong(queryParams.get("creationTime"));
-      String imageURL = queryParams.get("imageURL");
-      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime,
-          imageURL);
+      //String imageURL = queryParams.get("imageURL");
+      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime);
       response = "Updated recipe: " + title;
       // replace with what we are expecting as a response
 

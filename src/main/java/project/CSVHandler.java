@@ -24,7 +24,8 @@ public class CSVHandler {
                 String line = ""; // Reads line by line of file
                 while ((line = buffer.readLine()) != null) { // Sets a new task per line
                     String[] tokens = line.split(";");
-                    Recipe recipe = new Recipe(tokens[0], tokens[1].replace("\\n", "\n"));
+                    //Recipe recipe = new Recipe(tokens[0], tokens[1].replace("\\n", "\n"));
+                    Recipe recipe = new Recipe(tokens[0], tokens[1].replace("\\n", "\n"),null,null);
                     recipes.add(recipe);
                 }
             } catch (Exception e) {
