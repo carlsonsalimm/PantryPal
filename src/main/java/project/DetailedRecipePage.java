@@ -34,7 +34,7 @@ class Header extends HBox {
     static String defaultButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
 
     Header() {
-        this.setPrefSize(600, 70); // Size of the header
+        this.setPrefSize(600, 90); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
         pane = new BorderPane();
         pane.setPrefSize(565, 40);
@@ -103,7 +103,7 @@ class Header extends HBox {
         pane.setLeft(titleContainer);
         pane.setRight(addContainer);
         BorderPane.setMargin(titleContainer,new Insets(10,0,0,0));
-        BorderPane.setMargin(addContainer,new Insets(10,0,0,0));
+        BorderPane.setMargin(addContainer,new Insets(10,0,20,0));
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
     }
@@ -139,7 +139,7 @@ public class DetailedRecipePage extends BorderPane {
     public static String defaultMouseOverButtonStyle = "-fx-background-color: #bfbfbf; -fx-background-radius: 5em;";
     public static String defaultMouseClickButtonStyle = "-fx-background-color: #D9D9D9; -fx-background-radius: 5em;";
     public static String defaultBackgroundStyle = "-fx-background-color: -fx-text-box-border, -fx-control-inner-background; -fx-text-box-border: transparent;";
-    public static String defaultTextStyle;
+    public static String defaultTextStyle = "-fx-font-weight: bold;";
 
     private Header header;
     private Button deleteButton;
@@ -151,8 +151,9 @@ public class DetailedRecipePage extends BorderPane {
 
     private ImageView image;
     private Text mealType;
-    private TextField title;
-    private TextArea instructions; // includes ingredients
+    private Text title;
+    public TextArea ingredients;
+    public TextArea instructions; // includes ingredients
 
 
     private Recipe recipe;
@@ -171,46 +172,76 @@ public class DetailedRecipePage extends BorderPane {
         this.shareButton = header.getShareButton();
         this.editButton = header.getEditButton();
 
-        this.title = new TextField();
+        this.title = new Text();
+        this.mealType = new Text();
+        this.ingredients = new TextArea();
         this.instructions = new TextArea();
 
         // Setting the title and Instructions
         title.setText(recipe.getTitle());
+        mealType.setText(recipe.getMealType());
+        ingredients.setText(recipe.getIngredients());
+        ingredients.setPrefSize(500,180);
         instructions.setText(recipe.getInstructions());
-        instructions.setPrefSize(600, 550);
+        instructions.setPrefSize(550, 180);
 
-        title.setEditable(false);
-        instructions.setEditable(true);
+        //title.setEditable(false);
+        ingredients.setEditable(false);
+        instructions.setEditable(false);
         instructions.setWrapText(true);
 
         // Page Style
         this.setStyle(defaultBackgroundStyle);
 
         // Setting UI Labels
-        Text name = new Text("Name:");
+        String url = "./icons/trash.png"; // Replace with regenerated image here
+        image = new ImageView(url);
+        image.setFitWidth(150);
+        image.setFitHeight(150);
+
+        Text name = new Text("Recipe Title:");
         name.setStyle(defaultTextStyle);
 
+        Text mealTypeName = new Text("Meal Type:");
+        mealTypeName.setStyle(defaultTextStyle);
+
+        Text ingredientName = new Text("Ingredients:");
+        ingredientName.setStyle(defaultTextStyle);
         Text instruct = new Text("Instructions:");
         instruct.setStyle(defaultTextStyle);
 
         // Adding to a container
-        VBox titleContainer = new VBox(name, title);
-        VBox bodyText = new VBox(instruct, instructions);
-        ScrollPane sp = new ScrollPane(bodyText);
-        sp.setFitToWidth(true);
-        sp.setFitToHeight(false);
+        HBox imageContainer = new HBox(image);
+        HBox titleContainer = new HBox(name, title);
+        titleContainer.setSpacing(5);
+        HBox mealTypeContainer = new HBox(mealTypeName, mealType);
+        mealTypeContainer.setSpacing(5);
+        VBox ingredientBodyText = new VBox(ingredientName, ingredients);
+        VBox instructBodyText = new VBox(instruct, instructions);
+
+        ScrollPane spIngredients = new ScrollPane(ingredientBodyText);
+        spIngredients.setFitToWidth(true);
+        spIngredients.setFitToHeight(false);
+
+        ScrollPane spInstruct = new ScrollPane(instructBodyText);
+        spInstruct.setFitToWidth(true);
+        spInstruct.setFitToHeight(false);
 
         titleContainer.setPadding(new Insets(0, 20, 0, 20));
         titleContainer.setStyle(defaultBackgroundStyle);
-        bodyText.setPadding(new Insets(0, 20, 0, 20));
-        bodyText.setStyle(defaultBackgroundStyle);
+        mealTypeContainer.setPadding(new Insets(0, 20, 0, 20));
+        mealTypeContainer.setStyle(defaultBackgroundStyle);
+        ingredientBodyText.setPadding(new Insets(0, 20, 0, 20));
+        ingredientBodyText.setStyle(defaultBackgroundStyle);
+        instructBodyText.setPadding(new Insets(0, 20, 0, 20));
+        instructBodyText.setStyle(defaultBackgroundStyle);
 
-        VBox container = new VBox(titleContainer, bodyText);
+        VBox container = new VBox(imageContainer, titleContainer, mealTypeContainer, ingredientBodyText,instructBodyText);
         container.setStyle(defaultBackgroundStyle);
+        
         container.setSpacing(10);
-
         this.setTop(header);
-        this.setBottom(container);
+        this.setCenter(container);
     }
 
     public Recipe getRecipe(){

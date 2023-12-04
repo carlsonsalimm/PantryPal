@@ -24,15 +24,19 @@ public class Main extends Application {
     static Controller controller;
     static Model model;
 
+
     @Override
     public void start(Stage primaryStage) throws Exception, IOException {
         Main.model = new Model();
         Main.primaryStage = primaryStage;
         Recipe mock = new Recipe("title test", "instruction test", "test", "123");
         List<Recipe> recipes = new ArrayList<Recipe>();
-        Main.root = new RecipeListPage(recipes);
+        //Main.root = new RecipeListPage(recipes);
         
-        Main.controller = new RecipeListPageController((RecipeListPage) root, model);
+        //Main.controller = new RecipeListPageController((RecipeListPage) root, model);
+
+        Main.root = new DetailedRecipePage(mock);
+        Main.controller = new DetailedRecipePageController((DetailedRecipePage) root, model);
        
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));

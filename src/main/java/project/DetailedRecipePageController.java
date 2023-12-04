@@ -35,6 +35,30 @@ public class DetailedRecipePageController implements Controller{
                     e.printStackTrace();
                 }
         });
+
+        this.view.setRefreshButtonAction(event -> {
+                try {
+                    handleRefreshButton(event);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        });
+
+        this.view.setShareButtonAction(event -> {
+                try {
+                    handleShareButton(event);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        });
+
+        this.view.setEditButtonAction(event -> {
+                try {
+                    handleEditButton(event);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        });
     }
 
     private void handleDeleteButton(ActionEvent event) throws IOException {
@@ -59,10 +83,23 @@ public class DetailedRecipePageController implements Controller{
     }
 
     public void handleBackButton(ActionEvent event) throws IOException{
-        
         // Exit Window
          RecipeListPage listPage = new RecipeListPage(null);
         Main.setPage(listPage);
         Main.setController(new RecipeListPageController(listPage,model));
     }
+
+    public void handleRefreshButton(ActionEvent event) throws IOException{
+        // Handle refresh actions here
+    }
+
+    public void handleShareButton(ActionEvent event) throws IOException{
+        // Handle share actions here (
+    }
+
+    public void handleEditButton(ActionEvent event) throws IOException{
+        // Handle Edit Button
+        view.instructions.setEditable(true);
+    }
+
 }
