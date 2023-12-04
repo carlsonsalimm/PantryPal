@@ -118,8 +118,8 @@ public class AudioRecording extends VBox {
     public static Recipe createRecipe(String gptResponse) {
         String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
         String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
-
-        Recipe recipe = new Recipe(recipeTitle, recipeInstructions);
+        //Recipe recipe = new Recipe(recipeTitle, recipeInstructions);
+        Recipe recipe = new Recipe(recipeTitle, recipeInstructions,null,null);
         return recipe;
     }
 

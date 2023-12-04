@@ -8,14 +8,14 @@ import java.io.IOException;
 import java.net.CookieHandler;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.bson.Document;
 import org.json.Cookie;
-
 import javafx.event.ActionEvent;
 
 public class LoginPageController implements Controller{
     private LoginPage view;
     private Model model;
+    private List<Recipe> fullRecipe;
 
     LoginPageController(LoginPage view, Model model) {
         this.view = view;
@@ -50,7 +50,7 @@ public class LoginPageController implements Controller{
 
             
             String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
-            List<Recipe> recipes = new ArrayList<Recipe>();
+            List<Recipe> recipes = extractRecipeInfo(convertStringToRecipeList(JSON));
             RecipeListPage view = new RecipeListPage(recipes);
             Main.setPage(view);
             Main.setController(new RecipeListPageController(view, model));
@@ -84,6 +84,34 @@ public class LoginPageController implements Controller{
             view.showAlert("Error", "Account Already Exist");
             return false;
         }
+    }
+    //helper method to store recipeList as a List of recipes
+    public List<Recipe> extractRecipeInfo(List<Document> recipeList) {
+        for(Document recipe: recipeList){
+            String recipeTitle = recipe.getString("recipeTitle");
+            String mealType = recipe.getString("mealType");
+            String ingredients = recipe.getString("ingredients");
+            String instructions = recipe.getString("instructions");
+            Long creationTime = recipe.getLong("creationTime");
+            // Create a Recipe object and add it to the fullRecipe list
+            Recipe recipe1 = new Recipe(recipeTitle, mealType, ingredients, instructions, String.valueOf(creationTime));
+            fullRecipe.add(recipe1);
+        }
+        return fullRecipe;  //fullRecipe will now contain all the recipeList  
+    }
+
+    public List<Document> convertStringToRecipeList(String jsonString) {
+        List<Document> recipeList = new ArrayList<>();
+
+        // Parse the JSON string and convert it to a list of documents
+        List<Document> documents = (List<Document>) Document.parse(jsonString);
+
+        // Add each document to the recipe list
+        for (Document document : documents) {
+            recipeList.add(document);
+        }
+
+        return recipeList;
     }
 
 }
