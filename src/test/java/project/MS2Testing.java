@@ -80,4 +80,11 @@ public class MS2Testing {
         assertEquals(false, result);
     }
 
+    @Test
+    void testSendAudio() throws IOException, InterruptedException, URISyntaxException {
+        MockWhisper whisper = new MockWhisper();
+        String response = whisper.transcribeAudio("testType.wav");
+        assertEquals(response, "Dinner.");
+    }
+
 }

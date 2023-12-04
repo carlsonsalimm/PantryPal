@@ -69,7 +69,7 @@ public class MongoDBProject {
                     .append("RecipeList", emptyRecipeList);
 
             InsertOneResult result = collection.insertOne(userDocument);
-            System.out.println("User created with _id: " + result.getInsertedId());
+            System.out.println("User created with _id: " + result.getInsertedId() + "  and username: " + username);
             return true; // User created successfully
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +89,7 @@ public class MongoDBProject {
 
             // If the user document is not null, login is successful
             if (userDocument != null) {
-                //System.out.println("Login successful for user: " + username);
+                System.out.println("Login successful for user: " + username);
                 return true;
             } else {
                 //System.out.println("Invalid username or password");
@@ -205,10 +205,10 @@ public class MongoDBProject {
             if (userDocument != null) {
                 // Delete the user document from the collection
                 collection.deleteOne(new Document("username", username).append("password", password));
-                //System.out.println("User deleted successfully.");
+                System.out.println("User " + username + " deleted successfully.");
                 return true;
             } else {
-                //System.out.println("User with username '" + username + "' does not exist. Cannot delete.");
+                System.out.println("User with username '" + username + "' does not exist. Cannot delete.");
                 return false;
             }
         } catch (Exception e) {
