@@ -9,7 +9,7 @@ import javax.sound.sampled.*;
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 
-public class MockSpecifyMealTypePageController {
+public class MockSpecifyMealTypePageController implements Controller{
     private SpecifyMealTypePage view;
     private Model model;
     private TargetDataLine targetDataLine;
@@ -17,9 +17,14 @@ public class MockSpecifyMealTypePageController {
     private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
     public String mealType;
     private Boolean errorFlag = false;
+    public String transcribedText;
 
     public MockSpecifyMealTypePageController(Model model){
         this.model = model;
+    }
+
+    public void setTranscribedText(String text){
+        this.transcribedText = text;
     }
 
     
@@ -58,9 +63,9 @@ public class MockSpecifyMealTypePageController {
     // Returns the audio format to use for the recording for SpecifyMealTypePage
     // and Specify Meal Type Page
 
-    public void handleRecordReleasetButton(MouseEvent event) throws IOException{
+    public String handleRecordReleasetButton(MouseEvent event) throws IOException{
         if (targetDataLine == null) {
-            return;
+            return null;
         }
 
         targetDataLine.stop();
@@ -68,15 +73,12 @@ public class MockSpecifyMealTypePageController {
         System.out.println("Recording stopped.");
 
         try {
-            String transcribedText = model.performRequest("POST",null,null,null,TEMP_AUDIO_FILE_PATH,null,null,null,null,null,null);
             System.out.println("Transcription: " + transcribedText);
 
             String mealType = detectMealType(transcribedText);
 
             if (mealType != null) {
-                SpecifyIngredientsPage temp = new SpecifyIngredientsPage(mealType);
-                Main.setPage(temp);
-                Main.setController(new SpecifyIngredientsPageController(temp,model));
+                return mealType;
             } else {
                 System.out.println("Please try again");
 
@@ -90,22 +92,19 @@ public class MockSpecifyMealTypePageController {
             e.printStackTrace();
             // Handle exceptions appropriately
         } 
+        return null;
     }
 
-    public void handleBackButton(ActionEvent event) throws IOException{
+    public boolean handleBackButton(ActionEvent event) throws IOException{
 
-        // Add Recipe Information
-        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
-        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
-        RecipeListPage listPage = new RecipeListPage(recipes);
-        Main.setPage(listPage);
-        Main.setController(new RecipeListPageController(listPage, model));
+
+        return true;
     }
 
    
     // Returns the meal type if it is found in the transcribed text, otherwise
     // returns null (Helper Function)
-    public static String detectMealType(String transcribedText) {
+    public String detectMealType(String transcribedText) {
         String[] mealTypes = { "breakfast", "lunch", "dinner" };
 
         for (String meal : mealTypes) {
