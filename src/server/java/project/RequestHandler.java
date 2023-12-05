@@ -75,6 +75,7 @@ public class RequestHandler implements HttpHandler {
     } else if (action.equals("getImage")) {
       // Do DALL-E call
       String title = queryParams.get("password");
+      String prompt = queryParams.get("prompt");
     } else if (action.equals("getRecipeDetails")) {
       // Fetch a specific recipe's details
       String username = queryParams.get("username");
@@ -205,6 +206,16 @@ public class RequestHandler implements HttpHandler {
       }
     }
 
+    else if (action.equals("generateImage")) {
+      String prompt = queryParams.get("prompt");
+      try {
+          String imageURL = dallE.generateImageURL(prompt);
+          response = "{ \"imageURL\": \"" + imageURL + "\" }"; // Format the response as JSON
+      } catch (IOException | InterruptedException | URISyntaxException e) {
+          e.printStackTrace();
+          response = "Error generating image: " + e.getMessage();
+      }
+  }  
     // response include generated recipe and image url (in the last part)
     return response;
   }

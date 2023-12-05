@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -194,10 +195,18 @@ public class DetailedRecipePage extends BorderPane {
         this.setStyle(defaultBackgroundStyle);
 
         // Setting UI Labels
-        String url = "./icons/trash.png"; // Replace with regenerated image here
-        image = new ImageView(url);
+        // Initialize the ImageView
+        image = new ImageView(); // Initialize with no image or a placeholder image
         image.setFitWidth(150);
         image.setFitHeight(150);
+        //recipe.setImageURL("https://oaidalleapiprodscus.blob.core.windows.net/private/org-Sd9bwBmEf5IDns4KIh3k3fXp/user-TTwaqZd6kA45CPFJ9Srb7I12/img-LIMwJsSf4T6lx1muZeiLA1Xj.png?st=2023-12-05T06%3A38%3A52Z&se=2023-12-05T08%3A38%3A52Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-12-04T23%3A19%3A41Z&ske=2023-12-05T23%3A19%3A41Z&sks=b&skv=2021-08-06&sig=QLBeDXgAr5GzbvViazbcILm0nyaW8AgwFup17juf6UI%3D");
+        if (recipe.getImageURL() != null && !recipe.getImageURL().isEmpty()) {
+            //setImage(recipe.getImageURL());
+            setImage(recipe.getImageURL());
+        } else {
+            // Set a default placeholder image if needed
+            setImage("./icons/trash.png");
+        }
 
         Text name = new Text("Recipe Title:");
         name.setStyle(defaultTextStyle);
@@ -242,6 +251,9 @@ public class DetailedRecipePage extends BorderPane {
         container.setSpacing(10);
         this.setTop(header);
         this.setCenter(container);
+
+        // Update the page with the initial recipe details
+        updateRecipeDetails(recipe); 
     }
 
     public Recipe getRecipe(){
@@ -278,6 +290,30 @@ public class DetailedRecipePage extends BorderPane {
 
     public void setEditButtonAction(EventHandler<ActionEvent> eventHandler){
         editButton.setOnAction(eventHandler);
+    }
+
+    public void updateRecipeDetails(Recipe newRecipe) {
+        this.recipe = newRecipe;
+        this.title.setText(newRecipe.getTitle());
+        this.mealType.setText(newRecipe.getMealType());
+        this.ingredients.setText(newRecipe.getIngredients());
+        this.instructions.setText(newRecipe.getInstructions());
+    
+        if (newRecipe.getImageURL() != null && !newRecipe.getImageURL().isEmpty()) {
+            //newRecipe.setImageURL("./icons/trash.png");
+            setImage(newRecipe.getImageURL());
+        }
+    }
+
+    private void setImage(String imageURL) {
+        try {
+            Image newImage = new Image(imageURL, true); // true for background loading
+            this.image.setImage(newImage);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid image URL: " + imageURL);
+        } catch (Exception e) {
+            System.out.println("Error loading image: " + e.getMessage());
+        }
     }
 
 }

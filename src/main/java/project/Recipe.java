@@ -6,6 +6,7 @@ public class Recipe {
     String ingredients;
     String mealType;
     String creationTime; 
+    String imageURL;
 
     public Recipe(String title, String instructions, String ingredients, String mealType){
         this.title = title;
@@ -20,6 +21,16 @@ public class Recipe {
         this.ingredients = ingredients;
         this.mealType = mealType;
         this.creationTime = creationTime;
+    }
+
+    //new constructor for recipe that includes imageURL (please update the other constructors if you change this one)
+    public Recipe(String title, String instructions, String ingredients, String mealType, String creationTime, String imageURL) {
+        this.title = title;
+        this.instructions = instructions;
+        this.ingredients = ingredients;
+        this.mealType = mealType;
+        this.creationTime = creationTime;
+        this.imageURL = imageURL;
     }
 
     public String getTitle() {
@@ -42,6 +53,10 @@ public class Recipe {
         return this.creationTime;
     }
 
+    public String getImageURL() {
+        return this.imageURL;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -60,5 +75,9 @@ public class Recipe {
 
     public void setCreationTime(String creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

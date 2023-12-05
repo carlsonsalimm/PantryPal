@@ -33,7 +33,7 @@ public class Model {
 
     public String performRequest(String method, String action, String iniUsername, String iniPassword,
             String audioFilePath, String mealType,
-            String ingredients, String title, String instructions, String creationTime) {
+            String ingredients, String title, String instructions, String creationTime, String imageURL) {
 
         File file = new File("dwukadhkadwa");
         try {
@@ -97,7 +97,7 @@ public class Model {
                     // instructions as string)
                     urlString += "?action=generateRecipe&mealType=" + mealType + "&ingredients=" + ingredients;
 
-                }
+                } 
 
             } else if (method.equals("DELETE")) {
                 if (username != null && password != null && title != null) {
@@ -172,29 +172,33 @@ public class Model {
 
 }
 
-//     private String handleSuccessResponse(HttpURLConnection connection) throws IOException, JSONException {
-//         StringBuilder response = new StringBuilder();
-//         try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-//             String inputLine;
-//             while ((inputLine = in.readLine()) != null) {
-//                 response.append(inputLine);
-//             }
-//         }
+// private String handleSuccessResponse(HttpURLConnection connection) throws
+// IOException, JSONException {
+// StringBuilder response = new StringBuilder();
+// try (BufferedReader in = new BufferedReader(new
+// InputStreamReader(connection.getInputStream()))) {
+// String inputLine;
+// while ((inputLine = in.readLine()) != null) {
+// response.append(inputLine);
+// }
+// }
 
-//         JSONObject responseJson = new JSONObject(response.toString());
-//         return responseJson.getString("text");
-//     }
+// JSONObject responseJson = new JSONObject(response.toString());
+// return responseJson.getString("text");
+// }
 
-//     private void handleErrorResponse(HttpURLConnection connection) throws IOException, JSONException {
-//         StringBuilder errorResponse = new StringBuilder();
-//         try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(connection.getErrorStream()))) {
-//             String errorLine;
-//             while ((errorLine = errorReader.readLine()) != null) {
-//                 errorResponse.append(errorLine);
-//             }
-//         }
-//         System.err.println("Error during transcription: " +
-//                 errorResponse.toString());
-//         // Here you might want to throw an exception instead
-//     }
+// private void handleErrorResponse(HttpURLConnection connection) throws
+// IOException, JSONException {
+// StringBuilder errorResponse = new StringBuilder();
+// try (BufferedReader errorReader = new BufferedReader(new
+// InputStreamReader(connection.getErrorStream()))) {
+// String errorLine;
+// while ((errorLine = errorReader.readLine()) != null) {
+// errorResponse.append(errorLine);
+// }
+// }
+// System.err.println("Error during transcription: " +
+// errorResponse.toString());
+// // Here you might want to throw an exception instead
+// }
 // }
