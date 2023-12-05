@@ -215,7 +215,7 @@ public class RequestHandler implements HttpHandler {
         e.printStackTrace();
       }
     } else if (action.equals("generateImage")) {
-      String prompt = queryParams.get("prompt");
+      String prompt = queryParams.get("title");
       try {
         String imageURL = dallE.generateImageURL(prompt);
         response = "{ \"imageURL\": \"" + imageURL + "\" }"; // Format the response as JSON
@@ -223,39 +223,39 @@ public class RequestHandler implements HttpHandler {
         e.printStackTrace();
         response = "Error generating image: " + e.getMessage();
       }
-    } else if (action.equals("regenerateRecipe")) {
-      String title = queryParams.get("title");
-      String mealType = queryParams.get("mealType");
-      String ingredients = queryParams.get("ingredients");
-      String imageURL = queryParams.get("imageURL");
+    // } else if (action.equals("regenerateRecipe")) {
+    //   String title = queryParams.get("title");
+    //   String mealType = queryParams.get("mealType");
+    //   String ingredients = queryParams.get("ingredients");
+    //   String imageURL = queryParams.get("imageURL");
 
-      // Use ChatGPT to generate recipe text
-      String generatedInstructions = ""; // Placeholder, replace with actual ChatGPT call
-      try {
-        generatedInstructions = chatGPT.getGPTResponse(ingredients, mealType);
-      } catch (InterruptedException | URISyntaxException e) {
-        e.printStackTrace();
-        response = "Error generating recipe text: " + e.getMessage();
-        return response;
-      }
+    //   // Use ChatGPT to generate recipe text
+    //   String generatedInstructions = ""; // Placeholder, replace with actual ChatGPT call
+    //   try {
+    //     generatedInstructions = chatGPT.getGPTResponse(ingredients, mealType);
+    //   } catch (InterruptedException | URISyntaxException e) {
+    //     e.printStackTrace();
+    //     response = "Error generating recipe text: " + e.getMessage();
+    //     return response;
+    //   }
 
-      // Use Dall-E to generate a new image
-      String newImageURL = ""; // Placeholder, replace with actual Dall-E call
-      try {
-        newImageURL = dallE.generateImageURL(title);
-      } catch (IOException | InterruptedException | URISyntaxException e) {
-        e.printStackTrace();
-        response = "Error generating image: " + e.getMessage();
-        return response;
-      }
+    //   // Use Dall-E to generate a new image
+    //   String newImageURL = ""; // Placeholder, replace with actual Dall-E call
+    //   try {
+    //     newImageURL = dallE.generateImageURL(title);
+    //   } catch (IOException | InterruptedException | URISyntaxException e) {
+    //     e.printStackTrace();
+    //     response = "Error generating image: " + e.getMessage();
+    //     return response;
+    //   }
 
-      // Construct and send the response
-      JSONObject jsonResponse = new JSONObject();
-      jsonResponse.put("title", title);
-      jsonResponse.put("instructions", generatedInstructions);
-      jsonResponse.put("ingredients", ingredients);
-      jsonResponse.put("imageURL", newImageURL);
-      response = jsonResponse.toString();
+      // // Construct and send the response
+      // JSONObject jsonResponse = new JSONObject();
+      // jsonResponse.put("title", title);
+      // jsonResponse.put("instructions", generatedInstructions);
+      // jsonResponse.put("ingredients", ingredients);
+      // jsonResponse.put("imageURL", newImageURL);
+      // response = jsonResponse.toString();
     }
   // response include generated recipe and image url (in the last part)
   return response;

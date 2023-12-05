@@ -127,14 +127,30 @@ public class SpecifyIngredientsPageController implements Controller{
         return true;
     }
     
+    // public Recipe createRecipe(String gptResponse) {
+    //     String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
+    //     String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
+
+    //     Recipe recipe = new Recipe(recipeTitle, recipeInstructions, transcribedText, mealType);
+    //     return recipe;
+    // }
+
     public Recipe createRecipe(String gptResponse) {
-        String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
-        String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
-
-        Recipe recipe = new Recipe(recipeTitle, recipeInstructions, transcribedText, mealType);
-        return recipe;
+        int firstNewLineIndex = gptResponse.indexOf("\n");
+    
+        // Check if the newline character is present
+        if (firstNewLineIndex == -1) {
+            // Handle the case where there is no newline character
+            // For example, you can set the title to the entire response
+            // and set the instructions to an empty string or some default value
+            return new Recipe(gptResponse, "", transcribedText, mealType);
+        } else {
+            // Split the string into title and instructions
+            String recipeTitle = gptResponse.substring(0, firstNewLineIndex);
+            String recipeInstructions = gptResponse.substring(firstNewLineIndex + 1); // +1 to skip the newline character
+            return new Recipe(recipeTitle, recipeInstructions, transcribedText, mealType);
+        }
     }
-
 
     // Returns the audio format to use for the recording for Specify Ingredient Page
     // and Specify Meal Type Page

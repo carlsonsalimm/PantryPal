@@ -144,7 +144,7 @@ public class MongoDBProject {
     //if it is 0 that means we want to add a new recipe, but if it's not !=0 then we just want to update a existing one
     public static void updateRecipe(String username, String password, String recipeTitle,
                                 String updatedMealType, String updatedIngredients,
-                                String updatedInstructions, long creationTime) {
+                                String updatedInstructions, long creationTime, String ImageURL) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
             MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
             MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);

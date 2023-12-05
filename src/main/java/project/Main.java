@@ -53,9 +53,6 @@ public class Main extends Application {
         }
         file.close();
         br.close();
-  
-        
-       
        
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
