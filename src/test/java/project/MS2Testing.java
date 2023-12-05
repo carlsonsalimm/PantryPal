@@ -87,4 +87,22 @@ public class MS2Testing {
         assertEquals(response, "Dinner.");
     }
 
+    @Test
+    void testEncodeDecodeEmpty() {
+        String orig = "";
+        String encoded = model.encodeURL(orig);
+        String decoded = model.decodeURL(encoded);
+
+        assertEquals(orig, decoded);
+    }
+
+    @Test
+    void testEncodeDecodeNotEmpty() {
+        String orig = "jfdskaluiowearewa\'\"fdsajiej\nfjdsiajei";
+        String encoded = model.encodeURL(orig);
+        String decoded = model.decodeURL(encoded);
+
+        assertEquals(orig, decoded);
+    }
+
 }

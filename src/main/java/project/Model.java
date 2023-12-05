@@ -2,6 +2,10 @@ package project;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,16 +23,24 @@ public class Model {
         this.password = password;
     }
 
-    public String encode(String requestArgument) {
-        // Encode request argument
-        String encodedArgument = "";
-        return encodedArgument;
+    public String encodeURL(String url) {
+        String encodedURL = null;
+        try {
+            encodedURL = URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("Error encoding URL: " + e.getMessage());
+        }
+        return encodedURL;
     }
 
-    public String decode(String requestResponse) {
-        // Encode request response
-        String decodedResponse = "";
-        return decodedResponse;
+    public String decodeURL(String encodedURL) {
+        String decodedURL = null;
+        try {
+            decodedURL = URLDecoder.decode(encodedURL, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("Error decoding URL: " + e.getMessage());
+        }
+        return decodedURL;
     }
 
     public String performRequest(String method, String action, String iniUsername, String iniPassword,
@@ -172,29 +184,33 @@ public class Model {
 
 }
 
-//     private String handleSuccessResponse(HttpURLConnection connection) throws IOException, JSONException {
-//         StringBuilder response = new StringBuilder();
-//         try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-//             String inputLine;
-//             while ((inputLine = in.readLine()) != null) {
-//                 response.append(inputLine);
-//             }
-//         }
+// private String handleSuccessResponse(HttpURLConnection connection) throws
+// IOException, JSONException {
+// StringBuilder response = new StringBuilder();
+// try (BufferedReader in = new BufferedReader(new
+// InputStreamReader(connection.getInputStream()))) {
+// String inputLine;
+// while ((inputLine = in.readLine()) != null) {
+// response.append(inputLine);
+// }
+// }
 
-//         JSONObject responseJson = new JSONObject(response.toString());
-//         return responseJson.getString("text");
-//     }
+// JSONObject responseJson = new JSONObject(response.toString());
+// return responseJson.getString("text");
+// }
 
-//     private void handleErrorResponse(HttpURLConnection connection) throws IOException, JSONException {
-//         StringBuilder errorResponse = new StringBuilder();
-//         try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(connection.getErrorStream()))) {
-//             String errorLine;
-//             while ((errorLine = errorReader.readLine()) != null) {
-//                 errorResponse.append(errorLine);
-//             }
-//         }
-//         System.err.println("Error during transcription: " +
-//                 errorResponse.toString());
-//         // Here you might want to throw an exception instead
-//     }
+// private void handleErrorResponse(HttpURLConnection connection) throws
+// IOException, JSONException {
+// StringBuilder errorResponse = new StringBuilder();
+// try (BufferedReader errorReader = new BufferedReader(new
+// InputStreamReader(connection.getErrorStream()))) {
+// String errorLine;
+// while ((errorLine = errorReader.readLine()) != null) {
+// errorResponse.append(errorLine);
+// }
+// }
+// System.err.println("Error during transcription: " +
+// errorResponse.toString());
+// // Here you might want to throw an exception instead
+// }
 // }
