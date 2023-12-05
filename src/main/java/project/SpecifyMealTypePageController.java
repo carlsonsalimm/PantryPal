@@ -75,7 +75,7 @@ public class SpecifyMealTypePageController implements Controller {
     private void handleBackButton(ActionEvent event) throws IOException{
 
         // Add Recipe Information
-         String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
+         String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
         List<Recipe> recipes = Main.extractRecipeInfo(JSON);
         RecipeListPage listPage = new RecipeListPage(recipes);
         Main.setPage(listPage);
@@ -125,7 +125,7 @@ public class SpecifyMealTypePageController implements Controller {
         System.out.println("Recording stopped.");
 
         try {
-            String transcribedText = model.performRequest("POST",null,null,null,TEMP_AUDIO_FILE_PATH,null,null,null,null,null);
+            String transcribedText = model.performRequest("POST",null,null,null,TEMP_AUDIO_FILE_PATH,null,null,null,null,null,null);
             System.out.println("Transcription: " + transcribedText);
 
             String mealType = detectMealType(transcribedText);
