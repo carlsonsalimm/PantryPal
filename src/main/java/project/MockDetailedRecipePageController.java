@@ -53,15 +53,14 @@ public class MockDetailedRecipePageController {
        return "Google.com";
     }
 
-    public void handleEditButton(ActionEvent event) throws IOException{
+    public boolean handleEditButton(ActionEvent event) throws IOException{
         // Handle Edit Button
-        view.instructions.setEditable(true);
+        return true;
     }
 
     public Recipe createRecipe(String gptResponse) {
         String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
         String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
-        Recipe recipe = view.getRecipe();
         Recipe newrecipe = new Recipe(recipeTitle, recipeInstructions, recipe.getIngredients(), recipe.getMealType());
         return newrecipe;
     }
