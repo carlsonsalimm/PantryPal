@@ -68,7 +68,7 @@ public class RecipeListPageController implements Controller {
 
     private void handleDetailedViewButton(ActionEvent event) throws IOException{
         Recipe recipe = view.getRecipe();
-        DetailedRecipePage temp = new DetailedRecipePage(recipe);
+        DetailedRecipePage temp = new DetailedRecipePage(recipe, false);
         Main.setPage(temp);
         Main.setController(new DetailedRecipePageController(temp, model));
     }

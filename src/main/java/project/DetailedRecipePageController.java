@@ -74,10 +74,11 @@ public class DetailedRecipePageController implements Controller{
     }
 
     public void handleSaveButton(ActionEvent event) throws IOException {
-        model.performRequest("POST", "updateRecipe", null, null, null, null, null, view.getTitle(), view.getInstructions(), null);
+        Recipe recipe = view.getRecipe();
+        model.performRequest("POST", "updateRecipe", null, null, null, null, view.getIngredients(), view.getTitle(), view.getInstructions(), recipe.getCreationTime());
 
         // Exit Window
-         RecipeListPage listPage = new RecipeListPage(null);
+        RecipeListPage listPage = new RecipeListPage(null);
         Main.setPage(listPage);
         Main.setController(new RecipeListPageController(listPage,model));
     }
@@ -90,7 +91,13 @@ public class DetailedRecipePageController implements Controller{
     }
 
     public void handleRefreshButton(ActionEvent event) throws IOException{
-        // Handle refresh actions here
+        Recipe recipe = view.getRecipe();
+        String response = model.performRequest("POST",null,null,null,null, recipe.getMealType(), recipe.getIngredients(),null,null,null);
+
+        view.setTitle(response);
+        view.setInstructions(response);
+        view.setIngredients(response);
+        
     }
 
     public void handleShareButton(ActionEvent event) throws IOException{

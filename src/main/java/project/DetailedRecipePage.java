@@ -35,7 +35,7 @@ class Header extends HBox {
 
     static String defaultButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
 
-    Header() {
+    Header(Boolean newCreation) {
         this.setPrefSize(600, 90); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
         pane = new BorderPane();
@@ -74,6 +74,7 @@ class Header extends HBox {
         refresh.setFitHeight(20);
         refreshButton.setGraphic(refresh);
         refreshButton.setStyle(defaultButtonStyle); // styling the button
+        
 
         shareButton = new Button(); // text displayed on add button
         ImageView share = new ImageView("./icons/share.png");
@@ -90,7 +91,12 @@ class Header extends HBox {
         editButton.setStyle(defaultButtonStyle); // styling the button
 
         titleContainer = new Pane();
-        titleContainer.getChildren().addAll(backButton, title, refreshButton);
+        titleContainer.getChildren().addAll(backButton, title);
+
+        if(newCreation){
+            titleContainer.getChildren().add(refreshButton);
+        }
+
         title.relocate(20, 35);
         backButton.relocate(20, 0);
         refreshButton.relocate(70,0);
@@ -162,8 +168,8 @@ public class DetailedRecipePage extends BorderPane {
 
     // Assumes that Recipe class has at least TextFields for title, ingredients, and
     // instructions
-    DetailedRecipePage(Recipe recipe) {
-        this.header = new Header();
+    DetailedRecipePage(Recipe recipe, Boolean newCreation) {
+        this.header = new Header(newCreation);
 
         this.recipe = recipe;
         // Getting Header Buttons
@@ -244,6 +250,26 @@ public class DetailedRecipePage extends BorderPane {
         container.setSpacing(10);
         this.setTop(header);
         this.setCenter(container);
+    }
+
+    public void setTitle(String title){
+        this.title.setText(title);
+    }
+
+    public void setInstructions(String instructions){
+        this.instructions.setText(instructions);
+    }
+
+    public void setIngredients(String ingredients){
+        this.ingredients.setText(ingredients);
+    }
+
+    public String getMealType(){
+        return this.mealType.toString();
+    }
+
+    public String getIngredients(){
+        return this.ingredients.toString();
     }
 
     public Recipe getRecipe(){
