@@ -77,7 +77,7 @@ public class SpecifyIngredientsPageController implements Controller{
     private void handleCancelButton(ActionEvent event) throws IOException{
 
         // Add Recipe Information
-        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
         List<Recipe> recipes = Main.extractRecipeInfo(JSON);
         RecipeListPage listPage = new RecipeListPage(recipes);
         Main.setPage(listPage);
@@ -126,11 +126,11 @@ public class SpecifyIngredientsPageController implements Controller{
             try {
                 
                 // Transcripe Audio
-                String transcribedText = model.performRequest("POST",null,null,null,TEMP_AUDIO_FILE_PATH,null,null,null,null,null);
+                String transcribedText = model.performRequest("POST",null,null,null,TEMP_AUDIO_FILE_PATH,null,null,null,null,null, null);
                 System.out.println("Transcription: " + transcribedText);
 
                 // Send the transcribed text to ChatGPT and get a response
-                String response = model.performRequest("POST",null,null,null,null, mealType, transcribedText,null,null,null);
+                String response = model.performRequest("POST",null,null,null,null, mealType, transcribedText,null,null,null, null);
                 System.out.println("ChatGPT Response: " + response);
 
                 DetailedRecipePage temp = new DetailedRecipePage(createRecipe(response), true);

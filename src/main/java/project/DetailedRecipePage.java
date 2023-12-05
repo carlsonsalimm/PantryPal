@@ -330,10 +330,10 @@ public class DetailedRecipePage extends BorderPane {
         if (newRecipe.getImageURL() != null && !newRecipe.getImageURL().isEmpty()) {
             //newRecipe.setImageURL("./icons/trash.png");
             setImage(newRecipe.getImageURL());
-        }
+        } 
     }
 
-    private void setImage(String imageURL) {
+    void setImage(String imageURL) {
         try {
             Image newImage = new Image(imageURL, true); // true for background loading
             this.image.setImage(newImage);

@@ -111,11 +111,19 @@ public class DetailedRecipePageController implements Controller {
 
     public void handleRefreshButton(ActionEvent event) throws IOException{
         Recipe recipe = view.getRecipe();
-        String response = model.performRequest("POST","generateRecipe",null,null,null, recipe.getMealType(), recipe.getIngredients(),null,null,null,null);
+        String response = model.performRequest("POST","regenerateRecipe",null,null,null, recipe.getMealType(), recipe.getIngredients(),recipe.getTitle(),recipe.getInstructions(),null,recipe.getImageURL());
 
         view.setTitle(response);
         view.setInstructions(response);
         view.setIngredients(response);
+        view.setImage(response);
+        
+
+        // // Generate a new recipe Image
+        // String imageURL = model.performRequest("POST", "generateImage", null, null, null, recipe.getMealType(), recipe.getIngredients(), null, null, null, recipe.getImageURL());
+
+        // // Set the image
+        // view.setImage(imageURL);
         
     }
 
@@ -134,47 +142,47 @@ public class DetailedRecipePageController implements Controller {
         view.instructions.setEditable(true);
     }
 
-    private Recipe generateNewRecipe(String mealType) {
-        String newTitle = "New Recipe Title"; // Replace with actual logic
-        String newInstructions = "New Instructions"; // Replace with actual logic
-        String newIngredients = "New Ingredients"; // Replace with actual logic
-        String newCreationTime = getCurrentTime();
+    // private Recipe generateNewRecipe(String mealType) {
+    //     String newTitle = "New Recipe Title"; // Replace with actual logic
+    //     String newInstructions = "New Instructions"; // Replace with actual logic
+    //     String newIngredients = "New Ingredients"; // Replace with actual logic
+    //     String newCreationTime = getCurrentTime();
     
-        // Request a new image URL from the server
-        String newImageURL = requestNewImageURLFromServer(newTitle);
+    //     // Request a new image URL from the server
+    //     String newImageURL = requestNewImageURLFromServer(newTitle);
     
-        return new Recipe(newTitle, newInstructions, newIngredients, mealType, newCreationTime, newImageURL);
-    }
+    //     return new Recipe(newTitle, newInstructions, newIngredients, mealType, newCreationTime, newImageURL);
+    // }
 
-    private String requestNewImageURLFromServer(String title) {
-        try {
-            // The performRequest method is called with the appropriate parameters
-            String response = model.performRequest("GET", "getImage", null, null, null, null, null, title, null, null, null);
-            // You might need to parse the response to extract the image URL
-            return extractImageURLFromResponse(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ""; // Or handle the exception more gracefully
-        }
-    }
+    // private String requestNewImageURLFromServer(String title) {
+    //     try {
+    //         // The performRequest method is called with the appropriate parameters
+    //         String response = model.performRequest("GET", "getImage", null, null, null, null, null, title, null, null, null);
+    //         // You might need to parse the response to extract the image URL
+    //         return extractImageURLFromResponse(response);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         return ""; // Or handle the exception more gracefully
+    //     }
+    // }
     
-    private String extractImageURLFromResponse(String response) {
-        // Implement the logic to parse the response and extract the image URL
-        // This will depend on the format of the response from your server
-        try {
-            JSONObject jsonResponse = new JSONObject(response);
-            // Assuming the response structure is similar to what DallE returns.
-            String generatedImageURL = jsonResponse.getJSONArray("data").getJSONObject(0).getString("url");
-            return generatedImageURL;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null; // Handle JSON parsing error
-        }
-    }
+    // private String extractImageURLFromResponse(String response) {
+    //     // Implement the logic to parse the response and extract the image URL
+    //     // This will depend on the format of the response from your server
+    //     try {
+    //         JSONObject jsonResponse = new JSONObject(response);
+    //         // Assuming the response structure is similar to what DallE returns.
+    //         String generatedImageURL = jsonResponse.getJSONArray("data").getJSONObject(0).getString("url");
+    //         return generatedImageURL;
+    //     } catch (JSONException e) {
+    //         e.printStackTrace();
+    //         return null; // Handle JSON parsing error
+    //     }
+    // }
 
-    private String getCurrentTime() {
-        // Returns the current time in a specified format
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-    }
+    // private String getCurrentTime() {
+    //     // Returns the current time in a specified format
+    //     return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    // }
 
 }

@@ -96,9 +96,15 @@ public class Model {
                     // Generate recipe instructions w/GPT (needs meal type and ingredients, returns
                     // instructions as string)
                     urlString += "?action=generateRecipe&mealType=" + mealType + "&ingredients=" + ingredients;
-
-                } 
-
+                }else if(title!=null && imageURL!=null){
+                    //generate image for the recipe
+                    urlString += "?action=regenerateRecipe&title=" + title +  "&imageUrl=" + imageURL;
+                } else if (title!=null && mealType!=null && ingredients!=null && instructions != null && creationTime !=null && imageURL != null) {
+                    // Updates an existing recipe (requires username, password, ingredients, title,
+                    // instructions, creationTime)
+                    urlString += "?action=regenerateRecipe&title=" + title + "&mealType=" + mealType + "&instructions="
+                            + instructions + "&imageUrl=" + imageURL;
+                }
             } else if (method.equals("DELETE")) {
                 if (username != null && password != null && title != null) {
                     // Deletes an existing recipe (requires username, password, title)
