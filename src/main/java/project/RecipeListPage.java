@@ -174,7 +174,6 @@ class RecipeItem extends VBox {
 public class RecipeListPage extends BorderPane {
     private RecipeListHeader header;
 
-    private List<Button> detailedViewButtons;
     private Button addButton;
     private Button signOutButton;
 
@@ -182,6 +181,7 @@ public class RecipeListPage extends BorderPane {
     private ComboBox<String> filterBox; 
 
     public List<Recipe> recipes;
+    public List<Button> detailedViewButtons;
 
     public VBox vbox;
 
