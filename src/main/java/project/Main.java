@@ -2,6 +2,7 @@ package project;
 
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -9,6 +10,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -30,41 +33,38 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception, IOException {
-        Main.model = new Model();
-        Main.primaryStage = primaryStage;
-        //Recipe mock = new Recipe("title test", "instruction test", "test", "123");
-        //List<Recipe> recipes = new ArrayList<Recipe>();
-        //Main.root = new RecipeListPage(recipes);
-        Main.root = new LoginPage();
-        Main.controller = new LoginPageController((LoginPage) root, model);
-        //Main.controller = new RecipeListPageController((RecipeListPage) root, model);
-        
-        FileReader file = new FileReader("RememberMe.csv");
-        BufferedReader br =new BufferedReader(file);
-        boolean result;
-        if(result = br.readLine().equals("1")){
-            System.out.println(result);
-            model.setUsername(br.readLine());
-            model.setPassword(br.readLine());
-            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
-            //List<Recipe> recipes = Main.extractRecipeInfo(Main.convertStringToRecipeList(JSON));
-            List<Recipe> recipes = new ArrayList<>();
-            String a = "test";
-            recipes.add(new Recipe(a, a, a, "Lunch","15"));
-            String b = "best";
-            recipes.add(new Recipe(b, b, b, "Lunch","30"));
-            String c = "apple";
-            recipes.add(new Recipe(c, c, c, "Dinner","10"));
-            RecipeListPage listPage = new RecipeListPage(recipes);
-            Main.root = listPage;
-            Main.setController(new RecipeListPageController(listPage, model));
+        try {
+            Main.model = new Model();
+            Main.primaryStage = primaryStage;
+            //Recipe mock = new Recipe("title test", "instruction test", "test", "123");
+            //List<Recipe> recipes = new ArrayList<Recipe>();
+            //Main.root = new RecipeListPage(recipes);
+            Main.root = new LoginPage();
+            Main.controller = new LoginPageController((LoginPage) root, model);
+            //Main.controller = new RecipeListPageController((RecipeListPage) root, model);
             
-        }
+            FileReader file = new FileReader("RememberMe.csv");
+            BufferedReader br =new BufferedReader(file);
+            boolean result;
+            if(result = br.readLine().equals("1")){
+                System.out.println(result);
+                model.setUsername(br.readLine());
+                model.setPassword(br.readLine());
+                String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
+                //List<Recipe> recipes = Main.extractRecipeInfo(Main.convertStringToRecipeList(JSON));
+                List<Recipe> recipes = new ArrayList<>();
+                String a = "test";
+                recipes.add(new Recipe(a, a, a, "Lunch","15"));
+                String b = "best";
+                recipes.add(new Recipe(b, b, b, "Lunch","30"));
+                String c = "apple";
+                recipes.add(new Recipe(c, c, c, "Dinner","10"));
+                RecipeListPage listPage = new RecipeListPage(recipes);
+                Main.root = listPage;
+                Main.setController(new RecipeListPageController(listPage, model));
+            }
         file.close();
         br.close();
-  
-        
-       
        
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
@@ -72,6 +72,22 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         // Show the app
         primaryStage.show();
+        } catch (Exception e) { // THIS DOES NOT WORK but utilize this UI for error message
+            BorderPane errorPage = new BorderPane();
+            Label msg = new Label("Server Temporarily Unavailable. Please Try Again Later");
+            StackPane msgPane = new StackPane(msg);
+            msgPane.setAlignment(Pos.CENTER);
+            errorPage.getChildren().add(msgPane);
+
+            Main.root = errorPage;
+            // Create scene of mentioned size with the border pane
+            primaryStage.setScene(new Scene(root, 600, 700));
+            // Make window non-resizable
+            primaryStage.setResizable(false);
+            // Show the error
+            primaryStage.show();
+        }
+        
     }
 
     public static void setPage(Parent page) {

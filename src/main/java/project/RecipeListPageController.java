@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.CookieHandler;
 import org.json.Cookie;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
 import java.util.Collections;
 import java.util.List;
 import java.util.Comparator;
@@ -97,11 +98,13 @@ public class RecipeListPageController implements Controller {
         }
         else if (selectedItem == "Oldest First") { // sort oldest first logic use creation time
             System.out.println("Oldest first selected");
-            Collections.sort(tempRecipes, Comparator.comparing(recipe -> Integer.parseInt(recipe.getCreationTime())));
+    
+            //FXCollections.sort(tempRecipes, Comparator.comparingInt(recipe -> Integer.parseInt(recipe.getCreationTime())));
         }
         else { // default; newest first 
             System.out.println("newest first selected");
-            //Collections.sort(tempRecipes, Comparator.comparing(recipe -> Integer.parseInt(recipe.getCreationTime())).reversed());
+            // Collections.sort(tempRecipes, Comparator.comparing(recipe -> Integer.parseInt(recipe.getCreationTime())));
+            // tempRecipes.reversed();
         }
         // re-populate list
         for (Recipe x : tempRecipes) {
