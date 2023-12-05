@@ -41,7 +41,7 @@ public class LoginPageController implements LoginControllerInterface {
         String username = view.getUsername();
         String password = view.getPassword();
 
-        if (model.performRequest("POST", "login", username, password, null, null, null, null, null, null)
+        if (model.performRequest("POST", "login", username, password, null, null, null, null, null, null, null)
                 .equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
@@ -70,7 +70,7 @@ public class LoginPageController implements LoginControllerInterface {
         String password = view.getPassword();
 
         // If Account Doesn Not Exist
-        if (model.performRequest("POST", "signup", username, password, null, null, null, null, null, null)
+        if (model.performRequest("POST", "signup", username, password, null, null, null, null, null, null, null)
                 .equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
