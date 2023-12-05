@@ -130,7 +130,7 @@ public class SpecifyIngredientsPageController implements Controller{
                 System.out.println("Transcription: " + transcribedText);
 
                 // Send the transcribed text to ChatGPT and get a response
-                String response = model.performRequest("POST",null,null,null,null, mealType, transcribedText,null,null,null);
+                String response = model.performRequest("POST","generateRecipe",null,null,null, mealType, transcribedText,null,null,null);
                 System.out.println("ChatGPT Response: " + response);
 
                 DetailedRecipePage temp = new DetailedRecipePage(createRecipe(response), true);
@@ -146,10 +146,8 @@ public class SpecifyIngredientsPageController implements Controller{
     }
     
     public Recipe createRecipe(String gptResponse) {
-        
-
-       // Recipe recipe = new Recipe(recipeTitle, recipeInstructions, recipeIngredients, this.mealType);
-        return null;
+        List<Recipe> recipe = Main.extractRecipeInfo(gptResponse);
+        return recipe.get(0);
     }
 
 
