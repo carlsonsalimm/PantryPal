@@ -134,13 +134,14 @@ public class RecipeListPageController implements Controller {
         }
         if (selectedItem == "Breakfast") {
             for (Recipe x : tempRecipes) {
-                if (x.getMealType() == "breakfast") {
+                if (x.getMealType().equals("breakfast")) {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
                     view.vbox.getChildren().add(Item);
+                    view.detailedViewButtons.add(Item.getDetailedViewButton());
                     view.setDetailedViewButtonsAction(event1 -> {
                         try {
-                            handleDetailedViewButton(event);
+                            handleDetailedViewButton(event1);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -149,13 +150,14 @@ public class RecipeListPageController implements Controller {
             }
         } else if (selectedItem == "Lunch") {
             for (Recipe x : tempRecipes) {
-                if (x.getMealType() == "lunch") {
+                if (x.getMealType().equals("lunch")) {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
                     view.vbox.getChildren().add(Item);
+                    view.detailedViewButtons.add(Item.getDetailedViewButton());
                     view.setDetailedViewButtonsAction(event1 -> {
                         try {
-                            handleDetailedViewButton(event);
+                            handleDetailedViewButton(event1);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -164,13 +166,14 @@ public class RecipeListPageController implements Controller {
             }
         } else if (selectedItem == "Dinner") {
             for (Recipe x : tempRecipes) {
-                if (x.getMealType() == "dinner") {
+                if (x.getMealType().equals("dinner")) {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
                     view.vbox.getChildren().add(Item);
+                    view.detailedViewButtons.add(Item.getDetailedViewButton());
                     view.setDetailedViewButtonsAction(event1 -> {
                         try {
-                            handleDetailedViewButton(event);
+                            handleDetailedViewButton(event1);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

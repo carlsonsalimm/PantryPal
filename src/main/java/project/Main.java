@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -30,6 +32,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception, IOException {
+        try { 
         Main.model = new Model();
         Main.primaryStage = primaryStage;
         //Recipe mock = new Recipe("title test", "instruction test", "test", "123");
@@ -53,9 +56,6 @@ public class Main extends Application {
         }
         file.close();
         br.close();
-  
-        
-       
        
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
@@ -63,6 +63,19 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         // Show the app
         primaryStage.show();
+    } catch (Exception e) {
+        // BorderPane serverDowntimePage = new BorderPane();
+        // Label downtimeMsg = new Label("Server temporarily unavailable. Please try again later.");
+        // serverDowntimePage.getChildren().add(downtimeMsg);
+
+        // Main.root = serverDowntimePage; 
+        // primaryStage.setScene(new Scene(root, 600, 700));
+        // // Make window non-resizable
+        // primaryStage.setResizable(false);
+        // // Show the error page
+        // primaryStage.show();
+        Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
+    }
     }
 
     public static void setPage(Parent page) {
@@ -90,7 +103,14 @@ public class Main extends Application {
             list.add(newRecipe);
         }
         return list;  // returns list with all recipes parsed from given JSON string
-       
+    }
+
+    public static void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     public static void main(String[] args) {
