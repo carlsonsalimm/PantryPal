@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javafx.event.ActionEvent;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 
 public class DetailedRecipePageController implements Controller {
     private DetailedRecipePage view;
@@ -74,47 +77,56 @@ public class DetailedRecipePageController implements Controller {
 
         // Exit Window
         // Add login stuff
-        RecipeListPage listPage = new RecipeListPage(null);
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
+        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+        RecipeListPage listPage = new RecipeListPage(recipes);
         Main.setPage(listPage);
         Main.setController(new RecipeListPageController(listPage, model));
     }
 
     public void handleSaveButton(ActionEvent event) throws IOException {
-        model.performRequest("POST", "updateRecipe", null, null, null, null, null, view.getTitle(),
-                view.getInstructions(), null, null);
+        Recipe recipe = view.getRecipe();
+        model.performRequest("POST", "updateRecipe", null, null, null, null, view.getIngredients(), view.getTitle(), view.getInstructions(), recipe.getCreationTime(), null);
 
         // Exit Window
-        RecipeListPage listPage = new RecipeListPage(null);
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
+        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+        RecipeListPage listPage = new RecipeListPage(recipes);
+
         Main.setPage(listPage);
         Main.setController(new RecipeListPageController(listPage, model));
     }
 
-    public void handleBackButton(ActionEvent event) throws IOException {
-        // Exit Window
-        RecipeListPage listPage = new RecipeListPage(null);
+    public void handleBackButton(ActionEvent event) throws IOException{
+        // Exit Window\
+
+
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
+        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+        RecipeListPage listPage = new RecipeListPage(recipes);
         Main.setPage(listPage);
         Main.setController(new RecipeListPageController(listPage, model));
     }
 
-    public void handleRefreshButton(ActionEvent event) throws IOException {
-        try {
-            // Retrieve the current meal type from the view
-            String currentMealType = view.getRecipe().getMealType();
 
-            // Generate a new recipe with the same meal type
-            Recipe newRecipe = generateNewRecipe(currentMealType);
+    public void handleRefreshButton(ActionEvent event) throws IOException{
+        Recipe recipe = view.getRecipe();
+        String response = model.performRequest("POST","generateRecipe",null,null,null, recipe.getMealType(), recipe.getIngredients(),null,null,null,null);
 
-            // Update the view with the new recipe details
-            view.updateRecipeDetails(newRecipe);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Handle exceptions appropriately
-        }
+        view.setTitle(response);
+        view.setInstructions(response);
+        view.setIngredients(response);
+        
     }
 
-    public void handleShareButton(ActionEvent event) throws IOException {
-        // Handle share actions here (
+    public void handleShareButton(ActionEvent event) throws IOException{
+        Recipe recipe = view.getRecipe();
+        String url = model.performRequest("GET", "getShare", null, null, null, null, null, recipe.getTitle(), null, recipe.getCreationTime(), null);
+
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(url);
+        clipboard.setContent(content);
     }
 
     public void handleEditButton(ActionEvent event) throws IOException {

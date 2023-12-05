@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.CookieHandler;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.Cookie;
 import javax.sound.sampled.*;
 
@@ -50,6 +53,15 @@ public class SpecifyIngredientsPageController implements Controller{
                 e.printStackTrace();
             }
         });
+
+        this.view.setCancelButtonAction(event -> {
+            try {
+                handleCancelButton(event);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
     }
 
     private void handleRecordHoldButton(MouseEvent event) throws IOException{
@@ -60,6 +72,16 @@ public class SpecifyIngredientsPageController implements Controller{
     private void handleRecordReleasetButton(MouseEvent event) throws IOException{
         stopRecordingAndProcessRecipe();
       
+    }
+
+    private void handleCancelButton(ActionEvent event) throws IOException{
+
+        // Add Recipe Information
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
+        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+        RecipeListPage listPage = new RecipeListPage(recipes);
+        Main.setPage(listPage);
+        Main.setController(new RecipeListPageController(listPage, model));
     }
 
 
@@ -102,19 +124,16 @@ public class SpecifyIngredientsPageController implements Controller{
             System.out.println("Recording stopped.");
 
             try {
-                // Transcribe the audio file to text using Whisper
-                Whisper whisper = new Whisper();
-
-                String transcribedText = whisper.transcribeAudio(TEMP_AUDIO_FILE_PATH);
+                
+                // Transcripe Audio
+                String transcribedText = model.performRequest("POST",null,null,null,TEMP_AUDIO_FILE_PATH,null,null,null,null,null);
                 System.out.println("Transcription: " + transcribedText);
 
                 // Send the transcribed text to ChatGPT and get a response
-                ChatGPT chatGPT = new ChatGPT();
-
-                String response = chatGPT.getGPTResponse(transcribedText, mealType);
+                String response = model.performRequest("POST",null,null,null,null, mealType, transcribedText,null,null,null);
                 System.out.println("ChatGPT Response: " + response);
 
-                DetailedRecipePage temp = new DetailedRecipePage(createRecipe(response));
+                DetailedRecipePage temp = new DetailedRecipePage(createRecipe(response), true);
                 Main.setPage(temp);
                 Main.setController(new DetailedRecipePageController(temp,model));
 
@@ -126,25 +145,13 @@ public class SpecifyIngredientsPageController implements Controller{
         }
     }
     
-    public static Recipe createRecipe(String gptResponse) {
-        //String r = model.performRequest("")
+    public Recipe createRecipe(String gptResponse) {
+        
 
-       // Recipe recipe = new Recipe(recipeTitle, recipeInstructions);
+       // Recipe recipe = new Recipe(recipeTitle, recipeInstructions, recipeIngredients, this.mealType);
         return null;
     }
 
-    // Returns the meal type if it is found in the transcribed text, otherwise
-    // returns null (Helper Function)
-    public static String detectMealType(String transcribedText) {
-        String[] mealTypes = { "breakfast", "lunch", "dinner" };
-
-        for (String meal : mealTypes) {
-            if (transcribedText.toLowerCase().contains(meal)) {
-                return meal;
-            }
-        }
-        return null;
-    }
 
     // Returns the audio format to use for the recording for Specify Ingredient Page
     // and Specify Meal Type Page

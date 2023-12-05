@@ -21,6 +21,7 @@ class SpecifyIngredientsPage extends VBox {
     private Button cancelButton;
 
     private Button recordButton;
+    private String recorderButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
 
     private HBox cancelContainer;
     private HBox promptContainer;
@@ -41,11 +42,6 @@ class SpecifyIngredientsPage extends VBox {
 
     SpecifyIngredientsPage(String mealType) {
 
-
-        // this.setPrefSize(600, 700); // Size of the header
-        // this.setStyle("-fx-background-color: #FFFFFF;");
-        // this.setSpacing(10);
-        // this.setAlignment(Pos.CENTER);
         //button to cancel recording and return to recipe list page
         cancelButton = new Button("x");
         cancelButton.setStyle(cancelButtonStyle);
@@ -58,7 +54,9 @@ class SpecifyIngredientsPage extends VBox {
         subPrompt.setStyle(subPromptStyle);
 
         //button to record audio
-        recordButton = new Button();
+        recordButton = new Button("Hold to Record");
+        recordButton.setStyle(recorderButtonStyle);
+        recordButton.setPrefSize(300, 50);
         //bodyContainer = new StackPane();
         
         cancelContainer = new HBox(cancelButton);
@@ -72,7 +70,7 @@ class SpecifyIngredientsPage extends VBox {
         
         //place stack panges onto border pane
 
-        this.getChildren().addAll(cancelContainer, promptContainer, subPromptContainer, recordButtonContainer);
+        this.getChildren().addAll(promptContainer, subPromptContainer, recordButtonContainer, cancelContainer);
         this.requestLayout();
     }
 
