@@ -15,7 +15,6 @@ import javafx.event.ActionEvent;
 public class LoginPageController implements LoginControllerInterface {
     private LoginPage view;
     private Model model;
-    private List<Recipe> fullRecipe;
 
     LoginPageController(LoginPage view, Model model) {
         this.view = view;
@@ -88,18 +87,22 @@ public class LoginPageController implements LoginControllerInterface {
         }
     }
     //helper method to store recipeList as a List of recipes
-    public List<Recipe> extractRecipeInfo(List<Document> recipeList) {
-        for(Document recipe: recipeList){
+    public List<Recipe> extractRecipeInfo(String jsonString) {
+        ArrayList<Recipe> list = new ArrayList<Recipe>();
+        Document jsonRecipes = Document.parse(jsonString);
+        for (int i = 0; i < jsonRecipes.size(); i++) {
+            Document recipe = (Document) (jsonRecipes.get(String.valueOf(i)));
             String recipeTitle = recipe.getString("recipeTitle");
             String mealType = recipe.getString("mealType");
             String ingredients = recipe.getString("ingredients");
             String instructions = recipe.getString("instructions");
             Long creationTime = recipe.getLong("creationTime");
-            // Create a Recipe object and add it to the fullRecipe list
-            Recipe recipe1 = new Recipe(recipeTitle, mealType, ingredients, instructions, String.valueOf(creationTime));
-            fullRecipe.add(recipe1);
+            // Create a Recipe object and add it to the list
+            // Recipe newRecipe = new Recipe(recipeTitle, ingredients + instructions);
+            Recipe newRecipe = new Recipe(recipeTitle, mealType, ingredients, instructions, String.valueOf(creationTime));
+            list.add(newRecipe);
         }
-        return fullRecipe;  //fullRecipe will now contain all the recipeList
+        return list;  // returns list with all recipes parsed from given JSON string
        
     }
 
