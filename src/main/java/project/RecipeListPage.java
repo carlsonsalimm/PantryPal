@@ -212,7 +212,7 @@ public class RecipeListPage extends BorderPane {
             RecipeItem Item = new RecipeItem();
             Item.setRecipe(recipe);
             vbox.getChildren().add(Item);
-            EventHandler<ActionEvent> viewButton = e ->  this.detailedViewButton = Item.getDetailedViewButton();
+            EventHandler<ActionEvent> viewButton = e -> { this.detailedViewButton = Item.getDetailedViewButton(); RecipeListPage.recipe = Item.getRecipe();};
             Item.getDetailedViewButton().addEventHandler(ActionEvent.ACTION, viewButton);
             
         }

@@ -42,11 +42,6 @@ class SpecifyIngredientsPage extends VBox {
 
     SpecifyIngredientsPage(String mealType) {
 
-
-        // this.setPrefSize(600, 700); // Size of the header
-        // this.setStyle("-fx-background-color: #FFFFFF;");
-        // this.setSpacing(10);
-        // this.setAlignment(Pos.CENTER);
         //button to cancel recording and return to recipe list page
         cancelButton = new Button("x");
         cancelButton.setStyle(cancelButtonStyle);
