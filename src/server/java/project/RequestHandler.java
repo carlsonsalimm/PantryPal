@@ -78,9 +78,15 @@ public class RequestHandler implements HttpHandler {
       }
       response += "}";
 
-    } else if (action.equals("getImage")) {
-      // Do DALL-E call
-      String title = this.decodeURL(queryParams.get("password"));
+    } else if (action.equals("generateImage")) {
+      String prompt = queryParams.get("title");
+      try {
+        String imageURL = dallE.generateImageURL(prompt);
+        response = "{ \"imageURL\": \"" + imageURL + "\" }"; // Format the response as JSON
+      } catch (IOException | InterruptedException | URISyntaxException e) {
+        e.printStackTrace();
+        response = "Error generating image: " + e.getMessage();
+      }
 
     } else if (action.equals("getRecipeDetails")) {
       // Fetch a specific recipe's details

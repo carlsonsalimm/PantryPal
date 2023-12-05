@@ -3,9 +3,6 @@ package project;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,9 +56,9 @@ public class Model {
                     urlString += "?action=getRecipeList&username=" + encodeURL(username)
                             + "&password=" + encodeURL(password);
 
-                } else if (username != null && password != null && title != null && imageURL == null) {
-                    // Generate image for recipe (needs title, returns url of image)
-                    urlString += "?action=getImage&title=" + encodeURL(title);
+                } else if (title != null && imageURL != null) {
+                    // Generate image for the recipe (needs title)
+                    urlString += "?action=generateImage=" + encodeURL(title);
 
                 } else if (username != null && password != null && title != null && mealType != null
                         && ingredients != null && instructions != null && imageURL != null) {
