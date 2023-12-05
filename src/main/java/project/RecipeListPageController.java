@@ -68,13 +68,13 @@ public class RecipeListPageController implements Controller {
         });
     }
 
-    private void handleAddButton(ActionEvent event) throws IOException {
+    public void handleAddButton(ActionEvent event) throws IOException {
         SpecifyMealTypePage temp = new SpecifyMealTypePage();
         Main.setPage(temp);
         Main.setController(new SpecifyMealTypePageController(temp, model));
     }
 
-    private void handleDetailedViewButton(ActionEvent event) throws IOException {
+    public void handleDetailedViewButton(ActionEvent event) throws IOException {
         Object obj = event.getSource();
         Parent par = ((Button) (obj)).getParent();
         System.out.println(par);
@@ -90,7 +90,7 @@ public class RecipeListPageController implements Controller {
         Main.setController(new DetailedRecipePageController(temp, model));
     }
 
-    private void handleSortBoxButton(ActionEvent event) throws IOException {
+    public void handleSortBoxButton(ActionEvent event) throws IOException {
         List<Recipe> tempRecipes = view.recipes;
         String selectedItem = view.getSortBox().getSelectionModel().getSelectedItem();
         // clear list
@@ -125,7 +125,7 @@ public class RecipeListPageController implements Controller {
         }
     }
 
-    private void handleFilterBoxButton(ActionEvent event) throws IOException {
+    public void handleFilterBoxButton(ActionEvent event) throws IOException {
         List<Recipe> tempRecipes = view.recipes;
         String selectedItem = view.getFilterBox().getSelectionModel().getSelectedItem();
         // clear list
@@ -193,7 +193,7 @@ public class RecipeListPageController implements Controller {
         }
     }
 
-    private void handleSignOutButton(ActionEvent event) throws IOException {
+    public void handleSignOutButton(ActionEvent event) throws IOException {
         LoginPage loginPage = new LoginPage();
         LoginPageController controller = new LoginPageController(loginPage, new Model());
 

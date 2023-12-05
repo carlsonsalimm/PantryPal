@@ -99,7 +99,7 @@ public class Main extends Application {
             Long creationTime = recipe.getLong("creationTime");
             // Create a Recipe object and add it to the list
             // Recipe newRecipe = new Recipe(recipeTitle, ingredients + instructions);
-            Recipe newRecipe = new Recipe(recipeTitle, mealType, ingredients, instructions, String.valueOf(creationTime));
+            Recipe newRecipe = new Recipe(recipeTitle, instructions, ingredients, mealType, String.valueOf(creationTime));
             list.add(newRecipe);
         }
         return list;  // returns list with all recipes parsed from given JSON string
