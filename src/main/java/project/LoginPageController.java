@@ -15,7 +15,6 @@ import javafx.event.ActionEvent;
 public class LoginPageController implements Controller{
     private LoginPage view;
     private Model model;
-    
 
     LoginPageController(LoginPage view, Model model) {
         this.view = view;
@@ -55,7 +54,7 @@ public class LoginPageController implements Controller{
 
             
             String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
-            List<Recipe> recipes = Main.extractRecipeInfo(Main.convertStringToRecipeList(JSON));
+            List<Recipe> recipes = Main.extractRecipeInfo(JSON);
             RecipeListPage listPage = new RecipeListPage(recipes);
             Main.setPage(listPage);
             Main.setController(new RecipeListPageController(listPage, model));
@@ -93,6 +92,6 @@ public class LoginPageController implements Controller{
             return false;
         }
     }
-
+    
 
 }
