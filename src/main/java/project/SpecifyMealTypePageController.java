@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.CookieHandler;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.Cookie;
 import javax.sound.sampled.*;
@@ -74,7 +75,9 @@ public class SpecifyMealTypePageController implements Controller {
     private void handleBackButton(ActionEvent event) throws IOException{
 
         // Add Recipe Information
-        RecipeListPage listPage = new RecipeListPage(new ArrayList<Recipe>());
+         String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
+        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+        RecipeListPage listPage = new RecipeListPage(recipes);
         Main.setPage(listPage);
         Main.setController(new RecipeListPageController(listPage, model));
     }

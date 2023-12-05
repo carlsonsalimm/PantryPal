@@ -1,8 +1,11 @@
 package project;
 
 import java.io.IOException;
+import java.util.List;
 
 import javafx.event.ActionEvent;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 
 public class DetailedRecipePageController implements Controller{
     private DetailedRecipePage view;
@@ -68,9 +71,11 @@ public class DetailedRecipePageController implements Controller{
 
         // Exit Window
         // Add login stuff
-        RecipeListPage listPage = new RecipeListPage(null);
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
+        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+        RecipeListPage listPage = new RecipeListPage(recipes);
         Main.setPage(listPage);
-        Main.setController(new RecipeListPageController(listPage,model));
+        Main.setController(new RecipeListPageController(listPage, model));
     }
 
     public void handleSaveButton(ActionEvent event) throws IOException {
@@ -78,16 +83,22 @@ public class DetailedRecipePageController implements Controller{
         model.performRequest("POST", "updateRecipe", null, null, null, null, view.getIngredients(), view.getTitle(), view.getInstructions(), recipe.getCreationTime());
 
         // Exit Window
-        RecipeListPage listPage = new RecipeListPage(null);
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
+        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+        RecipeListPage listPage = new RecipeListPage(recipes);
         Main.setPage(listPage);
-        Main.setController(new RecipeListPageController(listPage,model));
+        Main.setController(new RecipeListPageController(listPage, model));
     }
 
     public void handleBackButton(ActionEvent event) throws IOException{
-        // Exit Window
-         RecipeListPage listPage = new RecipeListPage(null);
+        // Exit Window\
+
+
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
+        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+        RecipeListPage listPage = new RecipeListPage(recipes);
         Main.setPage(listPage);
-        Main.setController(new RecipeListPageController(listPage,model));
+        Main.setController(new RecipeListPageController(listPage, model));
     }
 
     public void handleRefreshButton(ActionEvent event) throws IOException{
@@ -103,6 +114,11 @@ public class DetailedRecipePageController implements Controller{
     public void handleShareButton(ActionEvent event) throws IOException{
         Recipe recipe = view.getRecipe();
         String url = model.performRequest("GET", "getShare", null, null, null, null, null, recipe.getTitle(), null, recipe.getCreationTime());
+
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(url);
+        clipboard.setContent(content);
     }
 
     public void handleEditButton(ActionEvent event) throws IOException{
