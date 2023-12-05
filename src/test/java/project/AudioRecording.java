@@ -105,7 +105,7 @@ public class AudioRecording extends VBox {
                 System.out.println("ChatGPT Response: " + response);
 
             
-                Main.setPage(new DetailedRecipePage(createRecipe(response)));
+                Main.setPage(new DetailedRecipePage(createRecipe(response), true));
 
                 // Handle the UI update or user notification with the generated recipe response
             } catch (Exception e) {

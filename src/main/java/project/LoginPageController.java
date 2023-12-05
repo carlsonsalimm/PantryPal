@@ -15,7 +15,6 @@ import javafx.event.ActionEvent;
 public class LoginPageController implements Controller{
     private LoginPage view;
     private Model model;
-    
 
     LoginPageController(LoginPage view, Model model) {
         this.view = view;
@@ -44,7 +43,8 @@ public class LoginPageController implements Controller{
         String username = view.getUsername();
         String password = view.getPassword();
 
-        if(model.performRequest("POST", "login", username, password, null, null, null, null, null, null).equals("true")){
+        if (model.performRequest("POST", "login", username, password, null, null, null, null, null, null, null)
+                .equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
             if(view.getRememberMe()){
@@ -54,8 +54,8 @@ public class LoginPageController implements Controller{
             }
 
             
-            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
-            List<Recipe> recipes = Main.extractRecipeInfo(Main.convertStringToRecipeList(JSON));
+            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
+            List<Recipe> recipes = Main.extractRecipeInfo(JSON);
             RecipeListPage listPage = new RecipeListPage(recipes);
             Main.setPage(listPage);
             Main.setController(new RecipeListPageController(listPage, model));
@@ -75,7 +75,7 @@ public class LoginPageController implements Controller{
         String password = view.getPassword();
 
         // If Account Doesn Not Exist
-        if (model.performRequest("POST", "signup", username, password, null, null, null, null, null, null)
+        if (model.performRequest("POST", "signup", username, password, null, null, null, null, null, null, null)
                 .equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
@@ -93,6 +93,6 @@ public class LoginPageController implements Controller{
             return false;
         }
     }
-
+    
 
 }
