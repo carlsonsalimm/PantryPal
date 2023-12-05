@@ -174,14 +174,16 @@ class RecipeItem extends VBox {
 public class RecipeListPage extends BorderPane {
     private RecipeListHeader header;
 
-    private Button detailedViewButton;
     private Button addButton;
     private Button signOutButton;
 
     private ComboBox<String> sortBox; 
     private ComboBox<String> filterBox; 
 
-    private List<Recipe> recipes;
+    public List<Recipe> recipes;
+    public List<Button> detailedViewButtons;
+
+    public VBox vbox;
 
     public static Recipe recipe;
 
@@ -192,7 +194,7 @@ public class RecipeListPage extends BorderPane {
         sortBox = header.getSortBox();
         filterBox = header.getFilterBox();
 
-        this.detailedViewButton = new Button();
+        this.detailedViewButtons = new ArrayList<Button>();
         
         this.recipes = recipes;
         // Add header to the top of the BorderPane
@@ -203,7 +205,7 @@ public class RecipeListPage extends BorderPane {
     }
 
     public void populateRecipe(){
-        VBox vbox = new VBox();
+        vbox = new VBox();
         vbox.setSpacing(7);
         vbox.setPadding(new Insets(10, 0, 30, 0));
         vbox.setStyle("-fx-background-color: #FFFFFF;");
@@ -212,8 +214,9 @@ public class RecipeListPage extends BorderPane {
             RecipeItem Item = new RecipeItem();
             Item.setRecipe(recipe);
             vbox.getChildren().add(Item);
-            EventHandler<ActionEvent> viewButton = e -> {RecipeListPage.recipe = Item.getRecipe();};
-            Item.getDetailedViewButton().addEventHandler(ActionEvent.ACTION, viewButton);
+            // EventHandler<ActionEvent> viewButton = e -> {RecipeListPage.recipe = Item.getRecipe();};
+            // Item.getDetailedViewButton().addEventHandler(ActionEvent.ACTION, viewButton);
+            this.detailedViewButtons.add(Item.getDetailedViewButton());
             
         }
 
@@ -249,8 +252,10 @@ public class RecipeListPage extends BorderPane {
         signOutButton.setOnAction(eventHandler);
     }
 
-    public void setDetailedViewButtonAction(EventHandler<ActionEvent> eventHandler){
-        detailedViewButton.setOnAction(eventHandler);
+    public void setDetailedViewButtonsAction(EventHandler<ActionEvent> eventHandler){
+        for (Button b: detailedViewButtons) {
+            b.setOnAction(eventHandler);
+        }
     }
 
     public void setSortBoxAction(EventHandler<ActionEvent> eventHandler){

@@ -2,6 +2,10 @@ package project;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,16 +23,24 @@ public class Model {
         this.password = password;
     }
 
-    public String encode(String requestArgument) {
-        // Encode request argument
-        String encodedArgument = "";
-        return encodedArgument;
+    public String encodeURL(String url) {
+        String encodedURL = null;
+        try {
+            encodedURL = URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("Error encoding URL: " + e.getMessage());
+        }
+        return encodedURL;
     }
 
-    public String decode(String requestResponse) {
-        // Encode request response
-        String decodedResponse = "";
-        return decodedResponse;
+    public String decodeURL(String encodedURL) {
+        String decodedURL = null;
+        try {
+            decodedURL = URLDecoder.decode(encodedURL, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("Error decoding URL: " + e.getMessage());
+        }
+        return decodedURL;
     }
 
     public String performRequest(String method, String action, String iniUsername, String iniPassword,
@@ -42,19 +54,24 @@ public class Model {
 
             if (method.equals("GET")) {
 
-                if (username != null && password != null && title == null && creationTime == null) {
+                if (username != null && password != null && title == null && imageURL == null) {
                     // Get recipe list (needs username, password)
-                    urlString += "?action=getRecipeList&username=" + username + "&password=" + password;
+                    urlString += "?action=getRecipeList&username=" + encodeURL(username)
+                            + "&password=" + encodeURL(password);
 
-                } else if (username != null && password != null && title != null && creationTime == null) {
-                    // Generate image for recipe (needs username, password, title, returns url of
-                    // image)
-                    urlString += "?action=getImage&title=" + title;
+                } else if (username != null && password != null && title != null && imageURL == null) {
+                    // Generate image for recipe (needs title, returns url of image)
+                    urlString += "?action=getImage&title=" + encodeURL(title);
 
-                } else if (username != null && password != null && title == null && creationTime != null) {
-                    // Get share URL for recipe (needs username, password, creationTime)
-                    urlString += "?action=getShare&username=" + username + "&password=" + password + "&creationTime="
-                            + creationTime;
+                } else if (username != null && password != null && title != null && mealType != null
+                        && ingredients != null && instructions != null && imageURL != null) {
+                    // Get share URL for recipe (needs mealType, ingredients, title, instructions,
+                    // image URL)
+                    urlString += "?action=getShare&title=" + encodeURL(title)
+                            + "&mealType=" + encodeURL(mealType)
+                            + "&ingredients=" + encodeURL(ingredients)
+                            + "&instructions=" + encodeURL(instructions)
+                            + "&imageURL=" + encodeURL(imageURL);
                 }
 
             } else if (method.equals("POST")) {
@@ -67,38 +84,47 @@ public class Model {
                     if (!file.exists()) {
                         throw new FileNotFoundException("File not found: " + audioFilePath);
                     }
-                    urlString += "?action=transcribeaudioFile&audioFile=" + file.getName();
+                    urlString += "?action=transcribeaudioFile&audioFile=" + encodeURL(file.getName());
                 } else if (action != null && action.equals("login") && iniUsername != null && iniPassword != null) {
                     // Login (needs username, password, action)
-                    urlString += "?action=login&username=" + iniUsername + "&password=" + iniPassword;
+                    urlString += "?action=login&username=" + encodeURL(iniUsername)
+                            + "&password=" + encodeURL(iniPassword);
 
                 } else if (action != null && action.equals("signup") && iniUsername != null && iniPassword != null) {
                     // Sign up (needs username, password, action)
-                    urlString += "?action=signup&username=" + iniUsername + "&password=" + iniPassword;
+                    urlString += "?action=signup&username=" + encodeURL(iniUsername)
+                            + "&password=" + encodeURL(iniPassword);
 
                 } else if (username != null && password != null && mealType != null && ingredients != null
                         && title != null && instructions != null && creationTime == null) {
                     // Create a new recipe (requires username, password, mealType,
                     // ingredients, title, instructions)
-                    urlString += "?action=createRecipe&username=" + username + "&password=" + password + "&mealType="
-                            + mealType + "&ingredients=" + ingredients + "&title=" + title + "&instructions="
-                            + instructions;
+                    urlString += "?action=createRecipe&username=" + encodeURL(username)
+                            + "&password=" + encodeURL(password)
+                            + "&mealType=" + encodeURL(mealType)
+                            + "&ingredients=" + encodeURL(ingredients)
+                            + "&title=" + encodeURL(title)
+                            + "&instructions=" + encodeURL(instructions);
 
                 } else if (username != null && password != null && title != null && instructions != null
                         && creationTime != null) {
                     // Updates an existing recipe (requires username, password, ingredients, title,
                     // instructions, creationTime)
-                    urlString += "?action=updateRecipe&username=" + username + "&password=" + password + "&ingredients="
-                            + ingredients + "&title=" + title + "&instructions=" + instructions + "&creationTime="
-                            + creationTime;
+                    urlString += "?action=updateRecipe&username=" + encodeURL(username)
+                            + "&password=" + encodeURL(password)
+                            + "&ingredients=" + encodeURL(ingredients)
+                            + "&title=" + encodeURL(title)
+                            + "&instructions=" + encodeURL(instructions)
+                            + "&creationTime=" + encodeURL(creationTime);
 
                 } else if (mealType != null && ingredients != null) {
                     // Generate recipe instructions w/GPT (needs meal type and ingredients, returns
                     // instructions as string)
-                    urlString += "?action=generateRecipe&mealType=" + mealType + "&ingredients=" + ingredients;
+                    urlString += "?action=generateRecipe&mealType=" + encodeURL(mealType)
+                            + "&ingredients=" + encodeURL(ingredients);
                 }else if(title!=null && imageURL!=null){
                     //generate image for the recipe
-                    urlString += "?action=generateImage=" + title;
+                    urlString += "?action=generateImage=" + encodeURL(title);
                 }
                 // } else if(title!=null &&  mealType != null && ingredients != null & imageURL!=null){
                 //     //generate new recipe with image (CURRENTLY USING THIS FOR REFRESH TESTING)
@@ -108,12 +134,14 @@ public class Model {
             } else if (method.equals("DELETE")) {
                 if (username != null && password != null && title != null) {
                     // Deletes an existing recipe (requires username, password, title)
-                    urlString += "?action=deleteRecipe&username=" + username + "&password=" + password + "&title="
-                            + title;
+                    urlString += "?action=deleteRecipe&username=" + encodeURL(username)
+                            + "&password=" + encodeURL(password)
+                            + "&title=" + encodeURL(title);
 
                 } else if (username != null && password != null && title == null) {
                     // Deletes an existing user (requires username, password)
-                    urlString += "?action=deleteUser&username=" + username + "&password=" + password;
+                    urlString += "?action=deleteUser&username=" + encodeURL(username)
+                            + "&password=" + encodeURL(password);
                 }
 
             }

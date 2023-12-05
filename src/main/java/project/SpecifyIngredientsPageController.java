@@ -1,21 +1,13 @@
 package project;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.net.CookieHandler;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.json.Cookie;
 import javax.sound.sampled.*;
 
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.control.Button;
-import javafx.scene.text.Text;
 
 public class SpecifyIngredientsPageController implements Controller{
     private SpecifyIngredientsPage view;
@@ -24,12 +16,8 @@ public class SpecifyIngredientsPageController implements Controller{
     private TargetDataLine targetDataLine;
     private AudioFormat audioFormat;
     private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
-    private String recorderButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
-    private Button recorderButton;
     public String mealType;
-    private String errorMsgStyle = "-fx-font-size: 20;-fx-font-weight: bold; -fx-text-fill: #DF0000;";
-    private Text errorMsg;
-    private Boolean errorFlag = false;
+    private String transcribedText;
 
     public SpecifyIngredientsPageController(SpecifyIngredientsPage view ,Model model){
         this.view = view;
@@ -64,33 +52,13 @@ public class SpecifyIngredientsPageController implements Controller{
         });
     }
 
-    private void handleRecordHoldButton(MouseEvent event) throws IOException{
-        startRecording();
-       
-    }
-
-    private void handleRecordReleasetButton(MouseEvent event) throws IOException{
-        stopRecordingAndProcessRecipe();
-      
-    }
-
-    private void handleCancelButton(ActionEvent event) throws IOException{
-
-        // Add Recipe Information
-        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
-        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
-        RecipeListPage listPage = new RecipeListPage(recipes);
-        Main.setPage(listPage);
-        Main.setController(new RecipeListPageController(listPage, model));
-    }
-
-
     // Returns the audio format to use for the recording for Specify Ingredient Page
     // and Specify Meal Type Page
     // NOTE: This is the same format that is used for the Whisper transcribeAudio
     // method
-    private void startRecording() {
-        try {
+
+    public void handleRecordHoldButton(MouseEvent event) throws IOException{
+         try {
             System.out.println("Starting to Record");
             audioFormat = getAudioFormat();
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat);
@@ -113,12 +81,14 @@ public class SpecifyIngredientsPageController implements Controller{
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
+       
     }
 
     // Returns the audio format to use for the recording for SpecifyMealTypePage
     // and Specify Meal Type Page
-    private void stopRecordingAndProcessRecipe() {
-        if (targetDataLine != null) {
+
+    public Recipe handleRecordReleasetButton(MouseEvent event) throws IOException{
+         if (targetDataLine != null) {
             targetDataLine.stop();
             targetDataLine.close();
             System.out.println("Recording stopped.");
@@ -132,24 +102,37 @@ public class SpecifyIngredientsPageController implements Controller{
                 // Send the transcribed text to ChatGPT and get a response
                 String response = model.performRequest("POST",null,null,null,null, mealType, transcribedText,null,null,null, null);
                 System.out.println("ChatGPT Response: " + response);
-
-                DetailedRecipePage temp = new DetailedRecipePage(createRecipe(response), true);
+                Recipe recipe = createRecipe(response);
+                DetailedRecipePage temp = new DetailedRecipePage(recipe , true);
                 Main.setPage(temp);
                 Main.setController(new DetailedRecipePageController(temp,model));
-
+                return recipe;
                 // Handle the UI update or user notification with the generated recipe response
             } catch (Exception e) {
                 e.printStackTrace();
                 // Handle exceptions appropriately
             }
         }
+        return null;
+    }
+
+    private boolean handleCancelButton(ActionEvent event) throws IOException{
+
+        // Add Recipe Information
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
+        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+        RecipeListPage listPage = new RecipeListPage(recipes);
+        Main.setPage(listPage);
+        Main.setController(new RecipeListPageController(listPage, model));
+        return true;
     }
     
     public Recipe createRecipe(String gptResponse) {
-        
+        String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
+        String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
 
-       // Recipe recipe = new Recipe(recipeTitle, recipeInstructions, recipeIngredients, this.mealType);
-        return null;
+        Recipe recipe = new Recipe(recipeTitle, recipeInstructions, transcribedText, mealType);
+        return recipe;
     }
 
 

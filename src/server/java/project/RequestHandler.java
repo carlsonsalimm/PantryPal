@@ -4,6 +4,7 @@ import com.sun.net.httpserver.*;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import org.bson.Document;
@@ -59,29 +60,34 @@ public class RequestHandler implements HttpHandler {
     queryParams = parseQueryParams(httpExchange.getRequestURI().getQuery());
     String action = queryParams.get("action");
     if (action == null) {
+      System.out.println("Received an " + response);
       return response;
     }
 
     if (action.equals("getRecipeList")) {
       // get recipe list for acct
-      String username = queryParams.get("username");
-      String password = queryParams.get("password");
+      String username = this.decodeURL(queryParams.get("username"));
+      String password = this.decodeURL(queryParams.get("password"));
       List<Document> recipes = MongoDBProject.getRecipeList(username, password);
       // ArrayList<String> jsons = new ArrayList<String>();
       response = "{";
-      for (Document d : recipes) {
-        response += d.toJson() + ",";
-      }
-      response += "}";
+        for (int i = 0; i < recipes.size(); i++) {
+            response += "\""+ i + "\" :" + recipes.get(i).toJson();
+            if (i < recipes.size() - 1) {
+                 response += ",";
+            }
+        }
+        response += "}";
+
     } else if (action.equals("getImage")) {
       // Do DALL-E call
-      String title = queryParams.get("password");
-      String prompt = queryParams.get("prompt");
+      String title = this.decodeURL(queryParams.get("password"));
+  
     } else if (action.equals("getRecipeDetails")) {
       // Fetch a specific recipe's details
-      String username = queryParams.get("username");
-      String password = queryParams.get("password");
-      String title = queryParams.get("title");
+      String username = this.decodeURL(queryParams.get("username"));
+      String password = this.decodeURL(queryParams.get("password"));
+      String title = this.decodeURL(queryParams.get("title"));
 
       Document recipe = MongoDBProject.getRecipeByTitle(username, password, title);
       if (recipe != null) {
@@ -100,6 +106,7 @@ public class RequestHandler implements HttpHandler {
     queryParams = parseQueryParams(httpExchange.getRequestURI().getQuery());
     String action = queryParams.get("action");
     if (action == null) {
+      System.out.println("Received an " + response);
       return response;
     }
 
@@ -110,7 +117,7 @@ public class RequestHandler implements HttpHandler {
       int fileSize = Integer.valueOf(httpHeaders.getFirst("Content-Length"));
       System.out.println("Expected audio file size: " + fileSize);
       // String FILE_TO_RECEIVED = queryParams.get("audioFile");
-      System.out.println(queryParams.get("audioFile"));
+      System.out.println(this.decodeURL(queryParams.get("audioFile")));
       String FILE_TO_RECEIVED = String.valueOf(System.currentTimeMillis()) + ".wav";
       File file = new File(FILE_TO_RECEIVED);
       if (!file.exists()) {
@@ -153,8 +160,8 @@ public class RequestHandler implements HttpHandler {
 
     } else if (action.equals("login")) {
       // try logging in with acct details
-      String username = queryParams.get("username");
-      String password = queryParams.get("password");
+      String username = this.decodeURL(queryParams.get("username"));
+      String password = this.decodeURL(queryParams.get("password"));
       response = String.valueOf(MongoDBProject.login(username, password));
 
       // String response_string = Boolean.valueOf(response) ? "success" : "failure";
@@ -163,8 +170,8 @@ public class RequestHandler implements HttpHandler {
 
     } else if (action.equals("signup")) {
       // try signing up with acct details
-      String username = queryParams.get("username");
-      String password = queryParams.get("password");
+      String username = this.decodeURL(queryParams.get("username"));
+      String password = this.decodeURL(queryParams.get("password"));
       response = String.valueOf(MongoDBProject.createUser(username, password));
 
       // String response_string = Boolean.valueOf(response) ? "success" : "failure";
@@ -172,34 +179,34 @@ public class RequestHandler implements HttpHandler {
       // response_string);
 
     } else if (action.equals("createRecipe")) {
-      String username = queryParams.get("username");
-      String password = queryParams.get("password");
-      String mealType = queryParams.get("mealType");
-      String ingredients = queryParams.get("ingredients");
-      String title = queryParams.get("title");
-      String instructions = queryParams.get("instructions");
-      String imageURL = queryParams.get("imageURL");
-      // TODO change to addRecipe once the method is added in MongoDBProject
-      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0);
+      String username = this.decodeURL(queryParams.get("username"));
+      String password = this.decodeURL(queryParams.get("password"));
+      String mealType = this.decodeURL(queryParams.get("mealType"));
+      String ingredients = this.decodeURL(queryParams.get("ingredients"));
+      String title = this.decodeURL(queryParams.get("title"));
+      String instructions = this.decodeURL(queryParams.get("instructions"));
+      String imageURL = this.decodeURL(queryParams.get("imageURL"));
+      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0, imageURL);
       response = "Added recipe: " + title;
 
     } else if (action.equals("updateRecipe")) {
       // update/add recipe
-      String username = queryParams.get("username");
-      String password = queryParams.get("password");
-      String mealType = queryParams.get("mealType");
-      String ingredients = queryParams.get("ingredients");
-      String title = queryParams.get("title");
-      String instructions = queryParams.get("instructions");
-      Long creationTime = Long.parseLong(queryParams.get("creationTime"));
-      // String imageURL = queryParams.get("imageURL");
-      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime);
+      String username = this.decodeURL(queryParams.get("username"));
+      String password = this.decodeURL(queryParams.get("password"));
+      String mealType = this.decodeURL(queryParams.get("mealType"));
+      String ingredients = this.decodeURL(queryParams.get("ingredients"));
+      String title = this.decodeURL(queryParams.get("title"));
+      String instructions = this.decodeURL(queryParams.get("instructions"));
+      Long creationTime = Long.parseLong(this.decodeURL(queryParams.get("creationTime")));
+      String imageURL = this.decodeURL(queryParams.get("imageURL"));
+      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime,
+          imageURL);
       response = "Updated recipe: " + title;
       // replace with what we are expecting as a response
 
-    } else if (action.equals("generateRecipe&mealType")) {
-      String mealType = queryParams.get("mealType");
-      String ingredients = queryParams.get("ingredients");
+    } else if (action.equals("generateRecipe")) {
+      String mealType = this.decodeURL(queryParams.get("mealType"));
+      String ingredients = this.decodeURL(queryParams.get("ingredients"));
       try {
         response = chatGPT.getGPTResponse(ingredients, mealType);
       } catch (InterruptedException e) {
@@ -261,13 +268,14 @@ public class RequestHandler implements HttpHandler {
     queryParams = parseQueryParams(httpExchange.getRequestURI().getQuery());
     String action = queryParams.get("action");
     if (action == null) {
+      System.out.println("Received an " + response);
       return response;
     }
 
     if (action.equals("deleteRecipe")) {
-      String username = queryParams.get("username");
-      String password = queryParams.get("password");
-      String title = queryParams.get("title");
+      String username = this.decodeURL(queryParams.get("username"));
+      String password = this.decodeURL(queryParams.get("password"));
+      String title = this.decodeURL(queryParams.get("title"));
       MongoDBProject.deleteRecipe(username, password, title);
       response = "Deleted recipe: " + title;
       // replace with what we are expecting as a response
@@ -287,6 +295,26 @@ public class RequestHandler implements HttpHandler {
       }
     }
     return params;
+  }
+
+  public String encodeURL(String url) {
+    String encodedURL = null;
+    try {
+      encodedURL = URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
+    } catch (UnsupportedEncodingException e) {
+      System.out.println("Error encoding URL: " + e.getMessage());
+    }
+    return encodedURL;
+  }
+
+  public String decodeURL(String encodedURL) {
+    String decodedURL = null;
+    try {
+      decodedURL = URLDecoder.decode(encodedURL, StandardCharsets.UTF_8.toString());
+    } catch (UnsupportedEncodingException e) {
+      System.out.println("Error decoding URL: " + e.getMessage());
+    }
+    return decodedURL;
   }
 
   private String readLine(InputStream is, String lineSeparator)

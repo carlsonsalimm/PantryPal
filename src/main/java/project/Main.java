@@ -41,9 +41,8 @@ public class Main extends Application {
         
         FileReader file = new FileReader("RememberMe.csv");
         BufferedReader br =new BufferedReader(file);
-        boolean result;
-        if(result = br.readLine().equals("1")){
-            System.out.println(result);
+        if(br.readLine().equals("1")){
+            System.out.println("Login Remembered");
             model.setUsername(br.readLine());
             model.setPassword(br.readLine());
             String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
