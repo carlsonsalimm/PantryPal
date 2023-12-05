@@ -6,6 +6,7 @@ import java.util.List;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -190,6 +191,8 @@ public class RecipeListPage extends BorderPane {
         signOutButton = header.getSignOutButton();
         sortBox = header.getSortBox();
         filterBox = header.getFilterBox();
+
+        this.detailedViewButton = new Button();
         
         this.recipes = recipes;
         // Add header to the top of the BorderPane
@@ -209,14 +212,8 @@ public class RecipeListPage extends BorderPane {
             RecipeItem Item = new RecipeItem();
             Item.setRecipe(recipe);
             vbox.getChildren().add(Item);
-
-            Item.getDetailedViewButton().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // Handle the button click
-                showDetailedView(recipe);
-            }
-        });
+            EventHandler<ActionEvent> viewButton = e ->  this.detailedViewButton = Item.getDetailedViewButton();
+            Item.getDetailedViewButton().addEventHandler(ActionEvent.ACTION, viewButton);
             
         }
 

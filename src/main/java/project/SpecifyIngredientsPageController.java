@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.CookieHandler;
+import java.util.ArrayList;
+
 import org.json.Cookie;
 import javax.sound.sampled.*;
 
@@ -50,6 +52,15 @@ public class SpecifyIngredientsPageController implements Controller{
                 e.printStackTrace();
             }
         });
+
+        this.view.setCancelButtonAction(event -> {
+            try {
+                handleCancelButton(event);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
     }
 
     private void handleRecordHoldButton(MouseEvent event) throws IOException{
@@ -60,6 +71,14 @@ public class SpecifyIngredientsPageController implements Controller{
     private void handleRecordReleasetButton(MouseEvent event) throws IOException{
         stopRecordingAndProcessRecipe();
       
+    }
+
+    private void handleCancelButton(ActionEvent event) throws IOException{
+
+        // Add Recipe Information
+        RecipeListPage listPage = new RecipeListPage(new ArrayList<Recipe>());
+        Main.setPage(listPage);
+        Main.setController(new RecipeListPageController(listPage, model));
     }
 
 

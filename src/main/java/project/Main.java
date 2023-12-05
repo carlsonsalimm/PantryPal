@@ -47,7 +47,10 @@ public class Main extends Application {
             model.setUsername(br.readLine());
             model.setPassword(br.readLine());
             String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null);
-            List<Recipe> recipes = Main.extractRecipeInfo(Main.convertStringToRecipeList(JSON));
+            //List<Recipe> recipes = Main.extractRecipeInfo(Main.convertStringToRecipeList(JSON));
+            List<Recipe> recipes = new ArrayList<>();
+            String a = "test";
+            recipes.add(new Recipe(a, a, a, a));
             RecipeListPage listPage = new RecipeListPage(recipes);
             Main.root = listPage;
             Main.setController(new RecipeListPageController(listPage, model));
