@@ -57,8 +57,9 @@ public class RequestHandler implements HttpHandler {
   private String handleGet(HttpExchange httpExchange) throws IOException {
     String response = "Invalid GET Request";
     queryParams = parseQueryParams(httpExchange.getRequestURI().getQuery());
-    String action = this.decodeURL(queryParams.get("action"));
+    String action = queryParams.get("action");
     if (action == null) {
+      System.out.println("Received an " + response);
       return response;
     }
 
@@ -102,8 +103,9 @@ public class RequestHandler implements HttpHandler {
   private String handlePost(HttpExchange httpExchange) throws IOException {
     String response = "Invalid POST Request";
     queryParams = parseQueryParams(httpExchange.getRequestURI().getQuery());
-    String action = this.decodeURL(queryParams.get("action"));
+    String action = queryParams.get("action");
     if (action == null) {
+      System.out.println("Received an " + response);
       return response;
     }
 
@@ -221,8 +223,9 @@ public class RequestHandler implements HttpHandler {
   private String handleDelete(HttpExchange httpExchange) throws IOException {
     String response = "Invalid DELETE request";
     queryParams = parseQueryParams(httpExchange.getRequestURI().getQuery());
-    String action = this.decodeURL(queryParams.get("action"));
+    String action = queryParams.get("action");
     if (action == null) {
+      System.out.println("Received an " + response);
       return response;
     }
 

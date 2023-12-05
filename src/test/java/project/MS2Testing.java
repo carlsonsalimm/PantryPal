@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import javafx.event.ActionEvent;
 
+import org.bson.Document;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import java.util.ArrayList;
@@ -85,6 +86,20 @@ public class MS2Testing {
         MockWhisper whisper = new MockWhisper();
         String response = whisper.transcribeAudio("testType.wav");
         assertEquals(response, "Dinner.");
+    }
+
+    @Test
+    void testGetRecipeList() {
+        model.setUsername("carl");
+        model.setPassword("1234");
+        String response = model.performRequest("GET", "getRecipeList",
+                null, null,
+                null, null,
+                null, null,
+                null, null, null);
+        assertEquals(
+                "{\"0\" :{\"recipeTitle\": \"chicken thigh\", \"mealType\": \"lunch\", \"ingredients\": \"chicken thigh\", \"instructions\": \"cook in a pan\", \"creationTime\": 1701677928859},\"1\" :{\"recipeTitle\": \"beef brocolli\", \"mealType\": \"dinner\", \"ingredients\": \"beef and brocolli\", \"instructions\": \"cook in wok\", \"creationTime\": 1701677929859}}",
+                response);
     }
 
     @Test
