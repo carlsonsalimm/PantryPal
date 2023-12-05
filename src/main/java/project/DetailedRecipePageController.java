@@ -92,7 +92,7 @@ public class DetailedRecipePageController implements Controller{
 
     public void handleRefreshButton(ActionEvent event) throws IOException{
         Recipe recipe = view.getRecipe();
-        String response = model.performRequest("POST",null,null,null,null, recipe.getMealType(), recipe.getIngredients(),null,null,null);
+        String response = model.performRequest("POST","generateRecipe",null,null,null, recipe.getMealType(), recipe.getIngredients(),null,null,null);
 
         view.setTitle(response);
         view.setInstructions(response);
@@ -101,7 +101,8 @@ public class DetailedRecipePageController implements Controller{
     }
 
     public void handleShareButton(ActionEvent event) throws IOException{
-        // Handle share actions here (
+        Recipe recipe = view.getRecipe();
+        String url = model.performRequest("GET", "getShare", null, null, null, null, null, recipe.getTitle(), null, recipe.getCreationTime());
     }
 
     public void handleEditButton(ActionEvent event) throws IOException{
