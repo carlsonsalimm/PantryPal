@@ -8,6 +8,7 @@ import java.util.*;
 
 import org.bson.Document;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class RequestHandler implements HttpHandler {
 
@@ -144,12 +145,12 @@ public class RequestHandler implements HttpHandler {
       }
 
       // delete the file after we've parsed it to save space in the long term
-      if (file.delete()) { 
+      if (file.delete()) {
         System.out.println("Deleted the file: " + file.getName());
       } else {
         System.out.println("Failed to delete file: " + file.getName());
-      } 
-      
+      }
+
     } else if (action.equals("login")) {
       // try logging in with acct details
       String username = queryParams.get("username");
@@ -157,7 +158,8 @@ public class RequestHandler implements HttpHandler {
       response = String.valueOf(MongoDBProject.login(username, password));
 
       // String response_string = Boolean.valueOf(response) ? "success" : "failure";
-      // System.out.println("Tried to login user: " + username + ": " + response_string);
+      // System.out.println("Tried to login user: " + username + ": " +
+      // response_string);
 
     } else if (action.equals("signup")) {
       // try signing up with acct details
@@ -166,7 +168,8 @@ public class RequestHandler implements HttpHandler {
       response = String.valueOf(MongoDBProject.createUser(username, password));
 
       // String response_string = Boolean.valueOf(response) ? "success" : "failure";
-      // System.out.println("Tried to signup user: " + username + ": " + response_string);
+      // System.out.println("Tried to signup user: " + username + ": " +
+      // response_string);
 
     } else if (action.equals("createRecipe")) {
       String username = queryParams.get("username");
@@ -189,12 +192,12 @@ public class RequestHandler implements HttpHandler {
       String title = queryParams.get("title");
       String instructions = queryParams.get("instructions");
       Long creationTime = Long.parseLong(queryParams.get("creationTime"));
-      //String imageURL = queryParams.get("imageURL");
+      // String imageURL = queryParams.get("imageURL");
       MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime);
       response = "Updated recipe: " + title;
       // replace with what we are expecting as a response
 
-    } else if (action.equals("generateRecipe")) {
+    } else if (action.equals("generateRecipe&mealType")) {
       String mealType = queryParams.get("mealType");
       String ingredients = queryParams.get("ingredients");
       try {
@@ -204,20 +207,52 @@ public class RequestHandler implements HttpHandler {
       } catch (URISyntaxException e) {
         e.printStackTrace();
       }
-    }
-
-    else if (action.equals("generateImage")) {
+    } else if (action.equals("generateImage")) {
       String prompt = queryParams.get("prompt");
       try {
-          String imageURL = dallE.generateImageURL(prompt);
-          response = "{ \"imageURL\": \"" + imageURL + "\" }"; // Format the response as JSON
+        String imageURL = dallE.generateImageURL(prompt);
+        response = "{ \"imageURL\": \"" + imageURL + "\" }"; // Format the response as JSON
       } catch (IOException | InterruptedException | URISyntaxException e) {
-          e.printStackTrace();
-          response = "Error generating image: " + e.getMessage();
+        e.printStackTrace();
+        response = "Error generating image: " + e.getMessage();
       }
-  }  
-    // response include generated recipe and image url (in the last part)
-    return response;
+    } else if (action.equals("regenerateRecipe")) {
+      String title = queryParams.get("title");
+      String mealType = queryParams.get("mealType");
+      String ingredients = queryParams.get("ingredients");
+      String imageURL = queryParams.get("imageURL");
+
+      // Use ChatGPT to generate recipe text
+      String generatedInstructions = ""; // Placeholder, replace with actual ChatGPT call
+      try {
+        generatedInstructions = chatGPT.getGPTResponse(ingredients, mealType);
+      } catch (InterruptedException | URISyntaxException e) {
+        e.printStackTrace();
+        response = "Error generating recipe text: " + e.getMessage();
+        return response;
+      }
+
+      // Use Dall-E to generate a new image
+      String newImageURL = ""; // Placeholder, replace with actual Dall-E call
+      try {
+        newImageURL = dallE.generateImageURL(title);
+      } catch (IOException | InterruptedException | URISyntaxException e) {
+        e.printStackTrace();
+        response = "Error generating image: " + e.getMessage();
+        return response;
+      }
+
+      // Construct and send the response
+      JSONObject jsonResponse = new JSONObject();
+      jsonResponse.put("title", title);
+      jsonResponse.put("instructions", generatedInstructions);
+      jsonResponse.put("ingredients", ingredients);
+      jsonResponse.put("imageURL", newImageURL);
+      response = jsonResponse.toString();
+    }
+  // response include generated recipe and image url (in the last part)
+  return response;
+
   }
 
   // deleteRecipe

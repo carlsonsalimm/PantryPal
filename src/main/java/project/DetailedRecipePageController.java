@@ -109,23 +109,36 @@ public class DetailedRecipePageController implements Controller {
     }
 
 
-    public void handleRefreshButton(ActionEvent event) throws IOException{
+    public void handleRefreshButton(ActionEvent event) throws IOException {
         Recipe recipe = view.getRecipe();
-        String response = model.performRequest("POST","regenerateRecipe",null,null,null, recipe.getMealType(), recipe.getIngredients(),recipe.getTitle(),recipe.getInstructions(),null,recipe.getImageURL());
+        // // Generate a new recipe with the image
+        // String response = model.performRequest("POST", "regenerateRecipe", null, null, null, recipe.getMealType(), recipe.getIngredients(), recipe.getTitle(), recipe.getInstructions(), null, recipe.getImageURL());
+    
+        // // Parse the response to extract the new recipe details
+        // JSONObject jsonResponse = new JSONObject(response);
+        // String newTitle = jsonResponse.getString("title");
+        // String newInstructions = jsonResponse.getString("instructions");
+        // String newIngredients = jsonResponse.getString("ingredients");
+        // String newImageURL = jsonResponse.getString("imageURL");
 
-        view.setTitle(response);
-        view.setInstructions(response);
-        view.setIngredients(response);
-        view.setImage(response);
-        
+        //generate new recipe
+        String response = model.performRequest("POST", "generateRecipe&mealType", null, null, null, recipe.getMealType(), recipe.getIngredients(), null, null, null, null);
+        // Parse the response to extract the new recipe details
+        JSONObject jsonResponse = new JSONObject(response);
+        String newTitle = jsonResponse.getString("title");
+        String newInstructions = jsonResponse.getString("instructions");
+        String newIngredients = jsonResponse.getString("ingredients");
 
-        // // Generate a new recipe Image
-        // String imageURL = model.performRequest("POST", "generateImage", null, null, null, recipe.getMealType(), recipe.getIngredients(), null, null, null, recipe.getImageURL());
-
-        // // Set the image
-        // view.setImage(imageURL);
-        
+        // Request a new image URL from the server
+        String newImageURL = model.performRequest("GET", "generateImage", null, null, null, null, null, newTitle, null, null, null);
+    
+        // Set the new recipe details in the view
+        view.setTitle(newTitle);
+        view.setInstructions(newInstructions);
+        view.setIngredients(newIngredients);
+        view.setImage(newImageURL);
     }
+    
 
     public void handleShareButton(ActionEvent event) throws IOException{
         Recipe recipe = view.getRecipe();
