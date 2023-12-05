@@ -174,14 +174,16 @@ class RecipeItem extends VBox {
 public class RecipeListPage extends BorderPane {
     private RecipeListHeader header;
 
-    private Button detailedViewButton;
+    public Button detailedViewButton;
     private Button addButton;
     private Button signOutButton;
 
     private ComboBox<String> sortBox; 
     private ComboBox<String> filterBox; 
 
-    private List<Recipe> recipes;
+    public List<Recipe> recipes;
+
+    public VBox vbox;
 
     public static Recipe recipe;
 
@@ -203,7 +205,7 @@ public class RecipeListPage extends BorderPane {
     }
 
     public void populateRecipe(){
-        VBox vbox = new VBox();
+        vbox = new VBox();
         vbox.setSpacing(7);
         vbox.setPadding(new Insets(10, 0, 30, 0));
         vbox.setStyle("-fx-background-color: #FFFFFF;");

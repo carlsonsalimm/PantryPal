@@ -50,7 +50,11 @@ public class Main extends Application {
             //List<Recipe> recipes = Main.extractRecipeInfo(Main.convertStringToRecipeList(JSON));
             List<Recipe> recipes = new ArrayList<>();
             String a = "test";
-            recipes.add(new Recipe(a, a, a, a));
+            recipes.add(new Recipe(a, a, a, "Lunch","15"));
+            String b = "best";
+            recipes.add(new Recipe(b, b, b, "Lunch","30"));
+            String c = "apple";
+            recipes.add(new Recipe(c, c, c, "Dinner","10"));
             RecipeListPage listPage = new RecipeListPage(recipes);
             Main.root = listPage;
             Main.setController(new RecipeListPageController(listPage, model));
