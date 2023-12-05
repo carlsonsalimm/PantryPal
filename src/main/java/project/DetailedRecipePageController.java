@@ -64,7 +64,7 @@ public class DetailedRecipePageController implements Controller{
         });
     }
 
-    private void handleDeleteButton(ActionEvent event) throws IOException {
+    public void handleDeleteButton(ActionEvent event) throws IOException {
         Recipe recipe = view.getRecipe();
        
         model.performRequest("DELETE", "deleteRecipe", null, null, null, null, null, recipe.getTitle(), null, null,null);
@@ -104,10 +104,10 @@ public class DetailedRecipePageController implements Controller{
     public void handleRefreshButton(ActionEvent event) throws IOException{
         Recipe recipe = view.getRecipe();
         String response = model.performRequest("POST","generateRecipe",null,null,null, recipe.getMealType(), recipe.getIngredients(),null,null,null, null);
-
-        view.setTitle(response);
-        view.setInstructions(response);
-        view.setIngredients(response);
+        Recipe newRecipe = createRecipe(response);
+        view.setTitle(newRecipe.getTitle());
+        view.setInstructions(newRecipe.getInstructions());
+        view.setIngredients(newRecipe.getIngredients());
         
     }
 
@@ -124,6 +124,14 @@ public class DetailedRecipePageController implements Controller{
     public void handleEditButton(ActionEvent event) throws IOException{
         // Handle Edit Button
         view.instructions.setEditable(true);
+    }
+
+    public Recipe createRecipe(String gptResponse) {
+        String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
+        String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
+        Recipe recipe = view.getRecipe();
+        Recipe newrecipe = new Recipe(recipeTitle, recipeInstructions, recipe.getIngredients(), recipe.getMealType());
+        return newrecipe;
     }
 
 }

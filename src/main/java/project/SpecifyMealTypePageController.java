@@ -1,33 +1,22 @@
 package project;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.net.CookieHandler;
-import java.util.ArrayList;
 import java.util.List;
-
-import org.json.Cookie;
 import javax.sound.sampled.*;
 
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
 public class SpecifyMealTypePageController implements Controller {
     private SpecifyMealTypePage view;
     private Model model;
-    private RecipeListPage temp;
 
     private TargetDataLine targetDataLine;
     private AudioFormat audioFormat;
     private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
     public String mealType;
-    private String errorMsgStyle = "-fx-font-size: 20;-fx-font-weight: bold; -fx-text-fill: #DF0000;";
-    private Text errorMsg;
     private Boolean errorFlag = false;
 
     public SpecifyMealTypePageController(SpecifyMealTypePage view ,Model model){
@@ -97,9 +86,9 @@ public class SpecifyMealTypePageController implements Controller {
     // Returns the audio format to use for the recording for SpecifyMealTypePage
     // and Specify Meal Type Page
     
-    public void handleRecordReleasetButton(MouseEvent event) throws IOException{
+    public String handleRecordReleasetButton(MouseEvent event) throws IOException{
         if (targetDataLine == null) {
-            return;
+            return null;
         }
 
         targetDataLine.stop();
@@ -129,9 +118,10 @@ public class SpecifyMealTypePageController implements Controller {
             e.printStackTrace();
             // Handle exceptions appropriately
         } 
+        return null;
     }
 
-    public void handleBackButton(ActionEvent event) throws IOException{
+    public boolean handleBackButton(ActionEvent event) throws IOException{
 
         // Add Recipe Information
          String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
@@ -139,12 +129,14 @@ public class SpecifyMealTypePageController implements Controller {
         RecipeListPage listPage = new RecipeListPage(recipes);
         Main.setPage(listPage);
         Main.setController(new RecipeListPageController(listPage, model));
+
+        return true;
     }
 
 
     // Returns the meal type if it is found in the transcribed text, otherwise
     // returns null (Helper Function)
-    public static String detectMealType(String transcribedText) {
+    public String detectMealType(String transcribedText) {
         String[] mealTypes = { "breakfast", "lunch", "dinner" };
 
         for (String meal : mealTypes) {
