@@ -174,7 +174,7 @@ class RecipeItem extends VBox {
 public class RecipeListPage extends BorderPane {
     private RecipeListHeader header;
 
-    public Button detailedViewButton;
+    private List<Button> detailedViewButtons;
     private Button addButton;
     private Button signOutButton;
 
@@ -194,7 +194,7 @@ public class RecipeListPage extends BorderPane {
         sortBox = header.getSortBox();
         filterBox = header.getFilterBox();
 
-        this.detailedViewButton = new Button();
+        this.detailedViewButtons = new ArrayList<Button>();
         
         this.recipes = recipes;
         // Add header to the top of the BorderPane
@@ -214,8 +214,9 @@ public class RecipeListPage extends BorderPane {
             RecipeItem Item = new RecipeItem();
             Item.setRecipe(recipe);
             vbox.getChildren().add(Item);
-            EventHandler<ActionEvent> viewButton = e -> {RecipeListPage.recipe = Item.getRecipe();};
-            Item.getDetailedViewButton().addEventHandler(ActionEvent.ACTION, viewButton);
+            // EventHandler<ActionEvent> viewButton = e -> {RecipeListPage.recipe = Item.getRecipe();};
+            // Item.getDetailedViewButton().addEventHandler(ActionEvent.ACTION, viewButton);
+            this.detailedViewButtons.add(Item.getDetailedViewButton());
             
         }
 
@@ -251,8 +252,10 @@ public class RecipeListPage extends BorderPane {
         signOutButton.setOnAction(eventHandler);
     }
 
-    public void setDetailedViewButtonAction(EventHandler<ActionEvent> eventHandler){
-        detailedViewButton.setOnAction(eventHandler);
+    public void setDetailedViewButtonsAction(EventHandler<ActionEvent> eventHandler){
+        for (Button b: detailedViewButtons) {
+            b.setOnAction(eventHandler);
+        }
     }
 
     public void setSortBoxAction(EventHandler<ActionEvent> eventHandler){
