@@ -1,72 +1,33 @@
 package project;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.net.CookieHandler;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.json.Cookie;
 import javax.sound.sampled.*;
 
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.control.Button;
-import javafx.scene.text.Text;
 
-public class SpecifyMealTypePageController implements Controller {
+public class MockSpecifyMealTypePageController {
     private SpecifyMealTypePage view;
     private Model model;
-    private RecipeListPage temp;
-
     private TargetDataLine targetDataLine;
     private AudioFormat audioFormat;
     private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
     public String mealType;
-    private String errorMsgStyle = "-fx-font-size: 20;-fx-font-weight: bold; -fx-text-fill: #DF0000;";
-    private Text errorMsg;
     private Boolean errorFlag = false;
 
-    public SpecifyMealTypePageController(SpecifyMealTypePage view ,Model model){
-        this.view = view;
+    public MockSpecifyMealTypePageController(Model model){
         this.model = model;
-
-        this.view.setRecordHoldAction(event -> {
-            try {
-                handleRecordHoldButton(event);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        });
-
-        this.view.setRecordReleaseAction(event -> {
-            try {
-                handleRecordReleasetButton(event);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        });
-
-        this.view.setBackButtonAction(event -> {
-            try {
-                handleBackButton(event);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        });
     }
 
+    
     // Returns the audio format to use for the recording for Specify Ingredient Page
     // and Specify Meal Type Page
     // NOTE: This is the same format that is used for the Whisper transcribeAudio
     // method
-
+   
     public void handleRecordHoldButton(MouseEvent event) throws IOException{
         try {
             System.out.println("Starting to Record");
@@ -96,7 +57,7 @@ public class SpecifyMealTypePageController implements Controller {
 
     // Returns the audio format to use for the recording for SpecifyMealTypePage
     // and Specify Meal Type Page
-    
+
     public void handleRecordReleasetButton(MouseEvent event) throws IOException{
         if (targetDataLine == null) {
             return;
@@ -134,14 +95,14 @@ public class SpecifyMealTypePageController implements Controller {
     public void handleBackButton(ActionEvent event) throws IOException{
 
         // Add Recipe Information
-         String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
         List<Recipe> recipes = Main.extractRecipeInfo(JSON);
         RecipeListPage listPage = new RecipeListPage(recipes);
         Main.setPage(listPage);
         Main.setController(new RecipeListPageController(listPage, model));
     }
 
-
+   
     // Returns the meal type if it is found in the transcribed text, otherwise
     // returns null (Helper Function)
     public static String detectMealType(String transcribedText) {
@@ -167,4 +128,3 @@ public class SpecifyMealTypePageController implements Controller {
     }
 }
 
-   

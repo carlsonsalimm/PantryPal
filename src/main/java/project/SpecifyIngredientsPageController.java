@@ -24,12 +24,8 @@ public class SpecifyIngredientsPageController implements Controller{
     private TargetDataLine targetDataLine;
     private AudioFormat audioFormat;
     private static final String TEMP_AUDIO_FILE_PATH = "tempAudio.wav";
-    private String recorderButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
-    private Button recorderButton;
     public String mealType;
-    private String errorMsgStyle = "-fx-font-size: 20;-fx-font-weight: bold; -fx-text-fill: #DF0000;";
-    private Text errorMsg;
-    private Boolean errorFlag = false;
+    private String transcribedText;
 
     public SpecifyIngredientsPageController(SpecifyIngredientsPage view ,Model model){
         this.view = view;
@@ -127,6 +123,7 @@ public class SpecifyIngredientsPageController implements Controller{
                 
                 // Transcripe Audio
                 String transcribedText = model.performRequest("POST",null,null,null,TEMP_AUDIO_FILE_PATH,null,null,null,null,null,null);
+                this.transcribedText = transcribedText;
                 System.out.println("Transcription: " + transcribedText);
 
                 // Send the transcribed text to ChatGPT and get a response
@@ -146,8 +143,11 @@ public class SpecifyIngredientsPageController implements Controller{
     }
     
     public Recipe createRecipe(String gptResponse) {
-        List<Recipe> recipe = Main.extractRecipeInfo(gptResponse);
-        return recipe.get(0);
+        String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
+        String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
+
+        Recipe recipe = new Recipe(recipeTitle, recipeInstructions, transcribedText, mealType);
+        return recipe;
     }
 
 
