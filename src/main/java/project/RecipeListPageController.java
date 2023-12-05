@@ -97,37 +97,32 @@ public class RecipeListPageController implements Controller {
         for (int i = 0; i < view.vbox.getChildren().size(); i++) {
             view.vbox.getChildren().removeIf(recipeItem -> recipeItem instanceof RecipeItem);
         }
-        System.out.println(view.vbox.getChildren().size());
+        view.detailedViewButtons.clear();
         // compare, then determine sort method
         if (selectedItem == "A-Z") { // sort A-Z logic
-            System.out.println("A-Z selected");
             Collections.sort(tempRecipes, Comparator.comparing(Recipe::getTitle));
         } else if (selectedItem == "Z-A") { // sort Z-A logic
-            System.out.println("Z-A selected");
             Collections.sort(tempRecipes, Comparator.comparing(Recipe::getTitle).reversed());
-        } else if (selectedItem == "Oldest First") { // sort oldest first logic use creation time
-            System.out.println("Oldest first selected");
-            Collections.sort(tempRecipes, Comparator.comparing(recipe -> Integer.parseInt(recipe.getCreationTime())));
+        } else if (selectedItem == "Oldest first") { // sort oldest first logic use creation time 
+            Collections.sort(tempRecipes, Comparator.comparingLong(Recipe -> Long.parseLong(Recipe.getCreationTime())));
+            Collections.reverse(tempRecipes);
         } else { // default; newest first
-            System.out.println("newest first selected");
-            // Collections.sort(tempRecipes, Comparator.comparing(recipe ->
-            // Integer.parseInt(recipe.getCreationTime())).reversed());
+            Collections.sort(tempRecipes, Comparator.comparingLong(Recipe -> Long.parseLong(Recipe.getCreationTime())));
         }
-        // re-populate list
+        // re-populate list)
         for (Recipe x : tempRecipes) {
             RecipeItem Item = new RecipeItem();
             Item.setRecipe(x);
             view.vbox.getChildren().add(Item);
-            view.setDetailedViewButtonsAction(event1 -> {
+            view.detailedViewButtons.add(Item.getDetailedViewButton());
+            this.view.setDetailedViewButtonsAction(event1 -> {
                 try {
-                    handleDetailedViewButton(event);
+                    handleDetailedViewButton(event1);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
         }
-        System.out.println(view.vbox.getChildren().size());
-
     }
 
     private void handleFilterBoxButton(ActionEvent event) throws IOException {
@@ -139,7 +134,7 @@ public class RecipeListPageController implements Controller {
         }
         if (selectedItem == "Breakfast") {
             for (Recipe x : tempRecipes) {
-                if (x.getMealType() == "Breakfast") {
+                if (x.getMealType() == "breakfast") {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
                     view.vbox.getChildren().add(Item);
@@ -154,7 +149,7 @@ public class RecipeListPageController implements Controller {
             }
         } else if (selectedItem == "Lunch") {
             for (Recipe x : tempRecipes) {
-                if (x.getMealType() == "Lunch") {
+                if (x.getMealType() == "lunch") {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
                     view.vbox.getChildren().add(Item);
@@ -169,7 +164,7 @@ public class RecipeListPageController implements Controller {
             }
         } else if (selectedItem == "Dinner") {
             for (Recipe x : tempRecipes) {
-                if (x.getMealType() == "Dinner") {
+                if (x.getMealType() == "dinner") {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
                     view.vbox.getChildren().add(Item);
