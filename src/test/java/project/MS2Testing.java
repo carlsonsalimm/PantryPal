@@ -299,20 +299,24 @@ public class MS2Testing {
     @Test
     void testUpdate() throws IOException {
         MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
-        Recipe recipe = new Recipe("eggs", "crack egg on stove", "egg", "breakfast", "0");
+        
         
          model.setUsername("carl");
         model.setPassword("1234");
         model.performRequest("POST", "createRecipe", null, null, null, "breakfast", "egg", "eggs","crack egg", null, null);
       
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null,null, null);
+        List<Recipe> recipes1 = Main.extractRecipeInfo(JSON);
+        Recipe recipe = new Recipe("eggs", "crack egg on stove", "egg", "breakfast", recipes1.get(recipes1.size()-1).getCreationTime());
+
         controller.setRecipeTarget(recipe);
         controller.setUpdateInfo("eggs", "crack egg on stove", "egg");
         controller.handleSaveButton(new ActionEvent());
         
        
-        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null,null, null);
+        JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null,null, null);
         List<Recipe> recipes = Main.extractRecipeInfo(JSON);
-
+        
         String instructionChange = recipes.get(recipes.size()-1).getInstructions();
         assertEquals(recipe.getInstructions(), instructionChange);
 
