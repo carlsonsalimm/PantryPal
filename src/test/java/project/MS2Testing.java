@@ -303,7 +303,7 @@ public class MS2Testing {
         
          model.setUsername("carl");
         model.setPassword("1234");
-        model.performRequest("POST", "createRecipe", null, null, null, "breakfast", "egg", "eggs","crack egg on stove", null, null);
+        model.performRequest("POST", "createRecipe", null, null, null, "breakfast", "egg", "eggs","crack egg", null, null);
       
         controller.setRecipeTarget(recipe);
         controller.setUpdateInfo("eggs", "crack egg on stove", "egg");
