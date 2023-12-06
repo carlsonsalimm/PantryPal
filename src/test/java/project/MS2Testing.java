@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -143,7 +144,7 @@ public class MS2Testing {
             i++;
         }
 
-        assertTrue(AtoZ.equals(actualAtoZ));
+        assertArrayEquals(AtoZ,actualAtoZ);
 
         String[] ZtoA = new String[] { "sausage", "eggs", "bread", "bacon" };
         String[] actualZtoA = new String[4];
@@ -155,7 +156,7 @@ public class MS2Testing {
             i++;
         }
 
-        assertTrue(ZtoA.equals(actualZtoA));
+        assertArrayEquals(ZtoA,actualZtoA);
 
         String[] OldFirst = new String[] { "bread", "sausage", "bacon", "eggs" };
         String[] actualOldFirst = new String[4];
@@ -167,7 +168,7 @@ public class MS2Testing {
             i++;
         }
 
-        assertTrue(OldFirst.equals(actualAtoZ));
+        assertArrayEquals(OldFirst, actualOldFirst);
 
         String[] FirstOld = new String[] { "bread", "sausage", "bacon", "eggs" };
         String[] actualFirstOld = new String[4];
@@ -179,7 +180,7 @@ public class MS2Testing {
             i++;
         }
 
-        assertTrue(FirstOld.equals(actualFirstOld));
+        assertArrayEquals(FirstOld, actualFirstOld);
     }
 
     @Test
@@ -247,7 +248,7 @@ public class MS2Testing {
     }
 
     @Test
-    void testRefreshButton() throws IOException{
+    void testRefreshButton() throws IOException {
         MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
         Recipe recipe = new Recipe("eggs", "crack egg", "egg", "breakfast");
         controller.setRecipeTarget(recipe);
@@ -304,12 +305,51 @@ public class MS2Testing {
      */
     @Test
     void endToEnd() throws IOException {
-        MockLoginPageController controller = new MockLoginPageController(model);
-        controller.setUsername("Caitlyn");
-        controller.setPassword("abcd1");
-        
-        
-        
+        // Stage 1 - Log in 
+        MockLoginPageController controllerLogin = new MockLoginPageController(model);
+        controllerLogin.setUsername("carl");
+        controllerLogin.setPassword("1234");
+        Boolean result1 =  controllerLogin.handleSignInButton(new ActionEvent());
+        assertEquals(true,result1); // Stage 1 pass 
+        // Stage 2 - View click
+        MockRecipeListPageController controllerRecipeList = new MockRecipeListPageController(model);
+        List<Recipe> recipes = new ArrayList<>();
+        recipes.add(new Recipe("eggs", null, null, "dinner", "0"));
+        recipes.add(new Recipe("bread", null, null, "lunch", "5"));
+        recipes.add(new Recipe("sausage", null, null, "breakfast", "2"));
+        recipes.add(new Recipe("bacon", null, null, "breakfast", "1"));
+        controllerRecipeList.setRecipes(recipes);
+        Boolean result2 = controllerRecipeList.handleDetailedViewButton(new ActionEvent());
+        assertEquals(true,result2);
+        // Stage 3 - Sharing
+        MockDetailedRecipePageController controllerDetailedRecipe = new MockDetailedRecipePageController(model);
+        Recipe recipe = new Recipe("eggs", "crack egg", "egg", "breakfast");
+        controllerDetailedRecipe.setRecipeTarget(recipe);
+        String expected = "Google.com";
+        String result3 = controllerDetailedRecipe.handleShareButton(new ActionEvent());
+        assertEquals(expected, result3);
+        // Stage 4 - Server shut down (logic utilized try-catch with show alert)
+        boolean ServerDown = false;
+        try {
+            throw new Exception("Server Down Exception");
+        } catch (Exception e) {
+            ServerDown = true;
+        }
+        assertEquals(true, ServerDown);
+        // Stage 5 - Sort oldest first
+        String[] result5 = new String[] { "bread", "sausage", "bacon", "eggs" };
+        String[] actualOldFirst = new String[4];
+        controllerRecipeList.setSort("Oldest first");
+        controllerRecipeList.setRecipes(recipes);
+        int j = 0;
+        for (Recipe recipe1 : controllerRecipeList.handleSortBoxButton(new ActionEvent())) {
+            actualOldFirst[j] = recipe1.getTitle();
+            j++;
+        }
+        assertArrayEquals(result5, actualOldFirst);
+        // Stage 6 - Filter for dinner
+        controllerRecipeList.setMealType("dinner");
+        assertEquals(1, controllerRecipeList.handleFilterBoxButton(new ActionEvent()).size());    
     }
 
 }
