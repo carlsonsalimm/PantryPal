@@ -62,14 +62,16 @@ public class LoginPageController implements Controller{
                 Main.setController(new RecipeListPageController(listPage, model));
 
                 return true;
-            } else {
+            } else if(model.performRequest("POST", "login", username, password, null, null, null, null, null, null, null) .equals("false")) {
                 view.showAlert("Error", "Account Not Found");
                 return false;
-            }                 
-        } catch (Exception e) {
-             Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
-             return false;
+            } 
+        } catch (Exception e) {  
+            Main.showAlert("Error", "Server temporarily unavailable. Please try again later.");            
+            return false;  
         }
+        return false;
+        
     }
 
     public boolean handleCreateAccountButton(ActionEvent event) throws IOException {

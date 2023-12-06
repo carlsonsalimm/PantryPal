@@ -106,7 +106,7 @@ public class MockSpecificIngredientsPageController implements Controller{
         String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
         String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
 
-        Recipe recipe = new Recipe(recipeTitle, recipeInstructions, transcribedText, mealType);
+        Recipe recipe = new Recipe(recipeTitle, recipeInstructions, transcribedText, mealType,null);
         return recipe;
     }
 

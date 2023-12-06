@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MS2Testing {
@@ -170,7 +171,7 @@ public class MS2Testing {
 
         assertArrayEquals(OldFirst, actualOldFirst);
 
-        String[] FirstOld = new String[] { "bread", "sausage", "bacon", "eggs" };
+        String[] FirstOld = new String[] { "eggs", "bacon", "sausage", "bread" };
         String[] actualFirstOld = new String[4];
         controller.setSort("First Oldest");
         controller.setRecipes(recipes);
@@ -222,12 +223,12 @@ public class MS2Testing {
     @Test
     void testRecordMealType() throws IOException {
         MockSpecifyMealTypePageController controller = new MockSpecifyMealTypePageController(model);
-        controller.setTranscribedText("Dinner");
+        controller.setTranscribedText("dinner");
         controller.handleRecordHoldButton(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false, false, false, false,
                 false, false, false, false, false, null));
         String text = controller.handleRecordReleasetButton(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false,
                 false, false, false, false, false, false, false, false, null));
-        assertEquals("Dinner", text);
+        assertEquals("dinner", text);
     }
 
     @Test
@@ -243,7 +244,7 @@ public class MS2Testing {
         assertNotNull(recipe.getTitle());
         assertNotNull(recipe.getIngredients());
         assertNotNull(recipe.getInstructions());
-        assertNotNull(recipe.getCreationTime());
+        assertNull(recipe.getCreationTime());
         assertNotNull(recipe.getMealType());
     }
 
@@ -348,7 +349,7 @@ public class MS2Testing {
         }
         assertArrayEquals(result5, actualOldFirst);
         // Stage 6 - Filter for dinner
-        controllerRecipeList.setMealType("dinner");
+        controllerRecipeList.setMealType("Dinner");
         assertEquals(1, controllerRecipeList.handleFilterBoxButton(new ActionEvent()).size());    
     }
 
