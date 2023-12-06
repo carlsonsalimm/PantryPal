@@ -111,7 +111,7 @@ public class RequestHandler implements HttpHandler {
       String ingredients = this.decodeURL(queryParams.get("ingredients"));
       String instructions = this.decodeURL(queryParams.get("instructions"));
       String imageURL = this.decodeURL(queryParams.get("imageURL"));
-
+      // check if recipe exists in mongodb before returning
       StringBuilder htmlBuilder = new StringBuilder();
       htmlBuilder
           .append("<html>")
@@ -134,8 +134,31 @@ public class RequestHandler implements HttpHandler {
           .append("</body>")
           .append("</html>");
 
+      // write HTML content into file titled username-Systemtime.html
       // encode HTML content
       response = htmlBuilder.toString();
+      long currTime = System.currentTimeMillis();
+      FileWriter fr = new FileWriter(/*username +*/currTime+".html");
+      BufferedWriter br = new BufferedWriter(fr);
+      br.write(response);
+      fr.close();
+      br.close();
+      // return sharable link
+      response = "https://pantrypal-team31.onrender.com/?action=share&id=" + currTime;
+    } else if (action.equals("share")) {
+      // String username = this.decodeURL(queryParams.get("username"));
+      String id = this.decodeURL(queryParams.get("id"));
+      // get the file with username
+      File f = new File(id + ".html");
+      FileReader file = new FileReader(f);
+      BufferedReader buffer = new BufferedReader(file);
+      String temp = "";
+      while ((temp = buffer.readLine()) != null) {
+        response += temp;
+      }
+
+      buffer.close();
+      file.close();
     }
 
     return response;
