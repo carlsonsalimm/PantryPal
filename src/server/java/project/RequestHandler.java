@@ -185,7 +185,7 @@ public class RequestHandler implements HttpHandler {
       String title = this.decodeURL(queryParams.get("title"));
       String instructions = this.decodeURL(queryParams.get("instructions"));
       String imageURL = this.decodeURL(queryParams.get("imageURL"));
-      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0, imageURL);
+      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0);
       response = "Added recipe: " + title;
 
     } else if (action.equals("updateRecipe")) {
@@ -198,8 +198,7 @@ public class RequestHandler implements HttpHandler {
       String instructions = this.decodeURL(queryParams.get("instructions"));
       Long creationTime = Long.parseLong(this.decodeURL(queryParams.get("creationTime")));
       String imageURL = this.decodeURL(queryParams.get("imageURL"));
-      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime,
-          imageURL);
+      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime);
       response = "Updated recipe: " + title;
       // replace with what we are expecting as a response
 
