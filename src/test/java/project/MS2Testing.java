@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MS2Testing {
     Model model = new Model();
-    List<Recipe> recipes = new ArrayList<>();
     
 
     @Test
@@ -124,40 +123,76 @@ public class MS2Testing {
     @Test
     void testSort() throws IOException{
         MockRecipeListPageController controller = new MockRecipeListPageController(model);
+        List<Recipe> recipes = new ArrayList<>();
+        recipes.add(new Recipe("eggs",null,null,"dinner", "0"));
+        recipes.add(new Recipe("bread",null,null,"lunch", "5"));
+        recipes.add(new Recipe("sausage",null,null,"breakfast", "2"));
+        recipes.add(new Recipe("bacon",null,null,"breakfast", "1"));
 
-        recipes.add(new Recipe("eggs",null,null,null, "0"));
-        recipes.add(new Recipe("bread",null,null,null, "5"));
-        recipes.add(new Recipe("sausage",null,null,null, "2"));
-        recipes.add(new Recipe("bacon",null,null,null, "1"));
 
         List<Recipe> AtoZ = new ArrayList<>();
-        AtoZ.add(new Recipe("bacon",null,null,null, "1"));
-        AtoZ.add(new Recipe("bread",null,null,null, "5"));
-        AtoZ.add(new Recipe("eggs",null,null,null, "0"));
-        AtoZ.add(new Recipe("sausage",null,null,null, "2"));
-        
-
-        List<Recipe> ZtoA = new ArrayList<>();
-        ZtoA.add(new Recipe("sausage",null,null,null, "2"));
-        ZtoA.add(new Recipe("eggs",null,null,null, "0"));
-        ZtoA.add(new Recipe("bread",null,null,null, "5"));
-        ZtoA.add(new Recipe("bacon",null,null,null, "1"));
-
-        List<Recipe> OldtoFirst = new ArrayList<>();
-        OldtoFirst.add(new Recipe("bread",null,null,null, "5"));
-        OldtoFirst.add(new Recipe("sausage",null,null,null, "2"));
-        OldtoFirst.add(new Recipe("bacon",null,null,null, "1"));
-        OldtoFirst.add(new Recipe("eggs",null,null,null, "0"));
-
-        List<Recipe> FirsttoOld = new ArrayList<>();
-        FirsttoOld.add(new Recipe("eggs",null,null,null, "0"));
-        FirsttoOld.add(new Recipe("bacon",null,null,null, "1"));
-        FirsttoOld.add(new Recipe("sausage",null,null,null, "2"));
-        FirsttoOld.add(new Recipe("bread",null,null,null, "5"));
+        AtoZ.add(new Recipe("bacon",null,null,"breakfast", "1"));
+        AtoZ.add(new Recipe("bread",null,null,"lunch", "5"));
+        AtoZ.add(new Recipe("eggs",null,null,"dinner", "0"));
+        AtoZ.add(new Recipe("sausage",null,null,"breakfast", "2"));
         
         controller.setSort("A-Z");
         controller.setRecipes(recipes);
         assertTrue(controller.handleSortBoxButton(new ActionEvent()).equals(AtoZ));
+
+        List<Recipe> ZtoA = new ArrayList<>();
+        ZtoA.add(new Recipe("sausage",null,null,"breakfast", "2"));
+        ZtoA.add(new Recipe("eggs",null,null,"dinner", "0"));
+        ZtoA.add(new Recipe("bread",null,null,"lunch", "5"));
+        ZtoA.add(new Recipe("bacon",null,null,"breakfast", "1"));
+
+        controller.setSort("Z-A");
+        controller.setRecipes(recipes);
+        assertTrue(controller.handleSortBoxButton(new ActionEvent()).equals(ZtoA));
+
+        List<Recipe> OldtoFirst = new ArrayList<>();
+        OldtoFirst.add(new Recipe("bread",null,null,"lunch", "5"));
+        OldtoFirst.add(new Recipe("sausage",null,null,"breakfast", "2"));
+        OldtoFirst.add(new Recipe("bacon",null,null,"breakfast", "1"));
+        OldtoFirst.add(new Recipe("eggs",null,null,"dinner", "0"));
+
+        controller.setSort("Oldest first");
+        controller.setRecipes(recipes);
+        assertTrue(controller.handleSortBoxButton(new ActionEvent()).equals(OldtoFirst));
+
+        List<Recipe> FirsttoOld = new ArrayList<>();
+        FirsttoOld.add(new Recipe("eggs",null,null,"dinner", "0"));
+        FirsttoOld.add(new Recipe("bacon",null,null,"breakfast", "1"));
+        FirsttoOld.add(new Recipe("sausage",null,null,"breakfast", "2"));
+        FirsttoOld.add(new Recipe("bread",null,null,"lunch", "5"));
+        
+        controller.setSort("First Oldest");
+        controller.setRecipes(recipes);
+        assertTrue(controller.handleSortBoxButton(new ActionEvent()).equals(FirsttoOld));
     }
+
+      @Test
+    void testFilter() throws IOException{
+        MockRecipeListPageController controller = new MockRecipeListPageController(model);
+        List<Recipe> recipes = new ArrayList<>();
+        recipes.add(new Recipe("eggs",null,null,"dinner", "0"));
+        recipes.add(new Recipe("bread",null,null,"lunch", "5"));
+        recipes.add(new Recipe("sausage",null,null,"breakfast", "2"));
+        recipes.add(new Recipe("bacon",null,null,"breakfast", "1"));
+
+        controller.setMealType("Breakfast");
+        controller.setRecipes(recipes);
+        assertEquals(2, controller.handleFilterBoxButton(new ActionEvent()).size());
+
+        controller.setMealType("Lunch");
+        controller.setRecipes(recipes);
+        assertEquals(1, controller.handleFilterBoxButton(new ActionEvent()).size());
+
+        controller.setMealType("Dinner");
+        controller.setRecipes(recipes);
+        assertEquals(1, controller.handleFilterBoxButton(new ActionEvent()).size());
+    }
+
+
 
 }
