@@ -31,6 +31,11 @@ public class Model {
         } catch (UnsupportedEncodingException e) {
             System.out.println("Error encoding URL: " + e.getMessage());
         }
+
+        if (encodedURL == null) {
+            System.out.println("NULL: " + url);
+        }
+        System.out.println("ENCODED: " + encodedURL);
         return encodedURL;
     }
 
@@ -73,6 +78,7 @@ public class Model {
                             + "&ingredients=" + encodeURL(ingredients)
                             + "&instructions=" + encodeURL(instructions)
                             + "&imageURL=" + encodeURL(imageURL);
+                    System.out.println(urlString);
                 }
 
             } else if (method.equals("POST")) {
