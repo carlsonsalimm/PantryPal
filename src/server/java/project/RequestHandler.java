@@ -71,18 +71,24 @@ public class RequestHandler implements HttpHandler {
       List<Document> recipes = MongoDBProject.getRecipeList(username, password);
       // ArrayList<String> jsons = new ArrayList<String>();
       response = "{";
-        for (int i = 0; i < recipes.size(); i++) {
-            response += "\""+ i + "\" :" + recipes.get(i).toJson();
-            if (i < recipes.size() - 1) {
-                 response += ",";
-            }
+      for (int i = 0; i < recipes.size(); i++) {
+        response += "\"" + i + "\" :" + recipes.get(i).toJson();
+        if (i < recipes.size() - 1) {
+          response += ",";
         }
-        response += "}";
+      }
+      response += "}";
 
-    } else if (action.equals("getImage")) {
-      // Do DALL-E call
-      String title = this.decodeURL(queryParams.get("password"));
-  
+    } else if (action.equals("generateImage")) {
+      String prompt = queryParams.get("title");
+      try {
+        String imageURL = dallE.generateImageURL(prompt);
+        response = "{ \"imageURL\": \"" + imageURL + "\" }"; // Format the response as JSON
+      } catch (IOException | InterruptedException | URISyntaxException e) {
+        e.printStackTrace();
+        response = "Error generating image: " + e.getMessage();
+      }
+
     } else if (action.equals("getRecipeDetails")) {
       // Fetch a specific recipe's details
       String username = this.decodeURL(queryParams.get("username"));
@@ -95,6 +101,41 @@ public class RequestHandler implements HttpHandler {
       } else {
         response = "Recipe not found";
       }
+
+    } else if (action.equals("getShare")) {
+      // Generate a url to share
+      response = "Invalid GET request (share)";
+
+      String title = this.decodeURL(queryParams.get("title"));
+      String mealType = this.decodeURL(queryParams.get("mealType"));
+      String ingredients = this.decodeURL(queryParams.get("ingredients"));
+      String instructions = this.decodeURL(queryParams.get("instructions"));
+      String imageURL = this.decodeURL(queryParams.get("imageURL"));
+
+      StringBuilder htmlBuilder = new StringBuilder();
+      htmlBuilder
+          .append("<html>")
+          .append("<body>")
+          .append("<h1>")
+          .append(title)
+          .append("</h1>")
+          .append("<h2>")
+          .append(mealType)
+          .append("</h2>")
+          .append("<img src=\"")
+          .append(imageURL)
+          .append("\">")
+          .append("<p>")
+          .append(ingredients)
+          .append("</p>")
+          .append("<p>")
+          .append(instructions)
+          .append("</p>")
+          .append("</body>")
+          .append("</html>");
+
+      // encode HTML content
+      response = htmlBuilder.toString();
     }
 
     return response;
@@ -185,22 +226,18 @@ public class RequestHandler implements HttpHandler {
       String ingredients = this.decodeURL(queryParams.get("ingredients"));
       String title = this.decodeURL(queryParams.get("title"));
       String instructions = this.decodeURL(queryParams.get("instructions"));
-      String imageURL = this.decodeURL(queryParams.get("imageURL"));
-      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0, imageURL);
+      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0);
       response = "Added recipe: " + title;
 
     } else if (action.equals("updateRecipe")) {
       // update/add recipe
       String username = this.decodeURL(queryParams.get("username"));
       String password = this.decodeURL(queryParams.get("password"));
-      String mealType = this.decodeURL(queryParams.get("mealType"));
       String ingredients = this.decodeURL(queryParams.get("ingredients"));
       String title = this.decodeURL(queryParams.get("title"));
       String instructions = this.decodeURL(queryParams.get("instructions"));
       Long creationTime = Long.parseLong(this.decodeURL(queryParams.get("creationTime")));
-      String imageURL = this.decodeURL(queryParams.get("imageURL"));
-      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime,
-          imageURL);
+      MongoDBProject.updateRecipe(username, password, title, instructions, null, ingredients, creationTime);
       response = "Updated recipe: " + title;
       // replace with what we are expecting as a response
 
