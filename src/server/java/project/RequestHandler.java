@@ -245,11 +245,14 @@ public class RequestHandler implements HttpHandler {
       String ingredients = this.decodeURL(queryParams.get("ingredients"));
       try {
         response = chatGPT.getGPTResponse(ingredients, mealType);
+        System.out.println(response);
       } catch (InterruptedException e) {
         e.printStackTrace();
       } catch (URISyntaxException e) {
         e.printStackTrace();
       }
+
+
     }
 
     // response include generated recipe and image url (in the last part)
