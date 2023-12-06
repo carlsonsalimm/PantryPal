@@ -3,6 +3,7 @@ package project;
 import org.junit.jupiter.api.Test;
 
 import javafx.event.ActionEvent;
+import javafx.scene.input.MouseEvent;
 
 import org.bson.Document;
 import org.json.JSONException;
@@ -14,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.beans.Transient;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -130,48 +133,56 @@ public class MS2Testing {
         recipes.add(new Recipe("bacon",null,null,"breakfast", "1"));
 
 
-        List<Recipe> AtoZ = new ArrayList<>();
-        AtoZ.add(new Recipe("bacon",null,null,"breakfast", "1"));
-        AtoZ.add(new Recipe("bread",null,null,"lunch", "5"));
-        AtoZ.add(new Recipe("eggs",null,null,"dinner", "0"));
-        AtoZ.add(new Recipe("sausage",null,null,"breakfast", "2"));
-        
+        String[] AtoZ = new String[]{"bacon", "bread", "eggs", "sausage"};
+        String[] actualAtoZ = new String[4];
         controller.setSort("A-Z");
         controller.setRecipes(recipes);
-        assertTrue(controller.handleSortBoxButton(new ActionEvent()).equals(AtoZ));
+        int i = 0;
+        for(Recipe recipe:  controller.handleSortBoxButton(new ActionEvent())){
+            actualAtoZ[i] = recipe.getTitle();
+            i++;
+        }
+    
+        assertTrue(AtoZ.equals(actualAtoZ));
 
-        List<Recipe> ZtoA = new ArrayList<>();
-        ZtoA.add(new Recipe("sausage",null,null,"breakfast", "2"));
-        ZtoA.add(new Recipe("eggs",null,null,"dinner", "0"));
-        ZtoA.add(new Recipe("bread",null,null,"lunch", "5"));
-        ZtoA.add(new Recipe("bacon",null,null,"breakfast", "1"));
-
+        String[] ZtoA = new String[]{ "sausage", "eggs", "bread", "bacon" };
+        String[] actualZtoA = new String[4];
         controller.setSort("Z-A");
         controller.setRecipes(recipes);
-        assertTrue(controller.handleSortBoxButton(new ActionEvent()).equals(ZtoA));
+        i = 0;
+        for(Recipe recipe:  controller.handleSortBoxButton(new ActionEvent())){
+            actualZtoA[i] = recipe.getTitle();
+            i++;
+        }
+       
+        assertTrue(ZtoA.equals(actualZtoA));
 
-        List<Recipe> OldtoFirst = new ArrayList<>();
-        OldtoFirst.add(new Recipe("bread",null,null,"lunch", "5"));
-        OldtoFirst.add(new Recipe("sausage",null,null,"breakfast", "2"));
-        OldtoFirst.add(new Recipe("bacon",null,null,"breakfast", "1"));
-        OldtoFirst.add(new Recipe("eggs",null,null,"dinner", "0"));
-
+        String[] OldFirst = new String[]{ "bread", "sausage", "bacon", "eggs" };
+        String[] actualOldFirst = new String[4];
         controller.setSort("Oldest first");
         controller.setRecipes(recipes);
-        assertTrue(controller.handleSortBoxButton(new ActionEvent()).equals(OldtoFirst));
-
-        List<Recipe> FirsttoOld = new ArrayList<>();
-        FirsttoOld.add(new Recipe("eggs",null,null,"dinner", "0"));
-        FirsttoOld.add(new Recipe("bacon",null,null,"breakfast", "1"));
-        FirsttoOld.add(new Recipe("sausage",null,null,"breakfast", "2"));
-        FirsttoOld.add(new Recipe("bread",null,null,"lunch", "5"));
+        i = 0;
+        for(Recipe recipe:  controller.handleSortBoxButton(new ActionEvent())){
+            actualOldFirst[i] = recipe.getTitle();
+            i++;
+        }
         
+        assertTrue(OldFirst.equals(actualAtoZ));
+
+        String[] FirstOld = new String[]{ "bread", "sausage", "bacon", "eggs" };
+        String[] actualFirstOld = new String[4];
         controller.setSort("First Oldest");
         controller.setRecipes(recipes);
-        assertTrue(controller.handleSortBoxButton(new ActionEvent()).equals(FirsttoOld));
+        i = 0;
+        for(Recipe recipe:  controller.handleSortBoxButton(new ActionEvent())){
+            actualFirstOld[i] = recipe.getTitle();
+            i++;
+        }
+        
+        assertTrue(FirstOld.equals(actualFirstOld));
     }
 
-      @Test
+    @Test
     void testFilter() throws IOException{
         MockRecipeListPageController controller = new MockRecipeListPageController(model);
         List<Recipe> recipes = new ArrayList<>();
@@ -191,6 +202,45 @@ public class MS2Testing {
         controller.setMealType("Dinner");
         controller.setRecipes(recipes);
         assertEquals(1, controller.handleFilterBoxButton(new ActionEvent()).size());
+    }
+
+    // Tests if RememberMe csv file re written to not remember
+    @Test
+    void testSignOut() throws IOException{
+        MockRecipeListPageController controller = new MockRecipeListPageController(model);
+        controller.handleSignOutButton(new ActionEvent());
+
+        FileReader file = new FileReader("RememberMe.csv");
+        BufferedReader br =new BufferedReader(file);
+        assertEquals("0", br.readLine());
+        file.close();
+        br.close();
+    }
+
+    // Transcribes correct mealType
+    @Test
+    void testRecordMealType() throws IOException{
+        MockSpecifyMealTypePageController controller = new MockSpecifyMealTypePageController(model);
+        controller.setTranscribedText("Dinner");
+        controller.handleRecordHoldButton(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false, false, false, false, false, false, false, false, false, null));
+        String text = controller.handleRecordReleasetButton(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false, false, false, false, false, false, false, false, false, null));
+        assertEquals("Dinner", text);
+    }
+
+    @Test
+    void testIngredients(){
+
+    }
+
+
+
+    /**
+     * 
+     * 
+     */
+    @Test
+    void endToEnd() throws IOException {
+        
     }
 
 

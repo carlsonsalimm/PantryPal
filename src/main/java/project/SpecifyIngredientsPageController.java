@@ -94,7 +94,6 @@ public class SpecifyIngredientsPageController implements Controller{
             System.out.println("Recording stopped.");
 
             try {
-                
                 // Transcripe Audio
                 String transcribedText = model.performRequest("POST",null,null,null,TEMP_AUDIO_FILE_PATH,null,null,null,null,null,null);
                 this.transcribedText = transcribedText;
@@ -111,6 +110,7 @@ public class SpecifyIngredientsPageController implements Controller{
                 // Handle the UI update or user notification with the generated recipe response
             } catch (Exception e) {
                 e.printStackTrace();
+                Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
                 // Handle exceptions appropriately
             }
         }
@@ -118,14 +118,18 @@ public class SpecifyIngredientsPageController implements Controller{
     }
 
     private boolean handleCancelButton(ActionEvent event) throws IOException{
-
-        // Add Recipe Information
-        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
-        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
-        RecipeListPage listPage = new RecipeListPage(recipes);
-        Main.setPage(listPage);
-        Main.setController(new RecipeListPageController(listPage, model));
-        return true;
+        try {
+            // Add Recipe Information
+            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
+            List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+            RecipeListPage listPage = new RecipeListPage(recipes);
+            Main.setPage(listPage);
+            Main.setController(new RecipeListPageController(listPage, model));
+            return true; 
+        } catch (Exception e) {
+            Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
+            return false;
+        }
     }
     
     public Recipe createRecipe(String gptResponse) {

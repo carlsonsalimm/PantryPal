@@ -67,16 +67,6 @@ public class Main extends Application {
         // Show the app
         primaryStage.show();
     } catch (Exception e) {
-        // BorderPane serverDowntimePage = new BorderPane();
-        // Label downtimeMsg = new Label("Server temporarily unavailable. Please try again later.");
-        // serverDowntimePage.getChildren().add(downtimeMsg);
-
-        // Main.root = serverDowntimePage; 
-        // primaryStage.setScene(new Scene(root, 600, 700));
-        // // Make window non-resizable
-        // primaryStage.setResizable(false);
-        // // Show the error page
-        // primaryStage.show();
         Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
     }
     }

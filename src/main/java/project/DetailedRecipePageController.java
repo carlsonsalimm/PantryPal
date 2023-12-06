@@ -65,53 +65,66 @@ public class DetailedRecipePageController implements Controller{
     }
 
     public void handleDeleteButton(ActionEvent event) throws IOException {
-        Recipe recipe = view.getRecipe();
-       
-        model.performRequest("DELETE", "deleteRecipe", null, null, null, null, null, recipe.getTitle(), null, null,null);
-
-        // Exit Window
-        // Add login stuff
-        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
-        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
-        RecipeListPage listPage = new RecipeListPage(recipes);
-        Main.setPage(listPage);
-        Main.setController(new RecipeListPageController(listPage, model));
+        try {
+            Recipe recipe = view.getRecipe();
+            model.performRequest("DELETE", "deleteRecipe", null, null, null, null, null, recipe.getTitle(), null, null,null);
+            // Exit Window
+            // Add login stuff
+            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
+            List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+            RecipeListPage listPage = new RecipeListPage(recipes);
+            Main.setPage(listPage);
+            Main.setController(new RecipeListPageController(listPage, model));
+        } catch (Exception e) {
+            Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
+        }
     }
 
     public void handleSaveButton(ActionEvent event) throws IOException {
-        Recipe recipe = view.getRecipe();
-        model.performRequest("POST", "createRecipe", null, null, null, null, null, view.getTitle(), view.getInstructions(), recipe.getCreationTime(), null);
-    
-        // Exit Window
-        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
-        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
-        RecipeListPage listPage = new RecipeListPage(recipes);
-        Main.setPage(listPage);
-        Main.setController(new RecipeListPageController(listPage, model));
+        try {
+            Recipe recipe = view.getRecipe();
+            model.performRequest("POST", "createRecipe", null, null, null, null, null, view.getTitle(), view.getInstructions(), recipe.getCreationTime(), null);
+        
+            // Exit Window
+            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
+            List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+            RecipeListPage listPage = new RecipeListPage(recipes);
+            Main.setPage(listPage);
+            Main.setController(new RecipeListPageController(listPage, model));
+        } catch (Exception e) {
+             Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
+        }
     }
 
     public void handleBackButton(ActionEvent event) throws IOException{
-        // Exit Window\
-
-
-        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
-        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
-        RecipeListPage listPage = new RecipeListPage(recipes);
-        Main.setPage(listPage);
-        Main.setController(new RecipeListPageController(listPage, model));
+        try {
+            // Exit Window\
+            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
+            List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+            RecipeListPage listPage = new RecipeListPage(recipes);
+            Main.setPage(listPage);
+            Main.setController(new RecipeListPageController(listPage, model));
+        } catch (Exception e) {
+            Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
+        }
     }
 
     public void handleRefreshButton(ActionEvent event) throws IOException{
-        Recipe recipe = view.getRecipe();
-        String response = model.performRequest("POST","generateRecipe",null,null,null, recipe.getMealType(), recipe.getIngredients(),null,null,null, null);
-        Recipe newRecipe = createRecipe(response);
-        view.setTitle(newRecipe.getTitle());
-        view.setInstructions(newRecipe.getInstructions());
-        view.setIngredients(newRecipe.getIngredients());
+        try {
+            Recipe recipe = view.getRecipe();
+            String response = model.performRequest("POST","generateRecipe",null,null,null, recipe.getMealType(), recipe.getIngredients(),null,null,null, null);
+            Recipe newRecipe = createRecipe(response);
+            view.setTitle(newRecipe.getTitle());
+            view.setInstructions(newRecipe.getInstructions());
+            view.setIngredients(newRecipe.getIngredients());
+        } catch (Exception e) {
+            Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
+        }
         
     }
 
     public void handleShareButton(ActionEvent event) throws IOException{
+        try {
         Recipe recipe = view.getRecipe();
         String url = model.performRequest("GET", "getShare", null, null, null, null, null, recipe.getTitle(), null, recipe.getCreationTime(), null);
 
@@ -119,6 +132,9 @@ public class DetailedRecipePageController implements Controller{
         ClipboardContent content = new ClipboardContent();
         content.putString(url);
         clipboard.setContent(content);
+        } catch (Exception e) {
+            Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
+        }
     }
 
     public void handleEditButton(ActionEvent event) throws IOException{

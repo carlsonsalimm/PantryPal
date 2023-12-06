@@ -116,21 +116,25 @@ public class SpecifyMealTypePageController implements Controller {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
             // Handle exceptions appropriately
         } 
         return null;
     }
 
     public boolean handleBackButton(ActionEvent event) throws IOException{
-
+        try {
         // Add Recipe Information
          String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
         List<Recipe> recipes = Main.extractRecipeInfo(JSON);
         RecipeListPage listPage = new RecipeListPage(recipes);
         Main.setPage(listPage);
         Main.setController(new RecipeListPageController(listPage, model));
-
         return true;
+        } catch (Exception e) {
+            Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
+            return false;
+        }
     }
 
 
