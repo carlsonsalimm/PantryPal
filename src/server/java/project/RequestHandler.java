@@ -195,6 +195,8 @@ public class RequestHandler implements HttpHandler {
         e.printStackTrace();
       }
 
+      System.out.println(response);
+
       // delete the file after we've parsed it to save space in the long term
       if (file.delete()) {
         System.out.println("Deleted the file: " + file.getName());

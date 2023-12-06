@@ -56,9 +56,9 @@ public class Model {
                     urlString += "?action=getRecipeList&username=" + encodeURL(username)
                             + "&password=" + encodeURL(password);
 
-                } else if (title != null && imageURL != null) {
+                } else if (title != null && imageURL == null) {
                     // Generate image for the recipe (needs title)
-                    urlString += "?action=generateImage=" + encodeURL(title);
+                    urlString += "?action=generateImage&title=" + encodeURL(title);
 
                 } else if (username != null && password != null && title != null && mealType != null
                         && ingredients != null && instructions != null && imageURL != null) {
