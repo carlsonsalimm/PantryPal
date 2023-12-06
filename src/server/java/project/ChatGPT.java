@@ -20,7 +20,8 @@ public class ChatGPT implements GPTInterface {
             throws IOException, InterruptedException, URISyntaxException {
 
         // Set Request parameters
-        prompt = " generate a " + mealType + " recipie with " + prompt;
+        prompt = "Generate a " + mealType + " recipe with the following ingredients: " + prompt
+                + "\nFormat your response in the following format:\n\nTitle: GENERATED TITLE Instructions: GENERATED INSTRUCTIONS.\n\nGenerated title and generated instructions should be separated by a space. Generated instructions should not be a numbered list, and should be contained in one paragraph with no newlines. Follow this format even if there are no ingredients.";
         int maxTokens = 1000;
 
         // Create a request body which you will pass into the request object

@@ -46,8 +46,8 @@ public class Model {
 
         File file = new File("dwukadhkadwa");
         try {
-            //String urlString = "https://pantrypal-team31.onrender.com/";
-             String urlString = "http://localhost:8100/";
+            // String urlString = "https://pantrypal-team31.onrender.com/";
+            String urlString = "http://localhost:8100/";
 
             if (method.equals("GET")) {
 
@@ -56,7 +56,7 @@ public class Model {
                     urlString += "?action=getRecipeList&username=" + encodeURL(username)
                             + "&password=" + encodeURL(password);
 
-                } else if (title != null) {
+                } else if (title != null && imageURL == null) {
                     // Generate image for the recipe (needs title)
                     urlString += "?action=generateImage&title=" + encodeURL(title);
 
@@ -119,15 +119,17 @@ public class Model {
                     // instructions as string)
                     urlString += "?action=generateRecipe&mealType=" + encodeURL(mealType)
                             + "&ingredients=" + encodeURL(ingredients);
-                }else if(title!=null && imageURL!=null){
-                    //generate image for the recipe
+                } else if (title != null && imageURL != null) {
+                    // generate image for the recipe
                     urlString += "?action=generateImage=" + encodeURL(title);
                 }
-                // } else if(title!=null &&  mealType != null && ingredients != null & imageURL!=null){
-                //     //generate new recipe with image (CURRENTLY USING THIS FOR REFRESH TESTING)
-                //     urlString += "?action=regenerateRecipe&title=" + title + "&mealType=" + mealType + "&ingredients="
-                //             + ingredients + "&imageUrl=" + imageURL;
-                // } 
+                // } else if(title!=null && mealType != null && ingredients != null &
+                // imageURL!=null){
+                // //generate new recipe with image (CURRENTLY USING THIS FOR REFRESH TESTING)
+                // urlString += "?action=regenerateRecipe&title=" + title + "&mealType=" +
+                // mealType + "&ingredients="
+                // + ingredients + "&imageUrl=" + imageURL;
+                // }
             } else if (method.equals("DELETE")) {
                 if (username != null && password != null && title != null) {
                     // Deletes an existing recipe (requires username, password, title)
@@ -154,11 +156,11 @@ public class Model {
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String response = "";
             String nextLine;
-            while((nextLine = in.readLine()) != null){
-                response += nextLine ;
+            while ((nextLine = in.readLine()) != null) {
+                response += nextLine;
             }
             in.close();
-            System.out.println("ChatGPT Response Model: " + response);
+            System.out.println("Model Response: " + response);
             return response;
 
         } catch (Exception ex) {

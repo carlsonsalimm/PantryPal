@@ -98,6 +98,10 @@ public class SpecifyIngredientsPageController implements Controller {
                 // Transcripe Audio
                 String transcribed = model.performRequest("POST", null, null, null, TEMP_AUDIO_FILE_PATH, null,
                         null, null, null, null, null);
+
+                if (transcribed == null || transcribed.isEmpty()) {
+                    transcribed = "No ingredients";
+                }
                 this.transcribedText = transcribed;
                 System.out.println("Transcription: " + transcribedText);
 
@@ -187,7 +191,8 @@ public class SpecifyIngredientsPageController implements Controller {
             String newImageURL = newImageURLResponse.startsWith("{") ? newImageURLResponse.split("\"")[3]
                     : newImageURLResponse;
 
-            return new Recipe(recipeTitle, instructions.toString().trim() , transcribedText, mealType, null, newImageURL);
+            return new Recipe(recipeTitle, instructions.toString().trim(), transcribedText, mealType, null,
+                    newImageURL);
         }
     }
 
