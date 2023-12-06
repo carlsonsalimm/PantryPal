@@ -104,7 +104,7 @@ public class SpecifyMealTypePageController implements Controller {
             if (mealType != null) {
                 SpecifyIngredientsPage temp = new SpecifyIngredientsPage(mealType);
                 Main.setPage(temp);
-                Main.setController(new SpecifyIngredientsPageController(temp,model));
+                Main.setController(new SpecifyIngredientsPageController(temp,model, mealType));
             } else {
                 System.out.println("Please try again");
 

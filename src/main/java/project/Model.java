@@ -46,8 +46,8 @@ public class Model {
 
         File file = new File("dwukadhkadwa");
         try {
-            String urlString = "https://pantrypal-team31.onrender.com/";
-            // String urlString = "http://localhost:8100/";
+            //String urlString = "https://pantrypal-team31.onrender.com/";
+             String urlString = "http://localhost:8100/";
 
             if (method.equals("GET")) {
 
@@ -56,9 +56,9 @@ public class Model {
                     urlString += "?action=getRecipeList&username=" + encodeURL(username)
                             + "&password=" + encodeURL(password);
 
-                } else if (title != null && imageURL != null) {
+                } else if (title != null) {
                     // Generate image for the recipe (needs title)
-                    urlString += "?action=generateImage=" + encodeURL(title);
+                    urlString += "?action=generateImage&title=" + encodeURL(title);
 
                 } else if (username != null && password != null && title != null && mealType != null
                         && ingredients != null && instructions != null && imageURL != null) {
@@ -152,8 +152,13 @@ public class Model {
                 setConnectionHeaders(conn, file);
             }
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String response = in.readLine();
+            String response = "";
+            String nextLine;
+            while((nextLine = in.readLine()) != null){
+                response += nextLine ;
+            }
             in.close();
+            System.out.println("ChatGPT Response Model: " + response);
             return response;
 
         } catch (Exception ex) {

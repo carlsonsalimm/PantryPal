@@ -38,6 +38,10 @@ public class Main extends Application {
         Main.root = new LoginPage();
         Main.controller = new LoginPageController((LoginPage) root, model);
         //Main.controller = new RecipeListPageController((RecipeListPage) root, model);
+
+        // Recipe mock = new Recipe("Egg Benedict Test", "instruction test", "chicken", "breakfast");
+        // Main.root = new DetailedRecipePage(mock, true);
+        // Main.controller = new DetailedRecipePageController((DetailedRecipePage) root, model);
         
         FileReader file = new FileReader("RememberMe.csv");
         BufferedReader br =new BufferedReader(file);

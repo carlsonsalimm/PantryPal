@@ -207,7 +207,7 @@ public class DetailedRecipePage extends BorderPane {
         image = new ImageView(); // Initialize with no image or a placeholder image
         image.setFitWidth(150);
         image.setFitHeight(150);
-        //recipe.setImageURL("https://oaidalleapiprodscus.blob.core.windows.net/private/org-Sd9bwBmEf5IDns4KIh3k3fXp/user-TTwaqZd6kA45CPFJ9Srb7I12/img-LIMwJsSf4T6lx1muZeiLA1Xj.png?st=2023-12-05T06%3A38%3A52Z&se=2023-12-05T08%3A38%3A52Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-12-04T23%3A19%3A41Z&ske=2023-12-05T23%3A19%3A41Z&sks=b&skv=2021-08-06&sig=QLBeDXgAr5GzbvViazbcILm0nyaW8AgwFup17juf6UI%3D");
+        recipe.setImageURL("https://oaidalleapiprodscus.blob.core.windows.net/private/org-Sd9bwBmEf5IDns4KIh3k3fXp/user-TTwaqZd6kA45CPFJ9Srb7I12/img-frVJrR47vS0SgE3MDzYmj6Vf.png?st=2023-12-06T03%3A20%3A33Z&se=2023-12-06T05%3A20%3A33Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-12-05T19%3A52%3A36Z&ske=2023-12-06T19%3A52%3A36Z&sks=b&skv=2021-08-06&sig=OPcjqwb3CfdngGAS7n8PrDOHHVA6IFtkaOzeuUSN/SE%3D");
         if (recipe.getImageURL() != null && !recipe.getImageURL().isEmpty()) {
             //setImage(recipe.getImageURL());
             setImage(recipe.getImageURL());

@@ -244,8 +244,15 @@ public class RequestHandler implements HttpHandler {
     } else if (action.equals("generateRecipe")) {
       String mealType = this.decodeURL(queryParams.get("mealType"));
       String ingredients = this.decodeURL(queryParams.get("ingredients"));
-      try {
+
+      // test
+      System.out.println("mealType: " + mealType);
+      System.out.println("Ingredients: " + ingredients);
+
+       try {
         response = chatGPT.getGPTResponse(ingredients, mealType);
+        //response = "TEST \n TEST \n TEST";
+        System.out.println("ChatGPT Response HandlerRequest: " + response);
       } catch (InterruptedException e) {
         e.printStackTrace();
       } catch (URISyntaxException e) {
@@ -260,31 +267,32 @@ public class RequestHandler implements HttpHandler {
         e.printStackTrace();
         response = "Error generating image: " + e.getMessage();
       }
-    // } else if (action.equals("regenerateRecipe")) {
-    //   String title = queryParams.get("title");
-    //   String mealType = queryParams.get("mealType");
-    //   String ingredients = queryParams.get("ingredients");
-    //   String imageURL = queryParams.get("imageURL");
+      // } else if (action.equals("regenerateRecipe")) {
+      // String title = queryParams.get("title");
+      // String mealType = queryParams.get("mealType");
+      // String ingredients = queryParams.get("ingredients");
+      // String imageURL = queryParams.get("imageURL");
 
-    //   // Use ChatGPT to generate recipe text
-    //   String generatedInstructions = ""; // Placeholder, replace with actual ChatGPT call
-    //   try {
-    //     generatedInstructions = chatGPT.getGPTResponse(ingredients, mealType);
-    //   } catch (InterruptedException | URISyntaxException e) {
-    //     e.printStackTrace();
-    //     response = "Error generating recipe text: " + e.getMessage();
-    //     return response;
-    //   }
+      // // Use ChatGPT to generate recipe text
+      // String generatedInstructions = ""; // Placeholder, replace with actual
+      // ChatGPT call
+      // try {
+      // generatedInstructions = chatGPT.getGPTResponse(ingredients, mealType);
+      // } catch (InterruptedException | URISyntaxException e) {
+      // e.printStackTrace();
+      // response = "Error generating recipe text: " + e.getMessage();
+      // return response;
+      // }
 
-    //   // Use Dall-E to generate a new image
-    //   String newImageURL = ""; // Placeholder, replace with actual Dall-E call
-    //   try {
-    //     newImageURL = dallE.generateImageURL(title);
-    //   } catch (IOException | InterruptedException | URISyntaxException e) {
-    //     e.printStackTrace();
-    //     response = "Error generating image: " + e.getMessage();
-    //     return response;
-    //   }
+      // // Use Dall-E to generate a new image
+      // String newImageURL = ""; // Placeholder, replace with actual Dall-E call
+      // try {
+      // newImageURL = dallE.generateImageURL(title);
+      // } catch (IOException | InterruptedException | URISyntaxException e) {
+      // e.printStackTrace();
+      // response = "Error generating image: " + e.getMessage();
+      // return response;
+      // }
 
       // // Construct and send the response
       // JSONObject jsonResponse = new JSONObject();
@@ -294,8 +302,8 @@ public class RequestHandler implements HttpHandler {
       // jsonResponse.put("imageURL", newImageURL);
       // response = jsonResponse.toString();
     }
-  // response include generated recipe and image url (in the last part)
-  return response;
+    // response include generated recipe and image url (in the last part)
+    return response;
 
   }
 
