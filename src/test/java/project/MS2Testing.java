@@ -272,19 +272,31 @@ public class MS2Testing {
 
     @Test
     void testDelete() throws IOException{
-         MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
+        MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
         Recipe recipe = new Recipe("eggs", "crack egg", "egg", "breakfast");
-        controller.setRecipeTarget(recipe);
+        MongoDBProject.updateRecipe("carl", "1234", "eggs", "breakfast", "egg", "crack egg", 0);
+        
+        model.setUsername("carl");
+        model.setPassword("1234");
 
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null,null, null);
+        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+        int recipeSize = recipes.size();
+
+        controller.setRecipeTarget(recipe);
         controller.handleDeleteButton(new ActionEvent());
-        assertEquals(controller, recipe);
+
+        String JSON2 = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null,null, null);
+        List<Recipe> recipesAfter = Main.extractRecipeInfo(JSON2);
+
+
+        
+        assertEquals(recipeSize -1, recipesAfter.size());
     }
 
     @Test
     void testUpdate() throws IOException{
-         MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
-        Recipe recipe = new Recipe("eggs", "crack egg", "egg", "breakfast");
-        controller.setRecipeTarget(recipe);
+        
     }
 
     /**
