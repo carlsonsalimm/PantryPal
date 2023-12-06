@@ -231,8 +231,6 @@ public class MS2Testing {
     void testRecordMealType() throws IOException {
         MockSpecifyMealTypePageController controller = new MockSpecifyMealTypePageController(model);
         controller.setTranscribedText("dinner");
-        controller.handleRecordHoldButton(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false, false, false, false,
-                false, false, false, false, false, null));
         String text = controller.handleRecordReleasetButton(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false,
                 false, false, false, false, false, false, false, false, null));
         assertEquals("dinner", text);
@@ -243,8 +241,6 @@ public class MS2Testing {
         MockSpecificIngredientsPageController controller = new MockSpecificIngredientsPageController(model);
         controller.setMealType("Dinner");
         controller.setTranscribedText("Test");
-        controller.handleRecordHoldButton(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false, false, false, false,
-                false, false, false, false, false, null));
         Recipe recipe = controller.handleRecordReleasetButton(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false,
                 false, false, false, false, false, false, false, false, null));
         assertNotNull(recipe);

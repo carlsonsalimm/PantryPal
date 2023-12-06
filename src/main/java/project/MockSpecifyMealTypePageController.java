@@ -64,12 +64,9 @@ public class MockSpecifyMealTypePageController implements Controller{
     // and Specify Meal Type Page
 
     public String handleRecordReleasetButton(MouseEvent event) throws IOException{
-        if (targetDataLine == null) {
-            return null;
-        }
+        
 
-        targetDataLine.stop();
-        targetDataLine.close();
+
         System.out.println("Recording stopped.");
 
         try {
@@ -82,11 +79,7 @@ public class MockSpecifyMealTypePageController implements Controller{
             } else {
                 System.out.println("Please try again");
 
-                if(!errorFlag) {
-                    // Add label child to layout here
-                    view.errorMsg();
-                    errorFlag = true;
-                }
+               
             }
         } catch (Exception e) {
             e.printStackTrace();

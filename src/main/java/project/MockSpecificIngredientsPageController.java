@@ -72,9 +72,8 @@ public class MockSpecificIngredientsPageController implements Controller{
    // and Specify Meal Type Page
 
     public Recipe handleRecordReleasetButton(MouseEvent event) throws IOException{
-        if (targetDataLine != null) {
-           targetDataLine.stop();
-           targetDataLine.close();
+     
+           
            System.out.println("Recording stopped.");
 
            try {
@@ -93,8 +92,7 @@ public class MockSpecificIngredientsPageController implements Controller{
                e.printStackTrace();
                // Handle exceptions appropriately
            }
-       }
-       return null;
+      return null;
      
     }
 

@@ -134,4 +134,3 @@ class LoginPage extends VBox {
         alert.showAndWait();
     }
 }
-
