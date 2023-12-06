@@ -274,7 +274,8 @@ public class MS2Testing {
         Recipe recipe = new Recipe("eggs", "crack egg", "egg", "breakfast");
         controller.setRecipeTarget(recipe);
 
-        controller.handleDeleteButton(null);
+        controller.handleDeleteButton(new ActionEvent());
+        assertEquals(controller, recipe);
     }
 
     @Test
@@ -303,8 +304,11 @@ public class MS2Testing {
      */
     @Test
     void endToEnd() throws IOException {
-        MockLoginPageController loginControl
-com wen = re
+        MockLoginPageController controller = new MockLoginPageController(model);
+        controller.setUsername("Caitlyn");
+        controller.setPassword("abcd1");
+        
+        
         
     }
 
