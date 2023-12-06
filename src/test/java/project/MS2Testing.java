@@ -307,7 +307,7 @@ public class MS2Testing {
       
         String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null,null, null);
         List<Recipe> recipes1 = Main.extractRecipeInfo(JSON);
-        Recipe recipe = new Recipe("eggs", "crack egg on stove", "egg", "breakfast", recipes1.get(recipes1.size()-1).getCreationTime());
+        Recipe recipe = new Recipe("eggs", "crack egg", "egg", "breakfast", recipes1.get(recipes1.size()-1).getCreationTime());
 
         controller.setRecipeTarget(recipe);
         controller.setUpdateInfo("eggs", "crack egg on stove", "egg");
@@ -318,9 +318,10 @@ public class MS2Testing {
         List<Recipe> recipes = Main.extractRecipeInfo(JSON);
         
         String instructionChange = recipes.get(recipes.size()-1).getInstructions();
-        assertEquals(recipe.getInstructions(), instructionChange);
-
+         controller.setRecipeTarget( recipes.get(recipes.size()-1));
         controller.handleDeleteButton(new ActionEvent());
+        assertEquals("crack egg on stove", instructionChange);
+
     }
 
     /**
