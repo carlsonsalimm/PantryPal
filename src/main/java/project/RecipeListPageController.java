@@ -22,10 +22,12 @@ public class RecipeListPageController implements Controller {
     // actions to account for: addButton, RecipeItem, detailedViewButton
     private RecipeListPage view;
     private Model model;
+    private List<Recipe> filtered;
 
     public RecipeListPageController(RecipeListPage view, Model model) {
         this.view = view;
         this.model = model;
+        this.filtered = view.recipes;
 
         this.view.setAddButtonAction(event -> {
             try {
@@ -91,7 +93,8 @@ public class RecipeListPageController implements Controller {
     }
 
     public void handleSortBoxButton(ActionEvent event) throws IOException {
-        List<Recipe> tempRecipes = view.recipes;
+        List<Recipe> tempRecipes = filtered;
+        filtered = new ArrayList<>();
         String selectedItem = view.getSortBox().getSelectionModel().getSelectedItem();
         // clear list
         for (int i = 0; i < view.vbox.getChildren().size(); i++) {
@@ -113,6 +116,7 @@ public class RecipeListPageController implements Controller {
         for (Recipe x : tempRecipes) {
             RecipeItem Item = new RecipeItem();
             Item.setRecipe(x);
+            filtered.add(x);
             view.vbox.getChildren().add(Item);
             view.detailedViewButtons.add(Item.getDetailedViewButton());
             this.view.setDetailedViewButtonsAction(event1 -> {
@@ -127,6 +131,7 @@ public class RecipeListPageController implements Controller {
 
     public void handleFilterBoxButton(ActionEvent event) throws IOException {
         List<Recipe> tempRecipes = view.recipes;
+        filtered = new ArrayList<>();
         String selectedItem = view.getFilterBox().getSelectionModel().getSelectedItem();
         // clear list
         for (int i = 0; i < view.vbox.getChildren().size(); i++) {
@@ -137,6 +142,7 @@ public class RecipeListPageController implements Controller {
                 if (x.getMealType().equals("breakfast")) {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
+                    filtered.add(x);
                     view.vbox.getChildren().add(Item);
                     view.detailedViewButtons.add(Item.getDetailedViewButton());
                     view.setDetailedViewButtonsAction(event1 -> {
@@ -153,6 +159,7 @@ public class RecipeListPageController implements Controller {
                 if (x.getMealType().equals("lunch")) {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
+                    filtered.add(x);
                     view.vbox.getChildren().add(Item);
                     view.detailedViewButtons.add(Item.getDetailedViewButton());
                     view.setDetailedViewButtonsAction(event1 -> {
@@ -169,6 +176,7 @@ public class RecipeListPageController implements Controller {
                 if (x.getMealType().equals("dinner")) {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
+                    filtered.add(x);
                     view.vbox.getChildren().add(Item);
                     view.detailedViewButtons.add(Item.getDetailedViewButton());
                     view.setDetailedViewButtonsAction(event1 -> {
@@ -184,6 +192,7 @@ public class RecipeListPageController implements Controller {
             for (Recipe x : tempRecipes) {
                 RecipeItem Item = new RecipeItem();
                 Item.setRecipe(x);
+                filtered.add(x);
                 view.vbox.getChildren().add(Item);
                 view.setDetailedViewButtonsAction(event1 -> {
                     try {

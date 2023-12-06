@@ -126,6 +126,7 @@ class RecipeListHeader extends VBox {
 class RecipeItem extends VBox {
     public Recipe recipe;
     private Label recipeName;
+    private Button mealTypeTag; // no action to this button needed
     private Button detailedViewButton;
     private BorderPane pane;
     private StackPane viewContainer;
@@ -144,14 +145,37 @@ class RecipeItem extends VBox {
         recipeName.setPadding(new Insets(0, 10, 0, 20));
         recipeName.setTextAlignment(TextAlignment.CENTER);
 
+        String breakfastButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #7ED7C1; -fx-font-weight: bold; -fx-font-fill: #65D9BC; -fx-font: 11 arial; -fx-top-spacing: 5;";
+        String lunchButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #F0DBAF; -fx-font-weight: bold; -fx-font-fill: #FFD57D; -fx-font: 11 arial; -fx-top-spacing: 5;";
+        String dinnerButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #E7BBBB; -fx-font-weight: bold; -fx-font-fill: #DC8686; -fx-font: 11 arial; -fx-top-spacing: 5;";
+        String noMealButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #D9D9D9; -fx-font-weight: bold; -fx-font: 11 arial; -fx-top-spacing: 5;";
+        mealTypeTag = new Button(this.recipe.getMealType());
+        if (this.recipe.getMealType().equals("breakfast")) {
+            mealTypeTag.setStyle(breakfastButtonStyle);
+        }
+        else if (this.recipe.getMealType().equals("lunch")) {
+            mealTypeTag.setStyle(lunchButtonStyle);
+        }
+        else if (this.recipe.getMealType().equals("dinner")) {
+            mealTypeTag.setStyle(dinnerButtonStyle);
+        }
+        else {
+            mealTypeTag.setStyle(noMealButtonStyle);
+        }
+        mealTypeTag.setPrefSize(50, 30);
+        mealTypeTag.setTextAlignment(TextAlignment.CENTER);
+
+
         String defaultButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #D9D9D9; -fx-font-weight: bold; -fx-font: 11 arial; -fx-top-spacing: 5;";
         detailedViewButton = new Button("View"); // text displayed on button
         detailedViewButton.setStyle(defaultButtonStyle); // styling the button
         detailedViewButton.setPrefSize(50, 30); // sets size of Recipe
         detailedViewButton.setTextAlignment(TextAlignment.CENTER);
 
-        viewContainer = new StackPane(detailedViewButton);
+        viewContainer = new StackPane(mealTypeTag);
+        viewContainer.getChildren().add(detailedViewButton);
         StackPane.setMargin(detailedViewButton, new Insets(0, 10, 0, 0));
+        StackPane.setMargin(mealTypeTag, new Insets(0, 120, 0, 0));
 
         pane.setLeft(recipeName);
         pane.setRight(viewContainer);
