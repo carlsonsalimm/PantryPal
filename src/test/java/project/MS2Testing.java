@@ -104,15 +104,15 @@ public class MS2Testing {
 
     @Test
     void testGetRecipeList() {
-        model.setUsername("carl");
-        model.setPassword("1234");
+        model.setUsername("carl123");
+        model.setPassword("14141241");
         String response = model.performRequest("GET", "getRecipeList",
                 null, null,
                 null, null,
                 null, null,
                 null, null, null);
         assertEquals(
-                "{\"0\" :{\"recipeTitle\": \"chicken thigh\", \"mealType\": \"lunch\", \"ingredients\": \"chicken thigh\", \"instructions\": \"cook in a pan\", \"creationTime\": 1701677928859}}",
+                "{\"0\" :{\"recipeTitle\": \"chicken thigh\", \"mealType\": \"lunch\", \"ingredients\": \"chicken thighs\", \"instructions\": \"oven that chicken\", \"creationTime\": 1701501246814}}",
                 response);
     }
 
