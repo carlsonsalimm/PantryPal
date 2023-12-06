@@ -262,7 +262,7 @@ public class MS2Testing {
 
         Pair<Recipe,String> newRecipe = controller.handleRefreshButton(new ActionEvent());
         assertNotEquals(recipe, newRecipe.getKey());
-        assertEquals("src/server/java/project/MockDallE.java", newRecipe.getValue());
+        assertEquals("http://example.com/mockimage.jpg", newRecipe.getValue());
     }
 
     @Test
