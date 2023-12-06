@@ -167,13 +167,13 @@ public class DetailedRecipePageController implements Controller {
             return;
         }
 
-        // Assuming the response is a plain string with the recipe details
-        // You would parse this string based on its format
-        // For example, if it's a newline-separated string:
-        String[] parts = response.split("\n");
-        String newTitle = parts.length > 0 ? parts[0] : "Default Title";
-        String newInstructions = parts.length > 1 ? parts[1] : "Default Instructions";
-        // String newIngredients = parts.length > 2 ? parts[2] : "Default Ingredients";
+        // Find the index where "Title:" and "Instructions:" occur
+        int titleIndex = response.indexOf("Title:");
+        int instructionsIndex = response.indexOf("Instructions:");
+
+        // Extract the title and instructions
+        String newTitle = response.substring(titleIndex + "Title:".length(), instructionsIndex).trim();
+        String newInstructions = response.substring(instructionsIndex + "Instructions:".length()).trim();
 
         // Request a new image URL from the server
         String newImageURLResponse = model.performRequest("GET", "generateImage", null, null, null, null, null,
@@ -196,7 +196,7 @@ public class DetailedRecipePageController implements Controller {
     public void handleShareButton(ActionEvent event) throws IOException {
         Recipe recipe = view.getRecipe();
         String url = model.performRequest("GET", "getShare", null, null, null, null, null, recipe.getTitle(), null,
-                recipe.getCreationTime(), null);
+                recipe.getCreationTime(), recipe.getImageURL());
 
         Clipboard clipboard = Clipboard.getSystemClipboard();
         ClipboardContent content = new ClipboardContent();

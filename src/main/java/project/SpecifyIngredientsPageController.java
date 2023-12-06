@@ -145,55 +145,26 @@ public class SpecifyIngredientsPageController implements Controller {
     // }
 
     public Recipe createRecipe(String gptResponse) {
-        int firstNewLineIndex = gptResponse.indexOf("\n");
 
-        // Check if the newline character is present
-        if (firstNewLineIndex == -1) {
-            // Handle the case where there is no newline character
-            // For example, you can set the title to the entire response
-            // and set the instructions to an empty string or some default value
-            return new Recipe(gptResponse, "", transcribedText, mealType);
-        } else {
-            // Split the response into lines
-            String[] lines = gptResponse.split("\n");
+        // Find the index where "Title:" and "Instructions:" occur
+        int titleIndex = gptResponse.indexOf("Title:");
+        int instructionsIndex = gptResponse.indexOf("Instructions:");
 
-            // Extract the recipe title
-            String recipeTitle = lines[0];
+        // Extract the title and instructions
+        String recipeTitle = gptResponse.substring(titleIndex + "Title:".length(), instructionsIndex).trim();
+        String instructions = gptResponse.substring(instructionsIndex + "Instructions:".length()).trim();
 
-            // Initialize StringBuilder for ingredients and instructions
-            StringBuilder ingredients = new StringBuilder();
-            StringBuilder instructions = new StringBuilder();
+        // Request a new image URL from the server
+        String newImageURLResponse = model.performRequest("GET", "generateImage", null, null, null, null, null,
+                recipeTitle, null, null, null);
 
-            // Boolean flag to switch from reading ingredients to instructions
-            boolean readingInstructions = false;
+        // Extracting the URL from the response
+        String newImageURL = newImageURLResponse.startsWith("{") ? newImageURLResponse.split("\"")[3]
+                : newImageURLResponse;
 
-            // Iterate over the lines to separate ingredients and instructions
-            for (int i = 1; i < lines.length; i++) {
-                // Check if the line indicates the start of instructions
-                if (lines[i].trim().equals("Instructions:")) {
-                    readingInstructions = true;
-                    continue;
-                }
+        return new Recipe(recipeTitle, instructions, transcribedText, mealType, null,
+                newImageURL);
 
-                // Append the line to the appropriate StringBuilder
-                if (readingInstructions) {
-                    instructions.append(lines[i]).append("\n");
-                } else {
-                    ingredients.append(lines[i]).append("\n");
-                }
-            }
-
-            // Request a new image URL from the server
-            String newImageURLResponse = model.performRequest("GET", "generateImage", null, null, null, null, null,
-                    recipeTitle, null, null, null);
-
-            // Extracting the URL from the response
-            String newImageURL = newImageURLResponse.startsWith("{") ? newImageURLResponse.split("\"")[3]
-                    : newImageURLResponse;
-
-            return new Recipe(recipeTitle, instructions.toString().trim(), transcribedText, mealType, null,
-                    newImageURL);
-        }
     }
 
     // Returns the audio format to use for the recording for Specify Ingredient Page

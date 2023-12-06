@@ -75,7 +75,6 @@ class Header extends HBox {
         refresh.setFitHeight(20);
         refreshButton.setGraphic(refresh);
         refreshButton.setStyle(defaultButtonStyle); // styling the button
-        
 
         shareButton = new Button(); // text displayed on add button
         ImageView share = new ImageView("./icons/share.png");
@@ -94,25 +93,25 @@ class Header extends HBox {
         titleContainer = new Pane();
         titleContainer.getChildren().addAll(backButton, title);
 
-        if(newCreation){
+        if (newCreation) {
             titleContainer.getChildren().add(refreshButton);
         }
 
         title.relocate(20, 35);
         backButton.relocate(20, 0);
-        refreshButton.relocate(70,0);
+        refreshButton.relocate(70, 0);
 
         addContainer = new Pane();
         addContainer.getChildren().addAll(delButton, shareButton, editButton, saveButton);
         delButton.relocate(-100, 0);
         shareButton.relocate(-50, 0);
-        editButton.relocate(0,0);
-        saveButton.relocate(50,0);
+        editButton.relocate(0, 0);
+        saveButton.relocate(50, 0);
 
         pane.setLeft(titleContainer);
         pane.setRight(addContainer);
-        BorderPane.setMargin(titleContainer,new Insets(10,0,0,0));
-        BorderPane.setMargin(addContainer,new Insets(10,0,20,0));
+        BorderPane.setMargin(titleContainer, new Insets(10, 0, 0, 0));
+        BorderPane.setMargin(addContainer, new Insets(10, 0, 20, 0));
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
     }
@@ -164,7 +163,6 @@ public class DetailedRecipePage extends BorderPane {
     public TextArea ingredients;
     public TextArea instructions; // includes ingredients
 
-
     private Recipe recipe;
 
     // Assumes that Recipe class has at least TextFields for title, ingredients, and
@@ -190,11 +188,11 @@ public class DetailedRecipePage extends BorderPane {
         title.setText(recipe.getTitle());
         mealType.setText(recipe.getMealType());
         ingredients.setText(recipe.getIngredients());
-        ingredients.setPrefSize(500,180);
+        ingredients.setPrefSize(500, 180);
         instructions.setText(recipe.getInstructions());
         instructions.setPrefSize(550, 180);
 
-        //title.setEditable(false);
+        // title.setEditable(false);
         ingredients.setEditable(false);
         instructions.setEditable(false);
         instructions.setWrapText(true);
@@ -207,9 +205,9 @@ public class DetailedRecipePage extends BorderPane {
         image = new ImageView(); // Initialize with no image or a placeholder image
         image.setFitWidth(150);
         image.setFitHeight(150);
-        recipe.setImageURL("https://oaidalleapiprodscus.blob.core.windows.net/private/org-Sd9bwBmEf5IDns4KIh3k3fXp/user-TTwaqZd6kA45CPFJ9Srb7I12/img-frVJrR47vS0SgE3MDzYmj6Vf.png?st=2023-12-06T03%3A20%3A33Z&se=2023-12-06T05%3A20%3A33Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-12-05T19%3A52%3A36Z&ske=2023-12-06T19%3A52%3A36Z&sks=b&skv=2021-08-06&sig=OPcjqwb3CfdngGAS7n8PrDOHHVA6IFtkaOzeuUSN/SE%3D");
+        // recipe.setImageURL("https://oaidalleapiprodscus.blob.core.windows.net/private/org-Sd9bwBmEf5IDns4KIh3k3fXp/user-TTwaqZd6kA45CPFJ9Srb7I12/img-frVJrR47vS0SgE3MDzYmj6Vf.png?st=2023-12-06T03%3A20%3A33Z&se=2023-12-06T05%3A20%3A33Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-12-05T19%3A52%3A36Z&ske=2023-12-06T19%3A52%3A36Z&sks=b&skv=2021-08-06&sig=OPcjqwb3CfdngGAS7n8PrDOHHVA6IFtkaOzeuUSN/SE%3D");
         if (recipe.getImageURL() != null && !recipe.getImageURL().isEmpty()) {
-            //setImage(recipe.getImageURL());
+            // setImage(recipe.getImageURL());
             setImage(recipe.getImageURL());
         } else {
             // Set a default placeholder image if needed
@@ -253,70 +251,71 @@ public class DetailedRecipePage extends BorderPane {
         instructBodyText.setPadding(new Insets(0, 20, 0, 20));
         instructBodyText.setStyle(defaultBackgroundStyle);
 
-        VBox container = new VBox(imageContainer, titleContainer, mealTypeContainer, ingredientBodyText,instructBodyText);
+        VBox container = new VBox(imageContainer, titleContainer, mealTypeContainer, ingredientBodyText,
+                instructBodyText);
         container.setStyle(defaultBackgroundStyle);
-        
+
         container.setSpacing(10);
         this.setTop(header);
         this.setCenter(container);
 
         // Update the page with the initial recipe details
-        updateRecipeDetails(recipe); 
+        updateRecipeDetails(recipe);
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         this.title.setText(title);
     }
 
-    public void setInstructions(String instructions){
+    public void setInstructions(String instructions) {
         this.instructions.setText(instructions);
     }
 
-    public void setIngredients(String ingredients){
+    public void setIngredients(String ingredients) {
         this.ingredients.setText(ingredients);
     }
 
-    public String getMealType(){
+    public String getMealType() {
         return this.mealType.toString();
     }
 
-    public String getIngredients(){
+    public String getIngredients() {
         return this.ingredients.toString();
     }
 
-    public Recipe getRecipe(){
+    public Recipe getRecipe() {
         return this.recipe;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title.getText();
     }
 
-    public String getInstructions(){
+    public String getInstructions() {
         return instructions.getText();
     }
 
-    public void setDeleteButtonAction(EventHandler<ActionEvent> eventHandler){
+    public void setDeleteButtonAction(EventHandler<ActionEvent> eventHandler) {
         deleteButton.setOnAction(eventHandler);
     }
 
-    public void setSaveButtonAction(EventHandler<ActionEvent> eventHandler){
+    public void setSaveButtonAction(EventHandler<ActionEvent> eventHandler) {
         saveButton.setOnAction(eventHandler);
     }
 
-    public void setBackButtonAction(EventHandler<ActionEvent> eventHandler){
+    public void setBackButtonAction(EventHandler<ActionEvent> eventHandler) {
         backButton.setOnAction(eventHandler);
     }
 
-    public void setRefreshButtonAction(EventHandler<ActionEvent> eventHandler){
+    public void setRefreshButtonAction(EventHandler<ActionEvent> eventHandler) {
         refreshButton.setOnAction(eventHandler);
     }
 
-    public void setShareButtonAction(EventHandler<ActionEvent> eventHandler){
+    public void setShareButtonAction(EventHandler<ActionEvent> eventHandler) {
         shareButton.setOnAction(eventHandler);
     }
 
-    public void setEditButtonAction(EventHandler<ActionEvent> eventHandler){
+    public void setEditButtonAction(EventHandler<ActionEvent> eventHandler) {
         editButton.setOnAction(eventHandler);
     }
 
@@ -326,11 +325,11 @@ public class DetailedRecipePage extends BorderPane {
         this.mealType.setText(newRecipe.getMealType());
         this.ingredients.setText(newRecipe.getIngredients());
         this.instructions.setText(newRecipe.getInstructions());
-    
+
         if (newRecipe.getImageURL() != null && !newRecipe.getImageURL().isEmpty()) {
-            //newRecipe.setImageURL("./icons/trash.png");
+            // newRecipe.setImageURL("./icons/trash.png");
             setImage(newRecipe.getImageURL());
-        } 
+        }
     }
 
     void setImage(String imageURL) {
