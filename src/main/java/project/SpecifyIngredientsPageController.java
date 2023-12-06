@@ -123,6 +123,7 @@ public class SpecifyIngredientsPageController implements Controller {
                 // Handle the UI update or user notification with the generated recipe response
             } catch (Exception e) {
                 e.printStackTrace();
+                Main.showAlert("Error", "Server temporarily unavailable. Please try again later.");
                 // Handle exceptions appropriately
             }
         }

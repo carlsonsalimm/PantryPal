@@ -32,7 +32,7 @@ class Header extends HBox {
     private Pane titleContainer;
     private Pane addContainer;
 
-    private Boolean newMealFlag;
+    private Boolean newCreation;
 
     static String defaultButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
 
@@ -194,6 +194,7 @@ public class DetailedRecipePage extends BorderPane {
 
         // title.setEditable(false);
         ingredients.setEditable(false);
+        ingredients.setWrapText(true);
         instructions.setEditable(false);
         instructions.setWrapText(true);
 

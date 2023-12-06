@@ -1,17 +1,20 @@
 package project;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.util.Pair;
 
 public class MockDetailedRecipePageController {
     private Model model;
     Recipe recipe;
 
-    String title,instructions;
+    String title,instructions, ingredients;
 
     public MockDetailedRecipePageController(Model model){
         this.model = model;
@@ -21,9 +24,10 @@ public class MockDetailedRecipePageController {
         this.recipe = recipe;
     }
 
-    public void setUpdateInfo(String title, String instructions){
+    public void setUpdateInfo(String title, String instructions, String ingredients){
         this.title = title;
         this.instructions = instructions;
+        this.ingredients = ingredients;
     }
 
     public void handleDeleteButton(ActionEvent event) throws IOException {
@@ -34,7 +38,7 @@ public class MockDetailedRecipePageController {
 
     public void handleSaveButton(ActionEvent event) throws IOException {
         
-        model.performRequest("POST", "updateRecipe", null, null, null, null, null, title, instructions, recipe.getCreationTime(), null);
+        model.performRequest("POST", "updateRecipe", null, null, null, null, ingredients, title, instructions, recipe.getCreationTime(), null);
 
     }
 
@@ -42,9 +46,12 @@ public class MockDetailedRecipePageController {
        return true;
     }
 
-    public Recipe handleRefreshButton(ActionEvent event) throws IOException{
-       
-        return new Recipe("Cereal", "Milk then Cereal", "Milk,Cereal", "Breakfast");
+    public Pair<Recipe,String> handleRefreshButton(ActionEvent event) throws IOException, InterruptedException, URISyntaxException{
+       MockDallE mock = new MockDallE();
+       String url = mock.generateImageURL("test");
+       Recipe recipe = new Recipe("Cereal", "Milk then Cereal", "Milk,Cereal", "Breakfast");
+       Pair<Recipe,String> result = new Pair<Recipe,String>(recipe, url);
+    return result;
         
     }
 

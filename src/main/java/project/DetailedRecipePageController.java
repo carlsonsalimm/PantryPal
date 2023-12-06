@@ -122,45 +122,6 @@ public class DetailedRecipePageController implements Controller {
         Main.setController(new RecipeListPageController(listPage, model));
     }
 
-    // public void handleRefreshButton(ActionEvent event) throws IOException {
-    // Recipe recipe = view.getRecipe();
-
-    // // Generate a new recipe
-    // String response = model.performRequest("POST", "generateRecipe", null, null,
-    // null, recipe.getMealType(), recipe.getIngredients(), null, null, null, null);
-
-    // // Debugging: Print the server's response
-    // System.out.println("Response: " + response);
-
-    // if (response == null || response.isEmpty()) {
-    // System.out.println("Error: Received empty or null response from server.");
-    // // Handle the error appropriately, e.g., show an error message to the user
-    // return;
-    // }
-
-    // try {
-    // // Parse the response to extract the new recipe details
-    // JSONObject jsonResponse = new JSONObject(response);
-    // String newTitle = jsonResponse.optString("title", "Default Title");
-    // String newInstructions = jsonResponse.optString("instructions", "Default
-    // Instructions");
-    // String newIngredients = jsonResponse.optString("ingredients", "Default
-    // Ingredients");
-
-    // // Request a new image URL from the server
-    // String newImageURL = model.performRequest("GET", "generateImage", null, null,
-    // null, null, null, newTitle, null, null, null);
-
-    // // Update the view with the new recipe details
-    // view.setTitle(newTitle);
-    // view.setInstructions(newInstructions);
-    // view.setIngredients(newIngredients);
-    // view.setImage(newImageURL);
-    // } catch(JSONException e) {
-    // System.out.println("Error parsing JSON response: " + e.getMessage());
-    // // Handle the error appropriately, e.g., show an error message to the user
-    // }
-    // }
 
     public void handleRefreshButton(ActionEvent event) throws IOException {
         Recipe recipe = view.getRecipe();

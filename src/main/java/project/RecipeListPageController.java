@@ -22,10 +22,12 @@ public class RecipeListPageController implements Controller {
     // actions to account for: addButton, RecipeItem, detailedViewButton
     private RecipeListPage view;
     private Model model;
+    private List<Recipe> filtered;
 
     public RecipeListPageController(RecipeListPage view, Model model) {
         this.view = view;
         this.model = model;
+        this.filtered = view.recipes;
 
         this.view.setAddButtonAction(event -> {
             try {
@@ -68,13 +70,13 @@ public class RecipeListPageController implements Controller {
         });
     }
 
-    private void handleAddButton(ActionEvent event) throws IOException {
+    public void handleAddButton(ActionEvent event) throws IOException {
         SpecifyMealTypePage temp = new SpecifyMealTypePage();
         Main.setPage(temp);
         Main.setController(new SpecifyMealTypePageController(temp, model));
     }
 
-    private void handleDetailedViewButton(ActionEvent event) throws IOException {
+    public void handleDetailedViewButton(ActionEvent event) throws IOException {
         Object obj = event.getSource();
         Parent par = ((Button) (obj)).getParent();
         System.out.println(par);
@@ -90,8 +92,9 @@ public class RecipeListPageController implements Controller {
         Main.setController(new DetailedRecipePageController(temp, model));
     }
 
-    private void handleSortBoxButton(ActionEvent event) throws IOException {
-        List<Recipe> tempRecipes = view.recipes;
+    public void handleSortBoxButton(ActionEvent event) throws IOException {
+        List<Recipe> tempRecipes = filtered;
+        filtered = new ArrayList<>();
         String selectedItem = view.getSortBox().getSelectionModel().getSelectedItem();
         // clear list
         for (int i = 0; i < view.vbox.getChildren().size(); i++) {
@@ -113,6 +116,7 @@ public class RecipeListPageController implements Controller {
         for (Recipe x : tempRecipes) {
             RecipeItem Item = new RecipeItem();
             Item.setRecipe(x);
+            filtered.add(x);
             view.vbox.getChildren().add(Item);
             view.detailedViewButtons.add(Item.getDetailedViewButton());
             this.view.setDetailedViewButtonsAction(event1 -> {
@@ -125,8 +129,9 @@ public class RecipeListPageController implements Controller {
         }
     }
 
-    private void handleFilterBoxButton(ActionEvent event) throws IOException {
+    public void handleFilterBoxButton(ActionEvent event) throws IOException {
         List<Recipe> tempRecipes = view.recipes;
+        filtered = new ArrayList<>();
         String selectedItem = view.getFilterBox().getSelectionModel().getSelectedItem();
         // clear list
         for (int i = 0; i < view.vbox.getChildren().size(); i++) {
@@ -134,13 +139,15 @@ public class RecipeListPageController implements Controller {
         }
         if (selectedItem == "Breakfast") {
             for (Recipe x : tempRecipes) {
-                if (x.getMealType() == "breakfast") {
+                if (x.getMealType().equals("breakfast")) {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
+                    filtered.add(x);
                     view.vbox.getChildren().add(Item);
+                    view.detailedViewButtons.add(Item.getDetailedViewButton());
                     view.setDetailedViewButtonsAction(event1 -> {
                         try {
-                            handleDetailedViewButton(event);
+                            handleDetailedViewButton(event1);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -149,13 +156,15 @@ public class RecipeListPageController implements Controller {
             }
         } else if (selectedItem == "Lunch") {
             for (Recipe x : tempRecipes) {
-                if (x.getMealType() == "lunch") {
+                if (x.getMealType().equals("lunch")) {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
+                    filtered.add(x);
                     view.vbox.getChildren().add(Item);
+                    view.detailedViewButtons.add(Item.getDetailedViewButton());
                     view.setDetailedViewButtonsAction(event1 -> {
                         try {
-                            handleDetailedViewButton(event);
+                            handleDetailedViewButton(event1);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -164,13 +173,15 @@ public class RecipeListPageController implements Controller {
             }
         } else if (selectedItem == "Dinner") {
             for (Recipe x : tempRecipes) {
-                if (x.getMealType() == "dinner") {
+                if (x.getMealType().equals("dinner")) {
                     RecipeItem Item = new RecipeItem();
                     Item.setRecipe(x);
+                    filtered.add(x);
                     view.vbox.getChildren().add(Item);
+                    view.detailedViewButtons.add(Item.getDetailedViewButton());
                     view.setDetailedViewButtonsAction(event1 -> {
                         try {
-                            handleDetailedViewButton(event);
+                            handleDetailedViewButton(event1);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -181,6 +192,7 @@ public class RecipeListPageController implements Controller {
             for (Recipe x : tempRecipes) {
                 RecipeItem Item = new RecipeItem();
                 Item.setRecipe(x);
+                filtered.add(x);
                 view.vbox.getChildren().add(Item);
                 view.setDetailedViewButtonsAction(event1 -> {
                     try {
@@ -193,7 +205,7 @@ public class RecipeListPageController implements Controller {
         }
     }
 
-    private void handleSignOutButton(ActionEvent event) throws IOException {
+    public void handleSignOutButton(ActionEvent event) throws IOException {
         LoginPage loginPage = new LoginPage();
         LoginPageController controller = new LoginPageController(loginPage, new Model());
 
