@@ -195,6 +195,7 @@ public class DetailedRecipePage extends BorderPane {
 
         //title.setEditable(false);
         ingredients.setEditable(false);
+        ingredients.setWrapText(true);
         instructions.setEditable(false);
         instructions.setWrapText(true);
 

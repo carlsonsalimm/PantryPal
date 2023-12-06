@@ -11,7 +11,7 @@ public class MockDetailedRecipePageController {
     private Model model;
     Recipe recipe;
 
-    String title,instructions;
+    String title,instructions, ingredients;
 
     public MockDetailedRecipePageController(Model model){
         this.model = model;
@@ -21,9 +21,10 @@ public class MockDetailedRecipePageController {
         this.recipe = recipe;
     }
 
-    public void setUpdateInfo(String title, String instructions){
+    public void setUpdateInfo(String title, String instructions, String ingredients){
         this.title = title;
         this.instructions = instructions;
+        this.ingredients = ingredients;
     }
 
     public void handleDeleteButton(ActionEvent event) throws IOException {
@@ -34,7 +35,7 @@ public class MockDetailedRecipePageController {
 
     public void handleSaveButton(ActionEvent event) throws IOException {
         
-        model.performRequest("POST", "updateRecipe", null, null, null, null, null, title, instructions, recipe.getCreationTime(), null);
+        model.performRequest("POST", "updateRecipe", null, null, null, null, ingredients, title, instructions, recipe.getCreationTime(), null);
 
     }
 

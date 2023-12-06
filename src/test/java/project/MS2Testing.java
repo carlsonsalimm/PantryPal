@@ -303,16 +303,14 @@ public class MS2Testing {
     @Test
     void testUpdate() throws IOException {
         MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
-        Recipe recipe = new Recipe("eggs", "crack egg on stove", "egg", "breakfast");
+        Recipe recipe = new Recipe("eggs", "crack egg on stove", "egg", "breakfast", "0");
         
          model.setUsername("carl");
         model.setPassword("1234");
         model.performRequest("POST", "createRecipe", null, null, null, "breakfast", "egg", "eggs","crack egg", null, null);
-        MongoDBProject.updateRecipe("carl", "1234", "egg", "breakfast", "egg", "crack egg", 0);
-       
+      
         controller.setRecipeTarget(recipe);
-        controller.setUpdateInfo("eggs", "crack egg on stove");
-        
+        controller.setUpdateInfo("eggs", "crack egg on stove", "egg");
         controller.handleSaveButton(new ActionEvent());
         
        
@@ -322,7 +320,7 @@ public class MS2Testing {
         String instructionChange = recipes.get(recipes.size()-1).getInstructions();
         assertEquals(recipe.getInstructions(), instructionChange);
 
-    
+       controller.handleDeleteButton(new ActionEvent());
     }
 
     /**

@@ -83,7 +83,7 @@ public class DetailedRecipePageController implements Controller{
     public void handleSaveButton(ActionEvent event) throws IOException {
         try {
             Recipe recipe = view.getRecipe();
-            model.performRequest("POST", "createRecipe", null, null, null, null, null, view.getTitle(), view.getInstructions(), recipe.getCreationTime(), null);
+            model.performRequest("POST", "createRecipe", null, null, null, null, view.getIngredients(), view.getTitle(), view.getInstructions(), recipe.getCreationTime(), null);
         
             // Exit Window
             String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
@@ -140,6 +140,7 @@ public class DetailedRecipePageController implements Controller{
     public void handleEditButton(ActionEvent event) throws IOException{
         // Handle Edit Button
         view.instructions.setEditable(true);
+        view.ingredients.setEditable(true);
     }
 
     public Recipe createRecipe(String gptResponse) {
