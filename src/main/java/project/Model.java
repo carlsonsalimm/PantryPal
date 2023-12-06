@@ -46,8 +46,8 @@ public class Model {
 
         File file = new File("dwukadhkadwa");
         try {
-            // String urlString = "https://pantrypal-team31.onrender.com/";
-            String urlString = "http://localhost:8100/";
+            String urlString = "https://pantrypal-team31.onrender.com/";
+            // String urlString = "http://localhost:8100/";
 
             if (method.equals("GET")) {
 

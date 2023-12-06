@@ -88,7 +88,8 @@ public class DetailedRecipePageController implements Controller {
 
     public void handleSaveButton(ActionEvent event) throws IOException {
         Recipe recipe = view.getRecipe();
-        model.performRequest("POST", "updateRecipe", null, null, null, null, view.getIngredients(), view.getTitle(),
+        model.performRequest("POST", "updateRecipe", null, null, null, view.getMealType(), view.getIngredients(),
+                view.getTitle(),
                 view.getInstructions(), recipe.getCreationTime(), null);
 
         // Exit Window
@@ -195,7 +196,8 @@ public class DetailedRecipePageController implements Controller {
 
     public void handleShareButton(ActionEvent event) throws IOException {
         Recipe recipe = view.getRecipe();
-        String url = model.performRequest("GET", "getShare", null, null, null, null, null, recipe.getTitle(), null,
+        String url = model.performRequest("GET", "getShare", null, null, null, recipe.getMealType(),
+                recipe.getIngredients(), recipe.getTitle(), recipe.getInstructions(),
                 recipe.getCreationTime(), recipe.getImageURL());
 
         Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -207,6 +209,7 @@ public class DetailedRecipePageController implements Controller {
     public void handleEditButton(ActionEvent event) throws IOException {
         // Handle Edit Button
         view.instructions.setEditable(true);
+        view.ingredients.setEditable(true);
     }
 
     // public Recipe createRecipe(String gptResponse) {
