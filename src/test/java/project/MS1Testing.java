@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MS1Testing {
-    Recipe recipe1 = new Recipe("scrambled eggs", "heat pan then scramble desired amount of eggs");
-    Recipe recipe2 = new Recipe("sunnyside eggs", "just eggs");
+    Recipe recipe1 = new Recipe("scrambled eggs", "heat pan then scramble desired amount of eggs",null,null);
+    Recipe recipe2 = new Recipe("sunnyside eggs", "just eggs",null,null);
     MockGPT gpt = new MockGPT();
     MockWhisper whisper = new MockWhisper();
     
@@ -146,7 +146,7 @@ public class MS1Testing {
          CSVHandler.writeRecipes(recipe2);
          CSVHandler.updateRecipe(recipe2, recipe1);
 
-         Recipe combine = new Recipe("sunnyside eggs", "heat pan then scramble desired amount of eggs");
+         Recipe combine = new Recipe("sunnyside eggs", "heat pan then scramble desired amount of eggs",null,null);
          CSVHandler.deleteRecipe(combine);
 
          assertEquals(0, CSVHandler.readRecipes().size());

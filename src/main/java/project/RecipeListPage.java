@@ -1,10 +1,13 @@
 package project;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.control.ScrollPane;
@@ -12,69 +15,156 @@ import javafx.geometry.Insets;
 import javafx.scene.text.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 
 /*
  * Header for RecipeListPage
  * Has add button UI that redirects to SpecifyIngredientsPage
  */
-class RecipeListHeader extends HBox {
+class RecipeListHeader extends VBox {
     private Label title;
     private Button addButton;
-    private BorderPane pane;
+    private Button signOutButton;
+
+    private BorderPane topPane;
     private StackPane titleContainer;
     private StackPane addContainer;
+    private StackPane signOutContainer;
+
+    private ObservableList<String> sortOptions;
+    private final ComboBox<String> sortBox;
+    private ObservableList<String> filterOptions;
+    private final ComboBox<String> filterBox;
+
+    private BorderPane bottomPane;
+    private StackPane sortContainer;
+    private StackPane filterContainer;
 
     RecipeListHeader() {
         this.setPrefSize(600, 70); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
-        pane = new BorderPane();
-        pane.setPrefSize(565, 40); // sets size of Recipe
+        topPane = new BorderPane();
+        topPane.setPrefSize(565, 40); 
 
         title = new Label("My Recipes"); // Text of the Header
-
-        title.setStyle("-fx-font-size: 20;-fx-font-weight: bold;");
-        title.setPrefSize(475, 40); // sets size of Recipe
+        title.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
+        title.setPrefSize(350, 40); // sets size of Recipe
         title.setTextAlignment(TextAlignment.CENTER);
+
+        String signOutButtonStyle = "-fx-background-radius: 10; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
+        signOutButton = new Button("Sign Out"); // text displayed on add button
+        signOutButton.setStyle(signOutButtonStyle); // styling the button
 
         String defaultButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
         addButton = new Button("+"); // text displayed on add button
         addButton.setStyle(defaultButtonStyle); // styling the button
 
         titleContainer = new StackPane(title);
-        StackPane.setMargin(title, new Insets(0, 10, 0, 0));
+        StackPane.setMargin(title, new Insets(10, 0, 10, 22));
+
+        signOutContainer = new StackPane(signOutButton);
+        StackPane.setMargin(signOutButton, new Insets(10, 15, 10, 0));
 
         addContainer = new StackPane(addButton);
-        StackPane.setMargin(addButton, new Insets(0, 33, 0, 0));
+        StackPane.setMargin(addButton, new Insets(10, 33, 10, 0));
 
-        pane.setLeft(titleContainer);
-        pane.setRight(addContainer);
-        this.getChildren().add(pane);
+        topPane.setLeft(titleContainer);
+        topPane.setCenter(signOutContainer);
+        topPane.setRight(addContainer);
+
+        // Bottom Pane Set up
+        bottomPane = new BorderPane();
+        bottomPane.setPrefSize(565, 40);
+    
+        sortOptions = FXCollections.observableArrayList("A-Z","Z-A","Newest first","Oldest first");
+        sortBox = new ComboBox<String>(sortOptions);
+        sortBox.setPromptText("Sort By");
+        sortBox.setPrefWidth(85);
+        sortBox.setStyle("-fx-background-color: #FFFFFF");
+        filterOptions = FXCollections.observableArrayList("All","Breakfast","Lunch","Dinner");
+        filterBox = new ComboBox<String>(filterOptions);
+        filterBox.setPromptText("Filter By");
+        filterBox.setPrefWidth(85);
+        filterBox.setStyle("-fx-background-color: #FFFFFF");
+
+        sortContainer = new StackPane(sortBox);
+        StackPane.setMargin(sortBox, new Insets(10, 0, 10, 22));
+        filterContainer = new StackPane(filterBox);
+        StackPane.setMargin(filterBox, new Insets(10, 300, 10, 0));
+
+        bottomPane.setLeft(sortContainer);
+        bottomPane.setCenter(filterContainer);
+
+        this.getChildren().addAll(topPane,bottomPane);
         this.setAlignment(Pos.CENTER);
     }
 
     public Button getAddButton() {
         return addButton;
     }
+
+    public Button getSignOutButton() {
+        return signOutButton;
+    }
+
+    public Label getTitle() {
+        return title;
+    }
+
+    public ComboBox<String> getSortBox() {
+        return sortBox;
+    }
+    
+    public ComboBox<String> getFilterBox() {
+        return filterBox;
+    }
+    
 }
 
-class RecipeItem extends HBox {
+class RecipeItem extends VBox {
     public Recipe recipe;
     private Label recipeName;
+    private Button mealTypeTag; // no action to this button needed
     private Button detailedViewButton;
     private BorderPane pane;
     private StackPane viewContainer;
 
-    RecipeItem(Recipe recipe) {
-        this.recipe = recipe;
+    RecipeItem() {
         pane = new BorderPane();
         pane.setPrefSize(550, 40); // sets size of Recipe
         pane.setStyle(" -fx-background-color:E1EAF3; -fx-background-radius: 5; -fx-font-weight: bold;"); // sets
-                                                                                                         // background
+    }
 
+    public void setRecipe(Recipe recipe){
+
+        this.recipe = recipe;
         recipeName = new Label(this.recipe.getTitle()); // create RecipeItem name text field
         recipeName.setPrefSize(475, 40); // sets size of Recipe
         recipeName.setPadding(new Insets(0, 10, 0, 20));
         recipeName.setTextAlignment(TextAlignment.CENTER);
+
+        String breakfastButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #7ED7C1; -fx-font-weight: bold; -fx-font-fill: #65D9BC; -fx-font: 11 arial; -fx-top-spacing: 5;";
+        String lunchButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #F0DBAF; -fx-font-weight: bold; -fx-font-fill: #FFD57D; -fx-font: 11 arial; -fx-top-spacing: 5;";
+        String dinnerButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #E7BBBB; -fx-font-weight: bold; -fx-font-fill: #DC8686; -fx-font: 11 arial; -fx-top-spacing: 5;";
+        String noMealButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #D9D9D9; -fx-font-weight: bold; -fx-font: 11 arial; -fx-top-spacing: 5;";
+        mealTypeTag = new Button(this.recipe.getMealType());
+        if (this.recipe.getMealType().equals("breakfast")) {
+            mealTypeTag.setStyle(breakfastButtonStyle);
+        }
+        else if (this.recipe.getMealType().equals("lunch")) {
+            mealTypeTag.setStyle(lunchButtonStyle);
+        }
+        else if (this.recipe.getMealType().equals("dinner")) {
+            mealTypeTag.setStyle(dinnerButtonStyle);
+        }
+        else {
+            mealTypeTag.setStyle(noMealButtonStyle);
+        }
+        mealTypeTag.setPrefSize(50, 30);
+        mealTypeTag.setTextAlignment(TextAlignment.CENTER);
+
 
         String defaultButtonStyle = "-fx-background-radius: 5; -fx-font-style: italic; -fx-background-color: #D9D9D9; -fx-font-weight: bold; -fx-font: 11 arial; -fx-top-spacing: 5;";
         detailedViewButton = new Button("View"); // text displayed on button
@@ -82,87 +172,122 @@ class RecipeItem extends HBox {
         detailedViewButton.setPrefSize(50, 30); // sets size of Recipe
         detailedViewButton.setTextAlignment(TextAlignment.CENTER);
 
-        viewContainer = new StackPane(detailedViewButton);
+        viewContainer = new StackPane(mealTypeTag);
+        viewContainer.getChildren().add(detailedViewButton);
         StackPane.setMargin(detailedViewButton, new Insets(0, 10, 0, 0));
+        StackPane.setMargin(mealTypeTag, new Insets(0, 120, 0, 0));
 
         pane.setLeft(recipeName);
         pane.setRight(viewContainer);
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
 
-       
-        detailedViewButton.setOnAction(e -> {
-            Main.setPage(new DetailedRecipePage(recipe));
-            // add controller for the DetailedRecipePage creation here
-        });
-    }
-}
+      
 
-class RecipeList extends VBox {
-    public List<Recipe> recipes;
-
-    RecipeList() throws IOException {
-        loadRecipe();
     }
 
-    public void loadRecipe() throws IOException {
-        // TO-DO: Replace with GET request
-        this.recipes = CSVHandler.readRecipes();
-
-        this.setSpacing(7);
-        this.setPadding(new Insets(10, 0, 30, 0));
-        // this.setPrefSize(600, 560);
-        this.setStyle("-fx-background-color: #FFFFFF;");
-
-        for (Recipe recipe : recipes) {
-            RecipeItem Item = new RecipeItem(recipe);
-            this.getChildren().add(Item);
-        }
+    public Button getDetailedViewButton() {
+        return detailedViewButton;
     }
 
+    public Recipe getRecipe() {
+        return recipe;
+    }
 }
 
 public class RecipeListPage extends BorderPane {
     private RecipeListHeader header;
-    private Button addButton;
-    private RecipeList recipeList;
 
-    RecipeListPage() throws IOException {
+    private Button addButton;
+    private Button signOutButton;
+
+    private ComboBox<String> sortBox; 
+    private ComboBox<String> filterBox; 
+
+    public List<Recipe> recipes;
+    public List<Button> detailedViewButtons;
+
+    public VBox vbox;
+
+    public static Recipe recipe;
+
+    RecipeListPage(List<Recipe> recipes) throws IOException {
         header = new RecipeListHeader();
         addButton = header.getAddButton();
+        signOutButton = header.getSignOutButton();
+        sortBox = header.getSortBox();
+        filterBox = header.getFilterBox();
 
-        // Create a RecipeList Object to hold the Recipes
-        recipeList = new RecipeList();
+        this.detailedViewButtons = new ArrayList<Button>();
+        
+        this.recipes = recipes;
+        // Add header to the top of the BorderPane
+        this.setTop(header);
+        // Populate the Body
+        populateRecipe();
 
-        ScrollPane scroller = new ScrollPane(recipeList);
+    }
+
+    public void populateRecipe(){
+        vbox = new VBox();
+        vbox.setSpacing(7);
+        vbox.setPadding(new Insets(10, 0, 30, 0));
+        vbox.setStyle("-fx-background-color: #FFFFFF;");
+
+        for (Recipe recipe : recipes) {
+            RecipeItem Item = new RecipeItem();
+            Item.setRecipe(recipe);
+            vbox.getChildren().add(Item);
+            // EventHandler<ActionEvent> viewButton = e -> {RecipeListPage.recipe = Item.getRecipe();};
+            // Item.getDetailedViewButton().addEventHandler(ActionEvent.ACTION, viewButton);
+            this.detailedViewButtons.add(Item.getDetailedViewButton());
+            
+        }
+
+
+        ScrollPane scroller = new ScrollPane(vbox);
         scroller.setFitToHeight(isCache());
         scroller.setFitToWidth(true);
 
-        // Add header to the top of the BorderPane
-        this.setTop(header);
-        // Add scroller to the centre of the BorderPane
         this.setCenter(scroller);
-
-        // Add footer to the bottom of the BorderPane
-
-        // Initialise Button Variables through the getters in Footer
-        addButton = header.getAddButton();
-        // Call Event Listeners for the Buttons
-        addListeners();
     }
 
-    // public void setAddButtonAction(EventHandler<ActionEvent> eventHandler) {
-    //     addButton.setOnAction(eventHandler);
-    // }
-
-    // Add Event Listeners for the Buttons to redirect to meal type page
-    public void addListeners() {
-        addButton.setOnAction(e -> {
-            Main.setPage(new SpecifyMealTypePage());
-        });
+    public static void showDetailedView(Recipe r) {
+        recipe = r;
     }
 
-    public RecipeList getRecipeList() {
-        return recipeList;
+    public Recipe getRecipe() {
+        return recipe;
     }
+
+    public ComboBox<String> getSortBox() {
+        return sortBox;
+    }
+    
+    public ComboBox<String> getFilterBox() {
+        return filterBox;
+    }
+
+    public void setAddButtonAction(EventHandler<ActionEvent> eventHandler){
+        addButton.setOnAction(eventHandler);
+    }
+
+    public void setSignOutButtonAction(EventHandler<ActionEvent> eventHandler){
+        signOutButton.setOnAction(eventHandler);
+    }
+
+    public void setDetailedViewButtonsAction(EventHandler<ActionEvent> eventHandler){
+        for (Button b: detailedViewButtons) {
+            b.setOnAction(eventHandler);
+        }
+    }
+
+    public void setSortBoxAction(EventHandler<ActionEvent> eventHandler){
+        sortBox.setOnAction(eventHandler);
+    }
+
+    public void setFilterBoxAction(EventHandler<ActionEvent> eventHandler){
+        filterBox.setOnAction(eventHandler);
+    }
+    
 }

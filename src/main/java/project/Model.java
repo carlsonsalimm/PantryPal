@@ -3,12 +3,13 @@ package project;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 public class Model {
 
@@ -30,6 +31,11 @@ public class Model {
         } catch (UnsupportedEncodingException e) {
             System.out.println("Error encoding URL: " + e.getMessage());
         }
+
+        if (encodedURL == null) {
+            System.out.println("NULL: " + url);
+        }
+        System.out.println("ENCODED: " + encodedURL);
         return encodedURL;
     }
 
@@ -44,8 +50,8 @@ public class Model {
     }
 
     public String performRequest(String method, String action, String iniUsername, String iniPassword,
-            String audioFilePath, String mealType, String ingredients, String title, String instructions,
-            String creationTime, String imageURL) {
+            String audioFilePath, String mealType,
+            String ingredients, String title, String instructions, String creationTime, String imageURL) {
 
         File file = new File("dwukadhkadwa");
         try {
@@ -59,9 +65,9 @@ public class Model {
                     urlString += "?action=getRecipeList&username=" + encodeURL(username)
                             + "&password=" + encodeURL(password);
 
-                } else if (username != null && password != null && title != null && imageURL == null) {
-                    // Generate image for recipe (needs title, returns url of image)
-                    urlString += "?action=getImage&title=" + encodeURL(title);
+                } else if (title != null && imageURL == null) {
+                    // Generate image for the recipe (needs title)
+                    urlString += "?action=generateImage&title=" + encodeURL(title);
 
                 } else if (username != null && password != null && title != null && mealType != null
                         && ingredients != null && instructions != null && imageURL != null) {
@@ -72,6 +78,7 @@ public class Model {
                             + "&ingredients=" + encodeURL(ingredients)
                             + "&instructions=" + encodeURL(instructions)
                             + "&imageURL=" + encodeURL(imageURL);
+                    System.out.println(urlString);
                 }
 
             } else if (method.equals("POST")) {
@@ -122,9 +129,17 @@ public class Model {
                     // instructions as string)
                     urlString += "?action=generateRecipe&mealType=" + encodeURL(mealType)
                             + "&ingredients=" + encodeURL(ingredients);
-
+                } else if (title != null && imageURL != null) {
+                    // generate image for the recipe
+                    urlString += "?action=generateImage=" + encodeURL(title);
                 }
-
+                // } else if(title!=null && mealType != null && ingredients != null &
+                // imageURL!=null){
+                // //generate new recipe with image (CURRENTLY USING THIS FOR REFRESH TESTING)
+                // urlString += "?action=regenerateRecipe&title=" + title + "&mealType=" +
+                // mealType + "&ingredients="
+                // + ingredients + "&imageUrl=" + imageURL;
+                // }
             } else if (method.equals("DELETE")) {
                 if (username != null && password != null && title != null) {
                     // Deletes an existing recipe (requires username, password, title)
@@ -132,7 +147,7 @@ public class Model {
                             + "&password=" + encodeURL(password)
                             + "&title=" + encodeURL(title);
 
-                } else if (username != null && password != null && title == null) {
+                } else if (username != null && password != null) {
                     // Deletes an existing user (requires username, password)
                     urlString += "?action=deleteUser&username=" + encodeURL(username)
                             + "&password=" + encodeURL(password);
@@ -149,8 +164,13 @@ public class Model {
                 setConnectionHeaders(conn, file);
             }
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String response = in.readLine();
+            String response = "";
+            String nextLine;
+            while ((nextLine = in.readLine()) != null) {
+                response += nextLine;
+            }
             in.close();
+            System.out.println("Model Response: " + response);
             return response;
 
         } catch (Exception ex) {

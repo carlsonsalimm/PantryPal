@@ -6,9 +6,13 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import org.bson.Document;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class RequestHandler implements HttpHandler {
 
@@ -70,18 +74,24 @@ public class RequestHandler implements HttpHandler {
       List<Document> recipes = MongoDBProject.getRecipeList(username, password);
       // ArrayList<String> jsons = new ArrayList<String>();
       response = "{";
-        for (int i = 0; i < recipes.size(); i++) {
-            response += "\""+ i + "\" :" + recipes.get(i).toJson();
-            if (i < recipes.size() - 1) {
-                 response += ",";
-            }
+      for (int i = 0; i < recipes.size(); i++) {
+        response += "\"" + i + "\" :" + recipes.get(i).toJson();
+        if (i < recipes.size() - 1) {
+          response += ",";
         }
-        response += "}";
+      }
+      response += "}";
 
-    } else if (action.equals("getImage")) {
-      // Do DALL-E call
-      String title = this.decodeURL(queryParams.get("password"));
-      
+    } else if (action.equals("generateImage")) {
+      String prompt = queryParams.get("title");
+      try {
+        String imageURL = dallE.generateImageURL(prompt);
+        response = "{ \"imageURL\": \"" + imageURL + "\" }"; // Format the response as JSON
+      } catch (IOException | InterruptedException | URISyntaxException e) {
+        e.printStackTrace();
+        response = "Error generating image: " + e.getMessage();
+      }
+
     } else if (action.equals("getRecipeDetails")) {
       // Fetch a specific recipe's details
       String username = this.decodeURL(queryParams.get("username"));
@@ -94,6 +104,64 @@ public class RequestHandler implements HttpHandler {
       } else {
         response = "Recipe not found";
       }
+
+    } else if (action.equals("getShare")) {
+      // Generate a url to share
+      response = "Invalid GET request (share)";
+
+      String title = this.decodeURL(queryParams.get("title"));
+      String mealType = this.decodeURL(queryParams.get("mealType"));
+      String ingredients = this.decodeURL(queryParams.get("ingredients"));
+      String instructions = this.decodeURL(queryParams.get("instructions"));
+      String imageURL = this.decodeURL(queryParams.get("imageURL"));
+      // check if recipe exists in mongodb before returning
+      StringBuilder htmlBuilder = new StringBuilder();
+      htmlBuilder
+          .append("<html>")
+          .append("<body>")
+          .append("<h1>")
+          .append(title)
+          .append("</h1>")
+          .append("<h2>")
+          .append(mealType)
+          .append("</h2>")
+          .append("<img src=\"")
+          .append(imageURL)
+          .append("\">")
+          .append("<p>")
+          .append(ingredients)
+          .append("</p>")
+          .append("<p>")
+          .append(instructions)
+          .append("</p>")
+          .append("</body>")
+          .append("</html>");
+
+      // write HTML content into file titled username-Systemtime.html
+      // encode HTML content
+      response = htmlBuilder.toString();
+      long currTime = System.currentTimeMillis();
+      FileWriter fr = new FileWriter(/* username + */currTime + ".html");
+      BufferedWriter br = new BufferedWriter(fr);
+      br.write(response);
+      fr.close();
+      br.close();
+      // return sharable link
+      response = "https://pantrypal-team31.onrender.com/?action=share&id=" + currTime;
+    } else if (action.equals("share")) {
+      // String username = this.decodeURL(queryParams.get("username"));
+      String id = this.decodeURL(queryParams.get("id"));
+      // get the file with username
+      File f = new File(id + ".html");
+      FileReader file = new FileReader(f);
+      BufferedReader buffer = new BufferedReader(file);
+      String temp = "";
+      while ((temp = buffer.readLine()) != null) {
+        response += temp;
+      }
+
+      buffer.close();
+      file.close();
     }
 
     return response;
@@ -184,39 +252,85 @@ public class RequestHandler implements HttpHandler {
       String ingredients = this.decodeURL(queryParams.get("ingredients"));
       String title = this.decodeURL(queryParams.get("title"));
       String instructions = this.decodeURL(queryParams.get("instructions"));
-      String imageURL = this.decodeURL(queryParams.get("imageURL"));
-      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0, imageURL);
+      MongoDBProject.updateRecipe(username, password, title, mealType, ingredients, instructions, 0);
       response = "Added recipe: " + title;
 
     } else if (action.equals("updateRecipe")) {
       // update/add recipe
       String username = this.decodeURL(queryParams.get("username"));
       String password = this.decodeURL(queryParams.get("password"));
-      String mealType = this.decodeURL(queryParams.get("mealType"));
       String ingredients = this.decodeURL(queryParams.get("ingredients"));
       String title = this.decodeURL(queryParams.get("title"));
       String instructions = this.decodeURL(queryParams.get("instructions"));
       Long creationTime = Long.parseLong(this.decodeURL(queryParams.get("creationTime")));
-      String imageURL = this.decodeURL(queryParams.get("imageURL"));
-      MongoDBProject.updateRecipe(username, password, title, instructions, mealType, ingredients, creationTime,
-          imageURL);
+      MongoDBProject.updateRecipe(username, password, title, instructions, null, ingredients, creationTime);
       response = "Updated recipe: " + title;
       // replace with what we are expecting as a response
 
     } else if (action.equals("generateRecipe")) {
       String mealType = this.decodeURL(queryParams.get("mealType"));
       String ingredients = this.decodeURL(queryParams.get("ingredients"));
+
+      // test
+      System.out.println("mealType: " + mealType);
+      System.out.println("Ingredients: " + ingredients);
+
       try {
         response = chatGPT.getGPTResponse(ingredients, mealType);
+        // response = "TEST \n TEST \n TEST";
+        System.out.println("ChatGPT Response HandlerRequest: " + response);
       } catch (InterruptedException e) {
         e.printStackTrace();
       } catch (URISyntaxException e) {
         e.printStackTrace();
       }
-    }
+    } else if (action.equals("generateImage")) {
+      String prompt = queryParams.get("title");
+      try {
+        String imageURL = dallE.generateImageURL(prompt);
+        response = "{ \"imageURL\": \"" + imageURL + "\" }"; // Format the response as JSON
+      } catch (IOException | InterruptedException | URISyntaxException e) {
+        e.printStackTrace();
+        response = "Error generating image: " + e.getMessage();
+      }
+      // } else if (action.equals("regenerateRecipe")) {
+      // String title = queryParams.get("title");
+      // String mealType = queryParams.get("mealType");
+      // String ingredients = queryParams.get("ingredients");
+      // String imageURL = queryParams.get("imageURL");
 
+      // // Use ChatGPT to generate recipe text
+      // String generatedInstructions = ""; // Placeholder, replace with actual
+      // ChatGPT call
+      // try {
+      // generatedInstructions = chatGPT.getGPTResponse(ingredients, mealType);
+      // } catch (InterruptedException | URISyntaxException e) {
+      // e.printStackTrace();
+      // response = "Error generating recipe text: " + e.getMessage();
+      // return response;
+      // }
+
+      // // Use Dall-E to generate a new image
+      // String newImageURL = ""; // Placeholder, replace with actual Dall-E call
+      // try {
+      // newImageURL = dallE.generateImageURL(title);
+      // } catch (IOException | InterruptedException | URISyntaxException e) {
+      // e.printStackTrace();
+      // response = "Error generating image: " + e.getMessage();
+      // return response;
+      // }
+
+      // // Construct and send the response
+      // JSONObject jsonResponse = new JSONObject();
+      // jsonResponse.put("title", title);
+      // jsonResponse.put("instructions", generatedInstructions);
+      // jsonResponse.put("ingredients", ingredients);
+      // jsonResponse.put("imageURL", newImageURL);
+      // response = jsonResponse.toString();
+    }
     // response include generated recipe and image url (in the last part)
     return response;
+
   }
 
   // deleteRecipe

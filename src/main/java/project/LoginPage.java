@@ -24,7 +24,6 @@ import javafx.application.Application;
 
 
 class LoginPage extends VBox {
-    private HBox hbox;
 
     private Label title;
 
@@ -37,7 +36,6 @@ class LoginPage extends VBox {
     private Button signInButton;
     private Button createAccountButton;
 
-    private BorderPane border;
 
     // styles
     private String titleStyle = "-fx-font-size: 25;-fx-font-weight: bold;";
@@ -127,9 +125,6 @@ class LoginPage extends VBox {
         createAccountButton.setOnAction(eventHandler);
     }
 
-    public void goToRecipeListPage() throws IOException{
-        this.getScene().setRoot(new RecipeListPage());
-    }
 
     public void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -139,4 +134,3 @@ class LoginPage extends VBox {
         alert.showAndWait();
     }
 }
-

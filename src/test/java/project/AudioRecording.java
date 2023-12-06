@@ -105,7 +105,7 @@ public class AudioRecording extends VBox {
                 System.out.println("ChatGPT Response: " + response);
 
             
-                Main.setPage(new DetailedRecipePage(createRecipe(response)));
+                Main.setPage(new DetailedRecipePage(createRecipe(response), true));
 
                 // Handle the UI update or user notification with the generated recipe response
             } catch (Exception e) {
@@ -118,8 +118,8 @@ public class AudioRecording extends VBox {
     public static Recipe createRecipe(String gptResponse) {
         String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
         String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
-
-        Recipe recipe = new Recipe(recipeTitle, recipeInstructions);
+        //Recipe recipe = new Recipe(recipeTitle, recipeInstructions);
+        Recipe recipe = new Recipe(recipeTitle, recipeInstructions,null,null);
         return recipe;
     }
 
@@ -144,7 +144,7 @@ public class AudioRecording extends VBox {
             String mealType = detectMealType(transcribedText);
 
             if (mealType != null) {
-                Main.setPage(new SpecifyIngredientPage(mealType));
+               // Main.setPage(new SpecifyIngredientPage(mealType));
             } else {
                 System.out.println("Please try again");
 

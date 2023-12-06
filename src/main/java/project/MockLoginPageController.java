@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javafx.event.ActionEvent;
 
-class MockLoginPageController implements LoginControllerInterface {
+class MockLoginPageController implements Controller {
     private Model model;
 
     String username;

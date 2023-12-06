@@ -6,11 +6,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.CookieHandler;
+import java.util.ArrayList;
+import java.util.List;
+import org.bson.Document;
 import org.json.Cookie;
-
 import javafx.event.ActionEvent;
 
-public class LoginPageController implements LoginControllerInterface {
+public class LoginPageController implements Controller{
     private LoginPage view;
     private Model model;
 
@@ -38,34 +40,41 @@ public class LoginPageController implements LoginControllerInterface {
     }
 
     public boolean handleSignInButton(ActionEvent event) throws IOException {
-        String username = view.getUsername();
-        String password = view.getPassword();
+        try {
+            String username = view.getUsername();
+            String password = view.getPassword();
 
-        if (model.performRequest("POST", "login", username, password, null, null, null, null, null, null, null)
-                .equals("true")) {
+        if(model.performRequest("POST", "login", username, password, null, null, null, null, null, null, null).equals("true")){
             model.setUsername(username);
             model.setPassword(password);
-            view.goToRecipeListPage();
-
-            if (view.getRememberMe()) {
+            if(view.getRememberMe()){
                 FileWriter file = new FileWriter("RememberMe.csv");
-                try {
-                    file.write(1);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                file.write("1\n" +username+"\n"+password);
                 file.close();
             }
 
-            return true;
-        } else {
-            view.showAlert("Error", "Account Not Found");
-            return false;
-        }
+                
+                String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
+                List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+                RecipeListPage listPage = new RecipeListPage(recipes);
+                Main.setPage(listPage);
+                Main.setController(new RecipeListPageController(listPage, model));
 
+                return true;
+            } else if(model.performRequest("POST", "login", username, password, null, null, null, null, null, null, null) .equals("false")) {
+                view.showAlert("Error", "Account Not Found");
+                return false;
+            } 
+        } catch (Exception e) {  
+            Main.showAlert("Error", "Server temporarily unavailable. Please try again later.");            
+            return false;  
+        }
+        return false;
+        
     }
 
     public boolean handleCreateAccountButton(ActionEvent event) throws IOException {
+        try {
         String username = view.getUsername();
         String password = view.getPassword();
 
@@ -74,7 +83,11 @@ public class LoginPageController implements LoginControllerInterface {
                 .equals("true")) {
             model.setUsername(username);
             model.setPassword(password);
-            view.goToRecipeListPage();
+
+            List<Recipe> recipes = new ArrayList<Recipe>();
+            RecipeListPage temp = new RecipeListPage(recipes);
+            Main.setPage(temp);
+            Main.setController(new RecipeListPageController(temp,model));
             return true;
         }
 
@@ -83,6 +96,11 @@ public class LoginPageController implements LoginControllerInterface {
             view.showAlert("Error", "Account Already Exist");
             return false;
         }
+        } catch (Exception e) {
+            Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
+            return false;
+        }
     }
+    
 
 }

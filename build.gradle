@@ -39,10 +39,6 @@ application {
     mainClassName = 'project.Main' // Replace with your main class
 }
 
-// application {
-//     mainClassName = 'project.Server' // alt for making docker image
-// }
-
 javafx {
     version = "16"
     modules = [ 'javafx.controls', 'javafx.fxml' ] // Add more modules if needed

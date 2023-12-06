@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -13,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 
 import java.io.IOException;
@@ -22,13 +25,19 @@ class Header extends HBox {
     private Button delButton;
     private Button saveButton;
     private Button backButton;
+    private Button refreshButton;
     private Button shareButton;
+    private Button editButton;
     private BorderPane pane;
     private Pane titleContainer;
     private Pane addContainer;
 
-    Header() {
-        this.setPrefSize(600, 70); // Size of the header
+    private Boolean newCreation;
+
+    static String defaultButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
+
+    Header(Boolean newCreation) {
+        this.setPrefSize(600, 90); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
         pane = new BorderPane();
         pane.setPrefSize(565, 40);
@@ -39,7 +48,6 @@ class Header extends HBox {
         title.setPrefSize(475, 40); // sets size of Recipe
         title.setTextAlignment(TextAlignment.CENTER);
 
-        String defaultButtonStyle = "-fx-background-radius: 100; -fx-font-style: italic; -fx-background-color: #D9D9D9;  -fx-font-weight: bold; -fx-font: 18 arial;";
         delButton = new Button(); // text displayed on add button
         ImageView trash = new ImageView("./icons/trash.png");
         trash.setFitWidth(20);
@@ -61,6 +69,13 @@ class Header extends HBox {
         backButton.setGraphic(back);
         backButton.setStyle(defaultButtonStyle); // styling the button
 
+        refreshButton = new Button(); // text displayed on add button
+        ImageView refresh = new ImageView("./icons/refresh.png");
+        refresh.setFitWidth(20);
+        refresh.setFitHeight(20);
+        refreshButton.setGraphic(refresh);
+        refreshButton.setStyle(defaultButtonStyle); // styling the button
+
         shareButton = new Button(); // text displayed on add button
         ImageView share = new ImageView("./icons/share.png");
         share.setFitWidth(20);
@@ -68,19 +83,35 @@ class Header extends HBox {
         shareButton.setGraphic(share);
         shareButton.setStyle(defaultButtonStyle); // styling the button
 
+        editButton = new Button(); // text displayed on add button
+        ImageView edit = new ImageView("./icons/edit.png");
+        edit.setFitWidth(20);
+        edit.setFitHeight(20);
+        editButton.setGraphic(edit);
+        editButton.setStyle(defaultButtonStyle); // styling the button
+
         titleContainer = new Pane();
         titleContainer.getChildren().addAll(backButton, title);
-        title.relocate(20, 30);
+
+        if (newCreation) {
+            titleContainer.getChildren().add(refreshButton);
+        }
+
+        title.relocate(20, 35);
         backButton.relocate(20, 0);
+        refreshButton.relocate(70, 0);
 
         addContainer = new Pane();
-        addContainer.getChildren().addAll(delButton, saveButton, shareButton);
-        delButton.relocate(-40, 0);
-        saveButton.relocate(10, 0);
-        shareButton.relocate(60, 0);
+        addContainer.getChildren().addAll(delButton, shareButton, editButton, saveButton);
+        delButton.relocate(-100, 0);
+        shareButton.relocate(-50, 0);
+        editButton.relocate(0, 0);
+        saveButton.relocate(50, 0);
 
         pane.setLeft(titleContainer);
         pane.setRight(addContainer);
+        BorderPane.setMargin(titleContainer, new Insets(10, 0, 0, 0));
+        BorderPane.setMargin(addContainer, new Insets(10, 0, 20, 0));
         this.getChildren().add(pane);
         this.setAlignment(Pos.CENTER);
     }
@@ -97,6 +128,14 @@ class Header extends HBox {
         return backButton;
     }
 
+    public Button getRefreshButton() {
+        return refreshButton;
+    }
+
+    public Button getEditButton() {
+        return editButton;
+    }
+
     public Button getShareButton() {
         return shareButton;
     }
@@ -108,157 +147,201 @@ public class DetailedRecipePage extends BorderPane {
     public static String defaultMouseOverButtonStyle = "-fx-background-color: #bfbfbf; -fx-background-radius: 5em;";
     public static String defaultMouseClickButtonStyle = "-fx-background-color: #D9D9D9; -fx-background-radius: 5em;";
     public static String defaultBackgroundStyle = "-fx-background-color: -fx-text-box-border, -fx-control-inner-background; -fx-text-box-border: transparent;";
+    public static String defaultTextStyle = "-fx-font-weight: bold;";
 
-    public static String defaultTextStyle = "-fx-font-size: 10;-fx-font-weight: bold;";
     private Header header;
     private Button deleteButton;
     private Button backButton;
     private Button saveButton;
-
+    private Button refreshButton;
     private Button shareButton;
+    private Button editButton;
 
-    private TextField title = new TextField();
-    private TextArea instructions = new TextArea(); // includes ingredients
+    private ImageView image;
+    private Text mealType;
+    private Text title;
+    public TextArea ingredients;
+    public TextArea instructions; // includes ingredients
+
+    private Recipe recipe;
 
     // Assumes that Recipe class has at least TextFields for title, ingredients, and
     // instructions
-    DetailedRecipePage(Recipe recipe) {
-        header = new Header();
+    DetailedRecipePage(Recipe recipe, Boolean newCreation) {
+        this.header = new Header(newCreation);
 
-        deleteButton = header.getDelButton();
-        backButton = header.getBackButton();
-        saveButton = header.getSaveButton();
-        shareButton = header.getShareButton();
+        this.recipe = recipe;
+        // Getting Header Buttons
+        this.deleteButton = header.getDelButton();
+        this.backButton = header.getBackButton();
+        this.saveButton = header.getSaveButton();
+        this.refreshButton = header.getRefreshButton();
+        this.shareButton = header.getShareButton();
+        this.editButton = header.getEditButton();
 
+        this.title = new Text();
+        this.mealType = new Text();
+        this.ingredients = new TextArea();
+        this.instructions = new TextArea();
+
+        // Setting the title and Instructions
         title.setText(recipe.getTitle());
+        mealType.setText(recipe.getMealType());
+        ingredients.setText(recipe.getIngredients());
+        ingredients.setPrefSize(500, 180);
         instructions.setText(recipe.getInstructions());
-        instructions.setPrefSize(600, 550);
+        instructions.setPrefSize(550, 180);
 
-        title.setEditable(false);
-        instructions.setEditable(true);
-
+        // title.setEditable(false);
+        ingredients.setEditable(false);
+        ingredients.setWrapText(true);
+        instructions.setEditable(false);
         instructions.setWrapText(true);
-        createUI();
 
-        addListeners(recipe);
-    }
-
-    private void createUI() {
+        // Page Style
         this.setStyle(defaultBackgroundStyle);
 
-        Text name = new Text("Name:");
+        // Setting UI Labels
+        // Initialize the ImageView
+        image = new ImageView(); // Initialize with no image or a placeholder image
+        image.setFitWidth(150);
+        image.setFitHeight(150);
+        // recipe.setImageURL("https://oaidalleapiprodscus.blob.core.windows.net/private/org-Sd9bwBmEf5IDns4KIh3k3fXp/user-TTwaqZd6kA45CPFJ9Srb7I12/img-frVJrR47vS0SgE3MDzYmj6Vf.png?st=2023-12-06T03%3A20%3A33Z&se=2023-12-06T05%3A20%3A33Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-12-05T19%3A52%3A36Z&ske=2023-12-06T19%3A52%3A36Z&sks=b&skv=2021-08-06&sig=OPcjqwb3CfdngGAS7n8PrDOHHVA6IFtkaOzeuUSN/SE%3D");
+        if (recipe.getImageURL() != null && !recipe.getImageURL().isEmpty()) {
+            // setImage(recipe.getImageURL());
+            setImage(recipe.getImageURL());
+        } else {
+            // Set a default placeholder image if needed
+            setImage("./icons/trash.png");
+        }
+
+        Text name = new Text("Recipe Title:");
         name.setStyle(defaultTextStyle);
 
+        Text mealTypeName = new Text("Meal Type:");
+        mealTypeName.setStyle(defaultTextStyle);
+
+        Text ingredientName = new Text("Ingredients:");
+        ingredientName.setStyle(defaultTextStyle);
         Text instruct = new Text("Instructions:");
         instruct.setStyle(defaultTextStyle);
 
-        VBox titleContainer = new VBox(name, title);
-        VBox bodyText = new VBox(instruct, instructions);
-        ScrollPane sp = new ScrollPane(bodyText);
-        sp.setFitToWidth(true);
-        sp.setFitToHeight(false);
+        // Adding to a container
+        HBox imageContainer = new HBox(image);
+        HBox titleContainer = new HBox(name, title);
+        titleContainer.setSpacing(5);
+        HBox mealTypeContainer = new HBox(mealTypeName, mealType);
+        mealTypeContainer.setSpacing(5);
+        VBox ingredientBodyText = new VBox(ingredientName, ingredients);
+        VBox instructBodyText = new VBox(instruct, instructions);
+
+        ScrollPane spIngredients = new ScrollPane(ingredientBodyText);
+        spIngredients.setFitToWidth(true);
+        spIngredients.setFitToHeight(false);
+
+        ScrollPane spInstruct = new ScrollPane(instructBodyText);
+        spInstruct.setFitToWidth(true);
+        spInstruct.setFitToHeight(false);
 
         titleContainer.setPadding(new Insets(0, 20, 0, 20));
         titleContainer.setStyle(defaultBackgroundStyle);
-        bodyText.setPadding(new Insets(0, 20, 0, 20));
-        bodyText.setStyle(defaultBackgroundStyle);
+        mealTypeContainer.setPadding(new Insets(0, 20, 0, 20));
+        mealTypeContainer.setStyle(defaultBackgroundStyle);
+        ingredientBodyText.setPadding(new Insets(0, 20, 0, 20));
+        ingredientBodyText.setStyle(defaultBackgroundStyle);
+        instructBodyText.setPadding(new Insets(0, 20, 0, 20));
+        instructBodyText.setStyle(defaultBackgroundStyle);
 
-        VBox container = new VBox(titleContainer, bodyText);
+        VBox container = new VBox(imageContainer, titleContainer, mealTypeContainer, ingredientBodyText,
+                instructBodyText);
         container.setStyle(defaultBackgroundStyle);
+
         container.setSpacing(10);
         this.setTop(header);
         this.setCenter(container);
+
+        // Update the page with the initial recipe details
+        updateRecipeDetails(recipe);
     }
 
-    public void addListeners(Recipe recipe) {
-        // Delete recipe and go back to RecipeListPage
-        deleteButton.setOnAction(e -> {
-            try {
-                deleteRecipe(recipe);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
-
-        // Toggle editing of ingredients & instructions
-        backButton.setOnAction(e -> {
-            try {
-                exitWindow();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
-
-        // Save recipe and go back to RecipeListPage
-        saveButton.setOnAction(e -> {
-            try {
-                saveRecipe(recipe);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-
-        });
-
-        //share recipe
-        shareButton.setOnAction(e -> {
-            shareRecipe(recipe);
-        });
+    public void setTitle(String title) {
+        this.title.setText(title);
     }
 
-    private void exitWindow() throws IOException {
-        // Go back to RecipeListPage
-        RecipeListPage temp = new RecipeListPage();
-        Main.setPage(temp);
+    public void setInstructions(String instructions) {
+        this.instructions.setText(instructions);
     }
 
-    private void deleteRecipe(Recipe recipe) throws IOException {
-        CSVHandler.deleteRecipe(recipe);
-        exitWindow();
+    public void setIngredients(String ingredients) {
+        this.ingredients.setText(ingredients);
     }
 
-    /*
-     * private void editRecipe() {
-     * if (this.editing) {
-     * this.instructions.setEditable(false);
-     * this.editing = false;
-     * this.editButton.setStyle(defaultMouseOverButtonStyle);
-     * } else {
-     * this.instructions.setEditable(true);
-     * this.editing = true;
-     * this.editButton.setStyle(defaultMouseClickButtonStyle);
-     * }
-     * }
-     */
-    private void saveRecipe(Recipe oldRecipe) throws IOException {
-        // call CSVHandler for saving new recipe or updating old recipe
-        // System.out.println(oldRecipe.getInstructions() + "\n");
-        // System.out.println(this.instructions.getText() + "\n");
-        if (oldRecipe.getInstructions().equals(this.instructions.getText())) {
-            CSVHandler.writeRecipes(oldRecipe);
-        } else {
-            CSVHandler.updateRecipe(oldRecipe, new Recipe(this.title.getText(), this.instructions.getText()));
+    public String getMealType() {
+        return this.mealType.getText();
+    }
+
+    public String getIngredients() {
+        return this.ingredients.getText();
+    }
+
+    public Recipe getRecipe() {
+        return this.recipe;
+    }
+
+    public String getTitle() {
+        return title.getText();
+    }
+
+    public String getInstructions() {
+        return instructions.getText();
+    }
+
+    public void setDeleteButtonAction(EventHandler<ActionEvent> eventHandler) {
+        deleteButton.setOnAction(eventHandler);
+    }
+
+    public void setSaveButtonAction(EventHandler<ActionEvent> eventHandler) {
+        saveButton.setOnAction(eventHandler);
+    }
+
+    public void setBackButtonAction(EventHandler<ActionEvent> eventHandler) {
+        backButton.setOnAction(eventHandler);
+    }
+
+    public void setRefreshButtonAction(EventHandler<ActionEvent> eventHandler) {
+        refreshButton.setOnAction(eventHandler);
+    }
+
+    public void setShareButtonAction(EventHandler<ActionEvent> eventHandler) {
+        shareButton.setOnAction(eventHandler);
+    }
+
+    public void setEditButtonAction(EventHandler<ActionEvent> eventHandler) {
+        editButton.setOnAction(eventHandler);
+    }
+
+    public void updateRecipeDetails(Recipe newRecipe) {
+        this.recipe = newRecipe;
+        this.title.setText(newRecipe.getTitle());
+        this.mealType.setText(newRecipe.getMealType());
+        this.ingredients.setText(newRecipe.getIngredients());
+        this.instructions.setText(newRecipe.getInstructions());
+
+        if (newRecipe.getImageURL() != null && !newRecipe.getImageURL().isEmpty()) {
+            // newRecipe.setImageURL("./icons/trash.png");
+            setImage(newRecipe.getImageURL());
         }
-
-        exitWindow();
     }
 
-    // In DetailedRecipePage.java
-    private void shareRecipe(Recipe recipe) {
-    String shareableUrl = " https://pantrypal-team31.onrender.com/" + recipe.getTitle(); // Where each recipe have unique title
-    // Copy shareableUrl to clipboard
-    // Show confirmation to the user (e.g., "URL copied to clipboard!")
-    final Clipboard clipboard = Clipboard.getSystemClipboard();
-        final ClipboardContent content = new ClipboardContent();
-        content.putString(shareableUrl);
-        clipboard.setContent(content);
-    
-    // Alert user that URL has been copied to clipboard
-    Alert alert = new Alert(AlertType.INFORMATION);
-    alert.setTitle("Share Recipe");
-    alert.setHeaderText("Shareable URL copied to clipboard!");
-    alert.setContentText("Shareable URL: " + shareableUrl);
-    alert.showAndWait();
-}
+    void setImage(String imageURL) {
+        try {
+            Image newImage = new Image(imageURL, true); // true for background loading
+            this.image.setImage(newImage);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid image URL: " + imageURL);
+        } catch (Exception e) {
+            System.out.println("Error loading image: " + e.getMessage());
+        }
+    }
 
-    
 }
