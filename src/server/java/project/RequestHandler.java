@@ -236,7 +236,7 @@ public class RequestHandler implements HttpHandler {
       String title = this.decodeURL(queryParams.get("title"));
       String instructions = this.decodeURL(queryParams.get("instructions"));
       Long creationTime = Long.parseLong(this.decodeURL(queryParams.get("creationTime")));
-      MongoDBProject.updateRecipe(username, password, title, instructions, null, ingredients, creationTime);
+      MongoDBProject.updateRecipe(username, password, title, null, ingredients, instructions, creationTime);
       response = "Updated recipe: " + title;
       // replace with what we are expecting as a response
 
