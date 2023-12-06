@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MS2Testing {
     Model model = new Model();
+    List<Recipe> recipes = new ArrayList<>();
+    
 
     @Test
     void testValidLogin() throws IOException, InterruptedException, URISyntaxException {
@@ -117,6 +119,45 @@ public class MS2Testing {
         String decoded = model.decodeURL(encoded);
 
         assertEquals(orig, decoded);
+    }
+
+    @Test
+    void testSort() throws IOException{
+        MockRecipeListPageController controller = new MockRecipeListPageController(model);
+
+        recipes.add(new Recipe("eggs",null,null,null, "0"));
+        recipes.add(new Recipe("bread",null,null,null, "5"));
+        recipes.add(new Recipe("sausage",null,null,null, "2"));
+        recipes.add(new Recipe("bacon",null,null,null, "1"));
+
+        List<Recipe> AtoZ = new ArrayList<>();
+        AtoZ.add(new Recipe("bacon",null,null,null, "1"));
+        AtoZ.add(new Recipe("bread",null,null,null, "5"));
+        AtoZ.add(new Recipe("eggs",null,null,null, "0"));
+        AtoZ.add(new Recipe("sausage",null,null,null, "2"));
+        
+
+        List<Recipe> ZtoA = new ArrayList<>();
+        ZtoA.add(new Recipe("sausage",null,null,null, "2"));
+        ZtoA.add(new Recipe("eggs",null,null,null, "0"));
+        ZtoA.add(new Recipe("bread",null,null,null, "5"));
+        ZtoA.add(new Recipe("bacon",null,null,null, "1"));
+
+        List<Recipe> OldtoFirst = new ArrayList<>();
+        OldtoFirst.add(new Recipe("bread",null,null,null, "5"));
+        OldtoFirst.add(new Recipe("sausage",null,null,null, "2"));
+        OldtoFirst.add(new Recipe("bacon",null,null,null, "1"));
+        OldtoFirst.add(new Recipe("eggs",null,null,null, "0"));
+
+        List<Recipe> FirsttoOld = new ArrayList<>();
+        FirsttoOld.add(new Recipe("eggs",null,null,null, "0"));
+        FirsttoOld.add(new Recipe("bacon",null,null,null, "1"));
+        FirsttoOld.add(new Recipe("sausage",null,null,null, "2"));
+        FirsttoOld.add(new Recipe("bread",null,null,null, "5"));
+        
+        controller.setSort("A-Z");
+        controller.setRecipes(recipes);
+        assertTrue(controller.handleSortBoxButton(new ActionEvent()).equals(AtoZ));
     }
 
 }

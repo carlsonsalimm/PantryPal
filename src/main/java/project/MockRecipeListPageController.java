@@ -31,7 +31,7 @@ public class MockRecipeListPageController implements Controller {
     public void setSort(String sort){
         this.sort = sort;
     }
-    public void setRecipes(ArrayList<Recipe> recipes){
+    public void setRecipes(List<Recipe> recipes){
         this.recipes = recipes;
     }
     public boolean handleAddButton(ActionEvent event) throws IOException {
