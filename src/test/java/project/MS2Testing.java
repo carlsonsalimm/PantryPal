@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Pair;
 
 import org.bson.Document;
 import org.json.JSONException;
@@ -241,24 +242,27 @@ public class MS2Testing {
         MockSpecificIngredientsPageController controller = new MockSpecificIngredientsPageController(model);
         controller.setMealType("Dinner");
         controller.setTranscribedText("Test");
-        Recipe recipe = controller.handleRecordReleasetButton(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false,
+        Pair<Recipe,String> recipe = controller.handleRecordReleasetButton(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false,
                 false, false, false, false, false, false, false, false, null));
-        assertNotNull(recipe);
-        assertNotNull(recipe.getTitle());
-        assertNotNull(recipe.getIngredients());
-        assertNotNull(recipe.getInstructions());
-        assertNull(recipe.getCreationTime());
-        assertNotNull(recipe.getMealType());
+        assertNotNull(recipe.getKey());
+        assertNotNull(recipe.getKey().getTitle());
+        assertNotNull(recipe.getKey().getIngredients());
+        assertNotNull(recipe.getKey().getInstructions());
+        assertNull(recipe.getKey().getCreationTime());
+        assertNotNull(recipe.getKey().getMealType());
+
+        assertEquals(recipe.getValue(), "http://example.com/mockimage.jpg");
     }
 
     @Test
-    void testRefreshButton() throws IOException {
+    void testRefreshButton() throws IOException, InterruptedException, URISyntaxException {
         MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
         Recipe recipe = new Recipe("eggs", "crack egg", "egg", "breakfast");
         controller.setRecipeTarget(recipe);
 
-        Recipe newRecipe = controller.handleRefreshButton(new ActionEvent());
-        assertNotEquals(newRecipe, recipe);
+        Pair<Recipe,String> newRecipe = controller.handleRefreshButton(new ActionEvent());
+        assertNotEquals(recipe, newRecipe.getKey());
+        assertEquals("src/server/java/project/MockDallE.java", newRecipe.getValue());
     }
 
     @Test

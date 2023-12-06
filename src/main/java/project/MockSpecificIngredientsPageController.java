@@ -14,6 +14,7 @@ import javax.sound.sampled.TargetDataLine;
 
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Pair;
 
 public class MockSpecificIngredientsPageController implements Controller{
     private Model model;
@@ -71,7 +72,7 @@ public class MockSpecificIngredientsPageController implements Controller{
    // Returns the audio format to use for the recording for SpecifyMealTypePage
    // and Specify Meal Type Page
 
-    public Recipe handleRecordReleasetButton(MouseEvent event) throws IOException{
+    public Pair<Recipe,String> handleRecordReleasetButton(MouseEvent event) throws IOException{
      
            
            System.out.println("Recording stopped.");
@@ -84,8 +85,9 @@ public class MockSpecificIngredientsPageController implements Controller{
                // Send the transcribed text to ChatGPT and get a response
                String response = "Cereal\nMilk,Cereal";
                System.out.println("ChatGPT Response: " + response);
-
-               return createRecipe(response);
+                MockDallE mock = new MockDallE();
+               Pair<Recipe,String> result= new Pair<>(createRecipe(response), mock.generateImageURL("test"));
+               return result;
 
                // Handle the UI update or user notification with the generated recipe response
            } catch (Exception e) {
