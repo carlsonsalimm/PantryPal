@@ -108,9 +108,9 @@ public class RecipeListPageController implements Controller {
             Collections.sort(tempRecipes, Comparator.comparing(Recipe::getTitle).reversed());
         } else if (selectedItem == "Oldest first") { // sort oldest first logic use creation time 
             Collections.sort(tempRecipes, Comparator.comparingLong(Recipe -> Long.parseLong(Recipe.getCreationTime())));
-            Collections.reverse(tempRecipes);
         } else { // default; newest first
             Collections.sort(tempRecipes, Comparator.comparingLong(Recipe -> Long.parseLong(Recipe.getCreationTime())));
+            Collections.reverse(tempRecipes);
         }
         // re-populate list)
         for (Recipe x : tempRecipes) {

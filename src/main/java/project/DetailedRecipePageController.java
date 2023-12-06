@@ -97,7 +97,7 @@ public class DetailedRecipePageController implements Controller {
 
     public void handleSaveButton(ActionEvent event) throws IOException {
         Recipe recipe = view.getRecipe();
-        model.performRequest("POST", "updateRecipe", null, null, null, view.getMealType(), view.getIngredients(),
+        model.performRequest("POST", "updateRecipe", null, null, null, null, view.getIngredients(),
                 view.getTitle(),
                 view.getInstructions(), recipe.getCreationTime(), null);
 
