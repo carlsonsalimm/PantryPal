@@ -9,7 +9,7 @@ import javax.sound.sampled.*;
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 
-public class SpecifyIngredientsPageController implements Controller{
+public class SpecifyIngredientsPageController implements Controller {
     private SpecifyIngredientsPage view;
     private Model model;
 
@@ -19,7 +19,7 @@ public class SpecifyIngredientsPageController implements Controller{
     public String mealType;
     private String transcribedText;
 
-    public SpecifyIngredientsPageController(SpecifyIngredientsPage view ,Model model){
+    public SpecifyIngredientsPageController(SpecifyIngredientsPage view, Model model) {
         this.view = view;
         this.model = model;
 
@@ -31,7 +31,6 @@ public class SpecifyIngredientsPageController implements Controller{
                 e.printStackTrace();
             }
         });
-
 
         this.view.setRecordReleaseAction(event -> {
             try {
@@ -57,8 +56,8 @@ public class SpecifyIngredientsPageController implements Controller{
     // NOTE: This is the same format that is used for the Whisper transcribeAudio
     // method
 
-    public void handleRecordHoldButton(MouseEvent event) throws IOException{
-         try {
+    public void handleRecordHoldButton(MouseEvent event) throws IOException {
+        try {
             System.out.println("Starting to Record");
             audioFormat = getAudioFormat();
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat);
@@ -81,65 +80,77 @@ public class SpecifyIngredientsPageController implements Controller{
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
-       
+
     }
 
     // Returns the audio format to use for the recording for SpecifyMealTypePage
     // and Specify Meal Type Page
 
-    public Recipe handleRecordReleasetButton(MouseEvent event) throws IOException{
-         if (targetDataLine != null) {
+    public Recipe handleRecordReleasetButton(MouseEvent event) throws IOException {
+        if (targetDataLine != null) {
             targetDataLine.stop();
             targetDataLine.close();
             System.out.println("Recording stopped.");
 
             try {
                 // Transcripe Audio
-                String transcribedText = model.performRequest("POST",null,null,null,TEMP_AUDIO_FILE_PATH,null,null,null,null,null,null);
+                String transcribedText = model.performRequest("POST", null, null, null, TEMP_AUDIO_FILE_PATH, null,
+                        null, null, null, null, null);
                 this.transcribedText = transcribedText;
                 System.out.println("Transcription: " + transcribedText);
 
                 // Send the transcribed text to ChatGPT and get a response
-                String response = model.performRequest("POST","generateRecipe",null,null,null, mealType, transcribedText,null,null,null,null);
+                String response = model.performRequest("POST", "generateRecipe", null, null, null, mealType,
+                        transcribedText, null, null, null, null);
                 System.out.println("ChatGPT Response: " + response);
                 Recipe recipe = createRecipe(response);
-                DetailedRecipePage temp = new DetailedRecipePage(recipe , true);
+                DetailedRecipePage temp = new DetailedRecipePage(recipe, true);
                 Main.setPage(temp);
-                Main.setController(new DetailedRecipePageController(temp,model));
+                Main.setController(new DetailedRecipePageController(temp, model));
                 return recipe;
                 // Handle the UI update or user notification with the generated recipe response
             } catch (Exception e) {
                 e.printStackTrace();
-                Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
+                Main.showAlert("Error", "Server temporarily unavailable. Please try again later.");
                 // Handle exceptions appropriately
             }
         }
         return null;
     }
 
-    private boolean handleCancelButton(ActionEvent event) throws IOException{
+    private boolean handleCancelButton(ActionEvent event) throws IOException {
         try {
             // Add Recipe Information
-            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,null);
+            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,
+                    null);
             List<Recipe> recipes = Main.extractRecipeInfo(JSON);
             RecipeListPage listPage = new RecipeListPage(recipes);
             Main.setPage(listPage);
             Main.setController(new RecipeListPageController(listPage, model));
-            return true; 
+            return true;
         } catch (Exception e) {
-            Main.showAlert("Error", "Server temporarily unavailable. Please try again later."); 
+            Main.showAlert("Error", "Server temporarily unavailable. Please try again later.");
             return false;
         }
     }
-    
+
     public Recipe createRecipe(String gptResponse) {
-        String recipeTitle = gptResponse.substring(0, gptResponse.indexOf("\n"));
-        String recipeInstructions = gptResponse.substring(gptResponse.indexOf("\n"));
+        int firstNewLineIndex = gptResponse.indexOf("\n");
 
-        Recipe recipe = new Recipe(recipeTitle, recipeInstructions, transcribedText, mealType);
-        return recipe;
+        // Check if the newline character is present
+        if (firstNewLineIndex == -1) {
+            // Handle the case where there is no newline character
+            // For example, you can set the title to the entire response
+            // and set the instructions to an empty string or some default value
+            return new Recipe(gptResponse, "", transcribedText, mealType);
+        } else {
+            // Split the string into title and instructions
+            String recipeTitle = gptResponse.substring(0, firstNewLineIndex);
+            String recipeInstructions = gptResponse.substring(firstNewLineIndex + 1); // +1 to skip the newline
+                                                                                      // character
+            return new Recipe(recipeTitle, recipeInstructions, transcribedText, mealType);
+        }
     }
-
 
     // Returns the audio format to use for the recording for Specify Ingredient Page
     // and Specify Meal Type Page
@@ -152,5 +163,3 @@ public class SpecifyIngredientsPageController implements Controller{
         return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
     }
 }
-
-   
