@@ -5,26 +5,31 @@ public class Recipe {
     String instructions;
     String ingredients;
     String mealType;
-    String creationTime; 
+    String creationTime;
     String imageURL;
 
-    public Recipe(String title, String instructions, String ingredients, String mealType){
+    public Recipe(String title, String instructions, String ingredients, String mealType) {
         this.title = title;
         this.instructions = instructions;
         this.ingredients = ingredients;
         this.mealType = mealType;
         this.creationTime = null;
+        this.imageURL = null;
     }
+
     public Recipe(String title, String instructions, String ingredients, String mealType, String creationTime) {
         this.title = title;
         this.instructions = instructions;
         this.ingredients = ingredients;
         this.mealType = mealType;
         this.creationTime = creationTime;
+        this.imageURL = null;
     }
 
-    //new constructor for recipe that includes imageURL (please update the other constructors if you change this one)
-    public Recipe(String title, String instructions, String ingredients, String mealType, String creationTime, String imageURL) {
+    // new constructor for recipe that includes imageURL (please update the other
+    // constructors if you change this one)
+    public Recipe(String title, String instructions, String ingredients, String mealType, String creationTime,
+            String imageURL) {
         this.title = title;
         this.instructions = instructions;
         this.ingredients = ingredients;

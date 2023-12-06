@@ -276,11 +276,11 @@ public class DetailedRecipePage extends BorderPane {
     }
 
     public String getMealType() {
-        return this.mealType.toString();
+        return this.mealType.getText();
     }
 
     public String getIngredients() {
-        return this.ingredients.toString();
+        return this.ingredients.getText();
     }
 
     public Recipe getRecipe() {

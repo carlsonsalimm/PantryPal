@@ -1,6 +1,5 @@
 package project;
 
-
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import org.bson.Document;
 
-
 public class Main extends Application {
 
     static Stage primaryStage;
@@ -27,29 +25,31 @@ public class Main extends Application {
     static Controller controller;
     static Model model;
 
-
     @Override
     public void start(Stage primaryStage) throws Exception, IOException {
         Main.model = new Model();
         Main.primaryStage = primaryStage;
-        //Recipe mock = new Recipe("title test", "instruction test", "test", "123");
-        //List<Recipe> recipes = new ArrayList<Recipe>();
-        //Main.root = new RecipeListPage(recipes);
+        // Recipe mock = new Recipe("title test", "instruction test", "test", "123");
+        // List<Recipe> recipes = new ArrayList<Recipe>();
+        // Main.root = new RecipeListPage(recipes);
         Main.root = new LoginPage();
         Main.controller = new LoginPageController((LoginPage) root, model);
-        //Main.controller = new RecipeListPageController((RecipeListPage) root, model);
+        // Main.controller = new RecipeListPageController((RecipeListPage) root, model);
 
-        // Recipe mock = new Recipe("Egg Benedict Test", "instruction test", "chicken", "breakfast");
+        // Recipe mock = new Recipe("Egg Benedict Test", "instruction test", "chicken",
+        // "breakfast");
         // Main.root = new DetailedRecipePage(mock, true);
-        // Main.controller = new DetailedRecipePageController((DetailedRecipePage) root, model);
-        
+        // Main.controller = new DetailedRecipePageController((DetailedRecipePage) root,
+        // model);
+
         FileReader file = new FileReader("RememberMe.csv");
-        BufferedReader br =new BufferedReader(file);
-        if(br.readLine().equals("1")){
+        BufferedReader br = new BufferedReader(file);
+        if (br.readLine().equals("1")) {
             System.out.println("Login Remembered");
             model.setUsername(br.readLine());
             model.setPassword(br.readLine());
-            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null, null);
+            String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null, null,
+                    null);
             List<Recipe> recipes = Main.extractRecipeInfo(JSON);
             RecipeListPage listPage = new RecipeListPage(recipes);
             Main.root = listPage;
@@ -57,7 +57,7 @@ public class Main extends Application {
         }
         file.close();
         br.close();
-       
+
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(new Scene(root, 600, 700));
         // Make window non-resizable
@@ -70,11 +70,11 @@ public class Main extends Application {
         primaryStage.getScene().setRoot(page);
     }
 
-    public static void setController(Controller controller){
+    public static void setController(Controller controller) {
         Main.controller = controller;
     }
 
-    //helper method to store recipeList as a List of recipes
+    // helper method to store recipeList as a List of recipes
     public static List<Recipe> extractRecipeInfo(String jsonString) {
         ArrayList<Recipe> list = new ArrayList<Recipe>();
         Document jsonRecipes = Document.parse(jsonString);
@@ -87,11 +87,12 @@ public class Main extends Application {
             Long creationTime = recipe.getLong("creationTime");
             // Create a Recipe object and add it to the list
             // Recipe newRecipe = new Recipe(recipeTitle, ingredients + instructions);
-            Recipe newRecipe = new Recipe(recipeTitle, mealType, ingredients, instructions, String.valueOf(creationTime));
+            Recipe newRecipe = new Recipe(recipeTitle, instructions, ingredients, mealType,
+                    String.valueOf(creationTime));
             list.add(newRecipe);
         }
-        return list;  // returns list with all recipes parsed from given JSON string
-       
+        return list; // returns list with all recipes parsed from given JSON string
+
     }
 
     public static void main(String[] args) {

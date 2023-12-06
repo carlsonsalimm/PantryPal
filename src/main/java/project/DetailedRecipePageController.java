@@ -68,6 +68,15 @@ public class DetailedRecipePageController implements Controller {
                 e.printStackTrace();
             }
         });
+
+        if (this.view.getRecipe().getImageURL() == null) {
+            String newImageURLResponse = model.performRequest("GET", "generateImage", null, null, null, null, null,
+                    this.view.getRecipe().getTitle(), null, null, null);
+            String newImageURL = newImageURLResponse.startsWith("{") ? newImageURLResponse.split("\"")[3]
+                    : newImageURLResponse;
+            this.view.getRecipe().setImageURL(newImageURL);
+            this.view.setImage(newImageURL);
+        }
     }
 
     public void handleDeleteButton(ActionEvent event) throws IOException {
@@ -187,6 +196,8 @@ public class DetailedRecipePageController implements Controller {
         // Test print the new image URL
         System.out.println("New image URL: " + newImageURL);
 
+        recipe.setImageURL(newImageURL);
+
         // Update the view with the new recipe details
         view.setTitle(newTitle);
         view.setInstructions(newInstructions);
@@ -196,6 +207,11 @@ public class DetailedRecipePageController implements Controller {
 
     public void handleShareButton(ActionEvent event) throws IOException {
         Recipe recipe = view.getRecipe();
+        System.out.println("IMAGE URL:" + recipe.getImageURL());
+        System.out.println("TITLE:" + recipe.getTitle());
+        System.out.println("MT:" + recipe.getMealType());
+        System.out.println("ING:" + recipe.getIngredients());
+        System.out.println("INST:" + recipe.getInstructions());
         String url = model.performRequest("GET", "getShare", null, null, null, recipe.getMealType(),
                 recipe.getIngredients(), recipe.getTitle(), recipe.getInstructions(),
                 recipe.getCreationTime(), recipe.getImageURL());

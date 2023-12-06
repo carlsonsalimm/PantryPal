@@ -7,6 +7,10 @@ import java.nio.charset.StandardCharsets;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
 public class Model {
 
     String username;

@@ -6,6 +6,9 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import org.bson.Document;
 import org.json.JSONException;
@@ -138,7 +141,7 @@ public class RequestHandler implements HttpHandler {
       // encode HTML content
       response = htmlBuilder.toString();
       long currTime = System.currentTimeMillis();
-      FileWriter fr = new FileWriter(/*username +*/currTime+".html");
+      FileWriter fr = new FileWriter(/* username + */currTime + ".html");
       BufferedWriter br = new BufferedWriter(fr);
       br.write(response);
       fr.close();
@@ -272,9 +275,9 @@ public class RequestHandler implements HttpHandler {
       System.out.println("mealType: " + mealType);
       System.out.println("Ingredients: " + ingredients);
 
-       try {
+      try {
         response = chatGPT.getGPTResponse(ingredients, mealType);
-        //response = "TEST \n TEST \n TEST";
+        // response = "TEST \n TEST \n TEST";
         System.out.println("ChatGPT Response HandlerRequest: " + response);
       } catch (InterruptedException e) {
         e.printStackTrace();
