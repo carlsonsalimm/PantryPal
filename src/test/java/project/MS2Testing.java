@@ -68,10 +68,17 @@ public class MS2Testing {
 
         controller.setUsername(username);
         controller.setPassword(password);
-        Boolean result = controller.handleCreateAccountButton(new ActionEvent());
-        MongoDBProject.deleteUser(username, password);
 
-        assertEquals(true, result);
+        // delete user
+
+        controller.handleCreateAccountButton(new ActionEvent());
+     
+       
+        Boolean result = controller.handleSignInButton(new ActionEvent());
+        assertTrue(result);
+
+       MongoDBProject.deleteUser(username, password);
+        
     }
 
     @Test
@@ -145,7 +152,7 @@ public class MS2Testing {
             i++;
         }
 
-        assertArrayEquals(AtoZ,actualAtoZ);
+        assertArrayEquals(AtoZ, actualAtoZ);
 
         String[] ZtoA = new String[] { "sausage", "eggs", "bread", "bacon" };
         String[] actualZtoA = new String[4];
@@ -157,7 +164,7 @@ public class MS2Testing {
             i++;
         }
 
-        assertArrayEquals(ZtoA,actualZtoA);
+        assertArrayEquals(ZtoA, actualZtoA);
 
         String[] OldFirst = new String[] { "bread", "sausage", "bacon", "eggs" };
         String[] actualOldFirst = new String[4];
@@ -259,7 +266,7 @@ public class MS2Testing {
     }
 
     @Test
-    void testShareButton() throws IOException{
+    void testShareButton() throws IOException {
         MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
         Recipe recipe = new Recipe("eggs", "crack egg", "egg", "breakfast");
         controller.setRecipeTarget(recipe);
@@ -271,47 +278,71 @@ public class MS2Testing {
     }
 
     @Test
-    void testDelete() throws IOException{
-         MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
+    void testDelete() throws IOException {
+        MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
         Recipe recipe = new Recipe("eggs", "crack egg", "egg", "breakfast");
-        controller.setRecipeTarget(recipe);
+        
+        model.setUsername("carl");
+        model.setPassword("1234");
+        model.performRequest("POST", null, null, null, null, "breakfast", "egg", "eggs","crack egg", "0", null);
+        
 
+        String JSON = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null,null, null);
+        List<Recipe> recipes = Main.extractRecipeInfo(JSON);
+        int recipeSize = recipes.size();
+
+        controller.setRecipeTarget(recipe);
         controller.handleDeleteButton(new ActionEvent());
-        assertEquals(controller, recipe);
+
+        String JSON2 = model.performRequest("GET", "getRecipeList", null, null, null, null, null, null, null,null, null);
+        List<Recipe> recipesAfter = Main.extractRecipeInfo(JSON2);
+        
+        assertEquals(recipeSize -1, recipesAfter.size());
     }
 
     @Test
-    void testUpdate() throws IOException{
-         MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
+    void testUpdate() throws IOException {
+        MockDetailedRecipePageController controller = new MockDetailedRecipePageController(model);
         Recipe recipe = new Recipe("eggs", "crack egg", "egg", "breakfast");
         controller.setRecipeTarget(recipe);
     }
 
     /**
-     * End-to-End Scenario for Iteration 
-     * 1. Compile and run the app. The user will land on the login page. After the user logs in, the user will be 
-     *    redirected to the recipe list page.
-     * 2. The user can click the view button for a recipe and will be directed to the detailed view page for that 
-     *    recipe. The user will be able to see an image generated of their recipe, to see what their recipe will look like.
-     * 3. Say the user wants to share this recipe with a friend. They will click the share button on the detailed view 
-     *    page. A URL will be copied to the users clipboard, which can be shared with the friend.
-     * 4. While using the app, if the server shuts down, the app should prompt the user that: server is unavailable, 
-     *    please try again later.
-     * 5. In the recipe list page page, the user wants to see their recipes sorted by alphabetical order, to find a 
-     *    certain recipe they saved a while back. By clicking sort by at the top of the view page, they will be able to sort 
-     *    the list with a variety of sorting options, including A-Z Z-A, Newest first, and Oldest first.
-     * 6. The user now wants to make something for dinner. The user will click the filter by button on top and choose the 
-     *    dinner option, and a list of only dinner recipes will now be displayed on the recipe list. Other filter options include 
-     *    all, breakfast, and lunch.
+     * End-to-End Scenario for Iteration
+     * 1. Compile and run the app. The user will land on the login page. After the
+     * user logs in, the user will be
+     * redirected to the recipe list page.
+     * 2. The user can click the view button for a recipe and will be directed to
+     * the detailed view page for that
+     * recipe. The user will be able to see an image generated of their recipe, to
+     * see what their recipe will look like.
+     * 3. Say the user wants to share this recipe with a friend. They will click the
+     * share button on the detailed view
+     * page. A URL will be copied to the users clipboard, which can be shared with
+     * the friend.
+     * 4. While using the app, if the server shuts down, the app should prompt the
+     * user that: server is unavailable,
+     * please try again later.
+     * 5. In the recipe list page page, the user wants to see their recipes sorted
+     * by alphabetical order, to find a
+     * certain recipe they saved a while back. By clicking sort by at the top of the
+     * view page, they will be able to sort
+     * the list with a variety of sorting options, including A-Z Z-A, Newest first,
+     * and Oldest first.
+     * 6. The user now wants to make something for dinner. The user will click the
+     * filter by button on top and choose the
+     * dinner option, and a list of only dinner recipes will now be displayed on the
+     * recipe list. Other filter options include
+     * all, breakfast, and lunch.
      */
     @Test
     void endToEnd() throws IOException {
-        // Stage 1 - Log in 
+        // Stage 1 - Log in
         MockLoginPageController controllerLogin = new MockLoginPageController(model);
         controllerLogin.setUsername("carl");
         controllerLogin.setPassword("1234");
-        Boolean result1 =  controllerLogin.handleSignInButton(new ActionEvent());
-        assertEquals(true,result1); // Stage 1 pass 
+        Boolean result1 = controllerLogin.handleSignInButton(new ActionEvent());
+        assertEquals(true, result1); // Stage 1 pass
         // Stage 2 - View click
         MockRecipeListPageController controllerRecipeList = new MockRecipeListPageController(model);
         List<Recipe> recipes = new ArrayList<>();
@@ -321,7 +352,7 @@ public class MS2Testing {
         recipes.add(new Recipe("bacon", null, null, "breakfast", "1"));
         controllerRecipeList.setRecipes(recipes);
         Boolean result2 = controllerRecipeList.handleDetailedViewButton(new ActionEvent());
-        assertEquals(true,result2);
+        assertEquals(true, result2);
         // Stage 3 - Sharing
         MockDetailedRecipePageController controllerDetailedRecipe = new MockDetailedRecipePageController(model);
         Recipe recipe = new Recipe("eggs", "crack egg", "egg", "breakfast");
@@ -350,7 +381,7 @@ public class MS2Testing {
         assertArrayEquals(result5, actualOldFirst);
         // Stage 6 - Filter for dinner
         controllerRecipeList.setMealType("Dinner");
-        assertEquals(1, controllerRecipeList.handleFilterBoxButton(new ActionEvent()).size());    
+        assertEquals(1, controllerRecipeList.handleFilterBoxButton(new ActionEvent()).size());
     }
 
 }

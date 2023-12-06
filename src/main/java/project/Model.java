@@ -132,7 +132,7 @@ public class Model {
                             + "&password=" + encodeURL(password)
                             + "&title=" + encodeURL(title);
 
-                } else if (username != null && password != null && title == null) {
+                } else if (username != null && password != null) {
                     // Deletes an existing user (requires username, password)
                     urlString += "?action=deleteUser&username=" + encodeURL(username)
                             + "&password=" + encodeURL(password);
