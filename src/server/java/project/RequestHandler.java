@@ -157,20 +157,24 @@ public class RequestHandler implements HttpHandler {
       int fileSize = Integer.valueOf(httpHeaders.getFirst("Content-Length"));
       System.out.println("Expected audio file size: " + fileSize);
       // String FILE_TO_RECEIVED = queryParams.get("audioFile");
-      System.out.println(this.decodeURL(queryParams.get("audioFile")));
+      // System.out.println(this.decodeURL(queryParams.get("audioFile")));
       String FILE_TO_RECEIVED = String.valueOf(System.currentTimeMillis()) + ".wav";
       File file = new File(FILE_TO_RECEIVED);
       if (!file.exists()) {
         file.createNewFile();
       }
+
+      System.out.println("Created file for original audio file: " + queryParams.get("audioFile"));
       InputStream input = httpExchange.getRequestBody();
       String nextLine = "";
       do {
         nextLine = readLine(input, CRLF);
       } while (!nextLine.equals(""));
 
+      System.out.println("Done skipping content headers");
       byte[] wavFileByteArray = new byte[fileSize];
       int readOffset = 0;
+      System.out.println("Now reading data into wavFileByteArray");
       while (readOffset < fileSize) {
         int bytesRead = input.read(wavFileByteArray, readOffset, fileSize);
         readOffset += bytesRead;
